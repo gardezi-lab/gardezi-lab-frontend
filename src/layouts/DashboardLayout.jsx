@@ -1,7 +1,6 @@
-import React from 'react'
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "../components/header/Header";
+import Footer from "../components/footer/Footer";
 
 
 export default function DashboardLayout() {
@@ -9,13 +8,10 @@ export default function DashboardLayout() {
         <>
             <main className="main position-relative min-vh-100 d-flex flex-column" id="top">
                 <Header />
-
-                {/* Changing part */}
                 <div className="content flex-grow-1">
-                    <div className="pb-5">
-                        <Outlet /> {/* This will load page content */}
+                    <div>
+                        <Outlet />
                     </div>
-
                     <Footer />
                 </div>
             </main>
