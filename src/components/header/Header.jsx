@@ -9,6 +9,7 @@ import NavMenu from "./NavMenu";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
+    
     useEffect(() => {
         feather.replace();
     }, []);
