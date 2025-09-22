@@ -5,92 +5,208 @@ const menuItems = [
         dropdown: [
             {
                 label: "Departments",
-                icon: "share-2",
                 href: "/departments",
             },
             {
                 label: "Test & Profile",
-                icon: "share-2",
                 href: "/testprofile",
             },
             {
                 label: "Consultants",
-                icon: "share-2",
                 href: "/consultant",
             },
             {
                 label: "Collection Center",
-                icon: "share-2",
-                href: "/collectioncenter",
+                href: "/collection-center",
             },
-             {
+            {
                 label: "CC Rate List",
-                icon: "share-2",
                 href: "/cc-rate-list",
             },
             {
                 label: "Add Reception",
-                icon: "share-2",
                 href: "/reception-add",
             },
             {
                 label: "Technicians",
-                icon: "share-2",
                 href: "/technician-list",
             },
-             {
+            {
                 label: "Pathologist",
-                icon: "share-2",
                 href: "/pathologist-add",
             },
-             {
+            {
                 label: "Account Department",
-                icon: "share-2",
                 href: "/account-department",
             },
-             {
+            {
                 label: "Manager Account",
-                icon: "share-2",
                 href: "/manager-add",
             },
-             {
+            {
                 label: "Add Banks",
-                icon: "share-2",
                 href: "/add-bank",
             },
-             {
+            {
                 label: "Add Panels",
-                icon: "share-2",
                 href: "/add-panel",
             },
-             {
+            {
                 label: "Payments",
-                icon: "share-2",
                 href: "/add-payment",
+            },
+            {
+                label: "History",
+                href: "/payment-history",
+            },
+            {
+                label: "Test Package",
+                href: "/test-package",
+            },
+            {
+                label: "Rate List",
+                href: "/rate-list",
             },
         ],
     },
     {
-        title: "Apps",
+        title: "Account",
         iconClass: "uil-cube",
         dropdown: [
             {
-                label: "Email",
-                icon: "mail",
-                href: "/",
-                isSubDropdown: true,
+                label: "Cash Audit",
+                href: "/cash-audit",
+            },
+            {
+                label: "Due Patients List",
+                href: "/due-patient-list",
+            },
+            {
+                label: "Cash Receiving",
+                href: "/cash-receive",
+            },
+            {
+                label: "Cash Receiving Report",
+                href: "/cash-receive-report",
+            },
+            {
+                label: "Sale Statement",
+                href: "/sale-statement",
+            },
+            {
+                label: "Statement By User",
+                href: "/statement-user",
+            },
+            {
+                label: "Jazz Cash Report",
+                href: "/jazz-cash-report",
+            },
+            {
+                label: "Discount Report",
+                href: "/discount-report",
+            },
+            {
+                label: "Advanced Received Report",
+                href: "/advanced-receive-report",
+            },
+            {
+                label: "Recovery Report",
+                href: "/recovery-report",
+            },
+            {
+                label: "Consultant Payment",
+                href: "/consultant-payment",
+            },
+            {
+                label: "Bank Transaction",
+                href: "/bank-transaction",
+            },
+        ],
+
+    },
+    {
+        title: "Expenses",
+        iconClass: "uil-files-landscapes-alt",
+        dropdown: [
+            {
+                label: "Expenses",
+                href: "/expenses",
+            },
+            {
+                label: "Expense Report",
+                href: "/expense-report",
             },
         ],
     },
     {
-        title: "Pages",
+        title: "Stock",
         iconClass: "uil-files-landscapes-alt",
         dropdown: [
             {
-                label: "Authentication",
-                icon: "lock",
-                href: "/",
-                isSubDropdown: true,
+                label: "Stock Dashboard",
+                href: "/stock-dashboard",
+            },
+            {
+                label: "Add Stock",
+                href: "/add-stock",
+            },
+            {
+                label: "Stock Inventory",
+                href: "/stock-inventory",
+            },
+            {
+                label: "CC Wise Issue Report",
+                href: "/cc-wise-issue-report",
+            },
+            {
+                label: "Stock Issue",
+                href: "/stock-issue",
+            },
+            {
+                label: "Stock In Report",
+                href: "/stock-report",
+            },
+            {
+                label: "Near Expiry",
+                href: "/near-expiry",
+            },
+        ],
+    },
+    {
+        title: "ACCOUNTS",
+        iconClass: "uil-files-landscapes-alt",
+        dropdown: [
+            {
+                label: "Create Account",
+                href: "/create-account",
+            },
+            {
+                label: "Journal Vouchers",
+                href: "/journal-vocher",
+            },
+            {
+                label: "CRV",
+                href: "/c-r-v",
+            },
+            {
+                label: "CPV",
+                href: "/c-p-v",
+            },
+            {
+                label: "BRV",
+                href: "/b-r-v",
+            },
+            {
+                label: "BPV",
+                href: "/b-p-v",
+            },
+            {
+                label: "Vouchers",
+                href: "/voucher",
+            },
+            {
+                label: "Ledgers",
+                href: "/ledger",
             },
         ],
     },
@@ -148,11 +264,12 @@ export default function NavMenu() {
                         <span className={`uil fs-8 me-2 ${iconClass}`} />
                         {title}
                     </a>
-                    <ul className="dropdown-menu navbar-dropdown-caret">
+                    <ul className="dropdown-menu navbar-dropdown-caret dropdown-scroll">
                         {dropdown.map((item) => (
                             <DropdownItem key={item.label} {...item} />
                         ))}
                     </ul>
+
                 </li>
             ))}
         </ul>

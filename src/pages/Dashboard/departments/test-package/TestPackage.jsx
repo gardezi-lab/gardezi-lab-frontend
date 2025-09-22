@@ -1,8 +1,9 @@
 import feather from "feather-icons";
-import Modal from "../../components/modal/Modal";
+import Modal from "../../../../components/modal/Modal";
+import TestPackageForm from "../../../../components/form/TestPackageForm";
 import { useEffect } from "react";
 
-export default function TestProfile() {
+export default function TestPackage() {
     useEffect(() => {
         feather.replace();
     }, []);
@@ -20,7 +21,7 @@ export default function TestProfile() {
                     }}
                 >
                     <h5 className="card-title mb-0" style={{ color: "#fff" }}>
-                        Test & Profiles
+                       Test Packages
                     </h5>
                     <button className="btn btn-success btn-sm"
                         type="button"
@@ -29,33 +30,10 @@ export default function TestProfile() {
                         aria-haspopup="true"
                         aria-expanded="false"
                         data-bs-reference="parent"><span className="fas fa-plus me-2" />
-                        Add New Profile</button>
+                        Add Test Packages</button>
                 </div>
 
-
-
                 <div className="card-body">
-                    <div className="d-flex align-items-center mb-3">
-                        {/* Search label + input */}
-                        <label htmlFor="searchInput" className="form-label me-2 mb-0">
-                            Search
-                        </label>
-                        <input
-                            type="text"
-                            id="searchInput"
-                            className="form-control me-3"
-                            placeholder="Enter keyword"
-                            style={{ width: "200px" }}
-                        />
-
-                        {/* Select dropdown */}
-                        <select className="form-select" style={{ width: "150px" }}>
-                            <option value="">Choose...</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                        </select>
-                    </div>
-
                     <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
                         <button
                             className="btn"
@@ -96,21 +74,16 @@ export default function TestProfile() {
                                             Sr.
                                         </th>
                                         <th className="sort border-top border-translucent" data-sort="test">
-                                            Test
-                                        </th>
-                                        <th className="sort border-top border-translucent" data-sort="header">
-                                            Header
+                                            Package Name
                                         </th>
                                         <th className="sort border-top border-translucent" data-sort="fee">
                                             Fees
                                         </th>
-                                        <th className="sort border-top border-translucent" data-sort="date">
-                                            Delivery Date
+                                      
+                                        <th className="sort border-top border-translucent" data-sort="view">
+                                            Delete
                                         </th>
-                                        <th
-                                            className="sort border-top border-translucent" data-sort="view"
-
-                                        >
+                                          <th className="sort border-top border-translucent" data-sort="view">
                                             View/Edit Test
                                         </th>
                                     </tr>
@@ -118,12 +91,13 @@ export default function TestProfile() {
                                 <tbody className="list">
                                     <tr>
                                         <td className="align-middle ps-3 name">1</td>
-                                        <td className="align-middle" style={{ color: '#ff2929', fontWeight: 'bold' }}>anna@example.com</td>
-                                        <td className="align-middle age">18</td>
-                                        <td className="align-middle email">anna@example.com</td>
-                                        <td className="align-middle age">18</td>
-                                        <td className="align-middle white-space-nowrap text-end pe-0">
-                                            <div className="btn-reveal-trigger position-static">
+                                        <td className="align-middle">Surgery Fitness</td>
+                                        <td className="align-middle">3700 Rs</td>                                      
+                                        <td className="align-middle">
+                                            <button className="btn btn-danger">Delete Package</button>
+                                        </td>
+                                        <td className="align-middle ">
+                                            <div className="btn-reveal-trigger">
                                                 <button
                                                     className="btn d-flex align-items-center justify-content-center"
                                                     style={{
@@ -134,41 +108,7 @@ export default function TestProfile() {
                                                         borderRadius: "5px",
                                                     }}
                                                 >
-                                                    <span className="fas fa-search me-2" size={25}/>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="align-middle ps-3 name">2</td>
-                                        <td className="align-middle" style={{ color: '#ff2929', fontWeight: 'bold' }}>homer@example.com</td>
-                                        <td className="align-middle age">35</td>
-                                        <td className="align-middle email">anna@example.com</td>
-                                        <td className="align-middle age">18</td>
-                                        <td className="align-middle white-space-nowrap text-end pe-0">
-                                            <div className="btn-reveal-trigger position-static">
-                                                <button
-                                                    className="btn d-flex align-items-center justify-content-center"
-                                                    style={{ backgroundColor: "#28a745", color: "#fff", width: "25px", height: "40px", borderRadius: "5px" }}
-                                                >
-                                                    <span className="fas fa-search me-2" size={25}/>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="align-middle ps-3 name">3</td>
-                                        <td className="align-middle" style={{ color: '#ff2929', fontWeight: 'bold' }}>oscar@example.com</td>
-                                        <td className="align-middle age">52</td>
-                                        <td className="align-middle email">anna@example.com</td>
-                                        <td className="align-middle age">18</td>
-                                        <td className="align-middle white-space-nowrap text-end pe-0">
-                                            <div className="btn-reveal-trigger position-static">
-                                                <button
-                                                    className="btn d-flex align-items-center justify-content-center"
-                                                    style={{ backgroundColor: "#28a745", color: "#fff", width: "40px", height: "40px", borderRadius: "5px" }}
-                                                >
-                                                   <span className="fas fa-search me-2" size={25}/>
+                                                    <span className="fas fa-search me-2" size={25} />
                                                 </button>
                                             </div>
                                         </td>
@@ -245,7 +185,19 @@ export default function TestProfile() {
                     </div>
                 </div>
             </div>
-            <Modal />
+
+            <Modal
+                id="addDealModal"
+                title="Test Name or Profile Name"
+                footerButtons={
+                    <>
+                        <button className="btn btn-danger">View Packages</button>
+                    </>
+                }
+            >
+                <TestPackageForm />
+
+            </Modal >
         </>
     )
 }
