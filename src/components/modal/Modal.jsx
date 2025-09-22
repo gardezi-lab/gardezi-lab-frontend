@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-export default function Model() {
+export default function Modal() {
     return (
         <>
             <div
@@ -9,106 +9,90 @@ export default function Model() {
                 data-bs-backdrop="static"
                 data-bs-keyboard="false"
                 tabIndex={-1}
-                aria-labelledby="addDealModal"
+                aria-labelledby="addDealModalLabel"
                 aria-hidden="true"
             >
-                <div className="modal-dialog modal-lg modal-dialog-centered">
-                    <div className="modal-content p-6">
-                        <div className="modal-header justify-content-between">
-                            <h5 className="mb-0">Test Name or Profile Name</h5>
+                <div className="modal-dialog modal-xl modal-dialog-centered">
+                    <div className="modal-content">
+                        {/* Modal Header */}
+                        <div className="modal-header">
+                            <h5 className="modal-title fw-bold" id="addDealModalLabel">
+                                Add New Test / Profile
+                            </h5>
                             <button
-                                className="btn btn-sm btn-phoenix-secondary"
+                                type="button"
+                                className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
-                            >
-                                <span className="fas fa-times text-danger" />
-                            </button>
+                            ></button>
                         </div>
-                        <div className="modal-body px-0">
-                            <div className="row g-4">
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Test Name
-                                        </label>
+
+                        {/* Modal Body */}
+                        <div className="modal-body">
+                            <form>
+                                {/* Row 1 */}
+                                <div className="row g-3">
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Test Name</label>
                                         <input
-                                            className="form-control"
                                             type="text"
+                                            className="form-control"
                                             placeholder="Will Show On Report"
                                         />
                                     </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Test Code
-                                        </label>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Test Code</label>
                                         <input
-                                            className="form-control"
                                             type="text"
-                                            placeholder="For Search short Code"
+                                            className="form-control"
+                                            placeholder="For search short code"
                                         />
                                     </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Sample Required
-                                        </label>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Sample Required</label>
                                         <input
-                                            className="form-control"
                                             type="text"
-                                            placeholder="sample required"
+                                            className="form-control"
+                                            placeholder="e.g. Blood, Urine"
                                         />
                                     </div>
-                                </div>
-                            </div>
-                            <div className="row g-4">
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Select Header
-                                        </label>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Select Header</label>
                                         <select className="form-select">
-                                            <option>Select</option>
+                                            <option value="">Select</option>
                                             <option>Ally Aagaard</option>
-
                                         </select>
                                     </div>
                                 </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Fee
-                                        </label>
+
+                                {/* Row 2 */}
+                                <div className="row g-3 mt-1">
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Fee</label>
                                         <input
+                                            type="number"
                                             className="form-control"
-                                            type="text"
                                             placeholder="Test Fee"
                                         />
                                     </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Delivery Time
-                                        </label>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Delivery Time</label>
                                         <input
-                                            className="form-control datetimepicker"
-                                            id="datetimepicker"
                                             type="text"
-                                            placeholder="dd/mm/yyyy hour : minute"
-                                            data-options='{"enableTime":true,"dateFormat":"d/m/y H:i","disableMobile":true}'
+                                            className="form-control"
+                                            placeholder="dd/mm/yyyy hh:mm"
                                         />
                                     </div>
-                                </div>
-                            </div>
-                            <div className="row g-4">
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Serology Elisa
-                                        </label>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Serology Elisa</label>
+                                        <select className="form-select">
+                                            <option>Select</option>
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label className="form-label fw-semibold">Interpretation</label>
                                         <select className="form-select">
                                             <option>Select</option>
                                             <option>No</option>
@@ -116,35 +100,38 @@ export default function Model() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Interpertation
+
+                                {/* Row 3 */}
+                                <div className="row g-3 mt-1">
+                                    <div className="col-md-12">
+                                        <label className="form-label fw-semibold">
+                                            Additional Notes
                                         </label>
-                                        <select className="form-select">
-                                            <option>Select Test Name</option>
-                                            <option>No</option>
-                                            <option>Yes</option>
-                                        </select>
+                                        <textarea
+                                            className="form-control"
+                                            rows="2"
+                                            placeholder="Add any special instructions..."
+                                        ></textarea>
                                     </div>
                                 </div>
-                                <div className="col-md-4">
-                                    <div className="mb-4">
-                                        <label className="text-body-highlight fw-bold mb-2">
-                                            Check The Following
-                                        </label>
-                                        <p>check box for test like WIDAL and Other test types whose formate change</p>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                        <div className="modal-footer">                      
-                                <button className="btn btn-success ">Submit</button>
-                            <button className="btn btn-danger my-0">View Tests & Profiles</button>
+
+                        {/* Modal Footer */}
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" className="btn btn-danger">
+                                View Tests & Profiles
+                            </button>
+                            <button type="submit" className="btn btn-success">
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         </>
-    )
+    );
 }
