@@ -35,9 +35,9 @@ export default function Header() {
                     </span>
                 </button>
                 <Link className="navbar-brand me-1 me-sm-3" to="/">
-                <div className="d-flex align-items-center">
-                    <h5 className="logo-text ms-2 d-none d-sm-block">Gardezi Lab</h5>
-                </div>
+                    <div className="d-flex align-items-center">
+                        <h5 className="logo-text ms-2 d-none d-sm-block">Gardezi Lab</h5>
+                    </div>
                 </Link>
 
             </div>

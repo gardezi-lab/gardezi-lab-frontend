@@ -6,9 +6,9 @@ import Footer from "../components/footer/Footer";
 export default function DashboardLayout() {
     return (
         <>
-            <main className="main position-relative min-vh-100 d-flex flex-column" id="top">
+            <main className="main" id="top">
                 <Header />
-                <div className="content flex-grow-1">
+                <div className="content">
                     <div>
                         <Outlet />
                     </div>
