@@ -1,29 +1,38 @@
-import DepModal from "./DepModal";
-
-export default function Department() {
+import { useState } from "react";
+export default function Invoice() {
+    const [search, setSearch] = useState("2025-GL-");
     return (
         <div className="container-fluid mt-0 p-0" style={{ paddingRight: "1%" }}>
             <div
                 className="card shadow-lg border-0 rounded-3"
-                style={{ width: "100%" }} 
+                style={{ width: "100%" }}
             >
                 <div
                     className="card-header text-white d-flex justify-content-between align-items-center"
                     style={{ backgroundColor: "rgba(243,156,18,255)" }}
                 >
-                    <h5 className="mb-1 text-white">Departments</h5>
-                    <button
+                    <h5 className="mb-1 text-white">Invoice Slips</h5>
+                    {/* <button
                         type="button"
                         className="btn btn-success"
                         data-bs-toggle="modal"
                         data-bs-target="#addModal"
                     >
                         Add Header
-                    </button>
-                    <DepModal />
+                    </button> */}
                 </div>
 
                 <div className="card-body">
+                    <input
+                        className="form-control mb-2 w-25"
+                        type="text"
+                        placeholder="Search"
+                        aria-label="Search"
+                        style={{ width: "200px" }}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)} // editable
+                    />
+
                     <form
                         className="d-flex align-items-center w-100 mb-4"
                         role="search"
@@ -56,92 +65,122 @@ export default function Department() {
                                         className="bg-black text-white"
                                         scope="col"
                                     >
-                                        Header
+                                        Name
                                     </th>
                                     <th
                                         className="bg-black text-white"
                                         scope="col"
                                     >
-                                        Edit
+                                        MR
+                                    </th>
+                                    <th
+                                        className="bg-black text-white"
+                                        scope="col"
+                                    >
+                                        Reff
+                                    </th>
+                                    <th
+                                        className="bg-black text-white"
+                                        scope="col"
+                                    >
+                                        Contact No.
+                                    </th>
+                                    <th
+                                        className="bg-black text-white"
+                                        scope="col"
+                                    >
+                                        Date
+                                    </th>
+                                    <th
+                                        className="bg-black text-white"
+                                        scope="col"
+                                    >
+                                        Ref Lab
+                                    </th>
+                                    <th
+                                        className="bg-black text-white"
+                                        scope="col"
+                                    >
+                                        Test
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td className="py-1">Microbiology</td>
+                                    <td className="py-1">Microbiology</td>
+                                    <td className="py-1">Microbiology</td>
+                                    <td className="py-1">Microbiology</td>
+                                    <td className="py-1">Microbiology</td>
+                                    <td className="py-1">Microbiology</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Routine</td>
+                                    <td className="py-1">Routine</td>
+                                    <td className="py-1">Routine</td>
+                                    <td className="py-1">Routine</td>
+                                    <td className="py-1">Routine</td>
+                                    <td className="py-1">Routine</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Special Chemistry</td>
+                                    <td className="py-1">Special Chemistry</td>
+                                    <td className="py-1">Special Chemistry</td>
+                                    <td className="py-1">Special Chemistry</td>
+                                    <td className="py-1">Special Chemistry</td>
+                                    <td className="py-1">Special Chemistry</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Serology</td>
+                                    <td className="py-1">Serology</td>
+                                    <td className="py-1">Serology</td>
+                                    <td className="py-1">Serology</td>
+                                    <td className="py-1">Serology</td>
+                                    <td className="py-1">Serology</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Molecular</td>
+                                    <td className="py-1">Molecular</td>
+                                    <td className="py-1">Molecular</td>
+                                    <td className="py-1">Molecular</td>
+                                    <td className="py-1">Molecular</td>
+                                    <td className="py-1">Molecular</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Serology Elisa</td>
+                                    <td className="py-1">Serology Elisa</td>
+                                    <td className="py-1">Serology Elisa</td>
+                                    <td className="py-1">Serology Elisa</td>
+                                    <td className="py-1">Serology Elisa</td>
+                                    <td className="py-1">Serology Elisa</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className="py-1">Hematology</td>
+                                    <td className="py-1">Hematology</td>
+                                    <td className="py-1">Hematology</td>
+                                    <td className="py-1">Hematology</td>
+                                    <td className="py-1">Hematology</td>
+                                    <td className="py-1">Hematology</td>
                                     <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
+                                        Routine
                                     </td>
                                 </tr>
                             </tbody>

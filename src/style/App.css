@@ -1,0 +1,24 @@
+<<<<<<< HEAD
+.login{
+    background-color: rgba(212,237,218,255);
+}
+
+/* Background with linear gradient */
+.login-container {
+    background: linear-gradient(135deg, #28a745, #85e085);
+}
+
+/* Login box styling */
+.login-box {
+    background-color: #ffffff;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 2%;
+    transition: transform 0.3s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-5px);
+}
+=======
+>>>>>>> origin/main
