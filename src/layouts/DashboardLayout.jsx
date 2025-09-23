@@ -11,8 +11,8 @@ export default function DashboardLayout() {
                 <div className="content">
                     <div>
                         <Outlet />
+                        
                     </div>
-                    <Footer />
                 </div>
             </main>
         </>

@@ -1,6 +1,5 @@
-<<<<<<< HEAD
-.login{
-    background-color: rgba(212,237,218,255);
+.login {
+    background-color: rgba(212, 237, 218, 255);
 }
 
 /* Background with linear gradient */
@@ -20,5 +19,36 @@
 .login-box:hover {
     transform: translateY(-5px);
 }
-=======
->>>>>>> origin/main
+
+.primary {
+    background-color: #1c2765 !important;
+}
+
+.secondary {
+    background-color: #fcb040;
+}
+
+
+.color-white {
+    color: #ffffff !important;
+}
+
+.page-header {
+    color: #5d71a6;
+    font-size: 22px
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #1c2765;
+    color: #ffffff;
+    border: none !important;
+}
+
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}

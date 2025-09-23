@@ -1,19 +1,27 @@
+import { useEffect, useState } from "react";
 import feather from "feather-icons";
-import Modal from "../../../../components/modal/Modal";
 import TestProfileForm from "../../../../components/form/TestProfileForm";
-import { useEffect } from "react";
+import Modal from 'react-bootstrap/Modal';
+import TestProfilesModal from "./TestProfilesModal";
+import Button from 'react-bootstrap/Button';
+import TestProfileTable from "./TestProfileTable";
 
 export default function ProfilesScreen() {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
     useEffect(() => {
         feather.replace();
     }, []);
 
     return (
         <div>
-            {/* Header Row */}
-            <h5 className="fw-bold text-primary" >Profiles Management</h5>
+            <h5 className="fw-bold page-header">Profiles Management</h5>
 
-            <div className="d-flex justify-content-end align-items-center mb-4">
+            <div className="d-flex justify-content-end align-items-center mb-3">
                 {/* Left side title */}
 
                 {/* Right side actions */}
@@ -31,10 +39,9 @@ export default function ProfilesScreen() {
                         <option value="2">Inactive</option>
                     </select>
                     <button
-                        className="btn btn-success"
+                        className="btn btn-success primary"
                         type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addDealModal"
+                        onClick={handleShow}
                     >
                         <i className="fas fa-plus me-2"></i> Add Profile
                     </button>
@@ -42,58 +49,23 @@ export default function ProfilesScreen() {
             </div>
 
             {/* Table Section */}
-            <div className="card shadow-sm border-0">
-                <div className="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+          <TestProfileTable />
 
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
                 {/* Left side export */}
-                <button className="btn btn-secondary">
+                <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
                 {/* Right side pagination */}
                 <nav>
-                    <ul className="pagination mb-0">
+                    <ul className="pagination mb-0 ">
                         <li className="page-item disabled">
-                            <button className="page-link">Previous</button>
+                            <button className="page-link ">Previous</button>
                         </li>
-                        <li className="page-item active">
-                            <button className="page-link">1</button>
+                        <li className="page-item active ">
+                            <button className="page-link primary">1</button>
                         </li>
                         <li className="page-item">
                             <button className="page-link">2</button>
@@ -108,7 +80,22 @@ export default function ProfilesScreen() {
                 </nav>
             </div>
 
-            <Modal />
+            <Modal show={show} onHide={handleClose} className="modal-xl">
+                <Modal.Header className="primary" >
+                    <Modal.Title className="color-white fw-bold">Test Name or Profile Name</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <TestProfilesModal />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" className="secondary"  onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary"  className="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

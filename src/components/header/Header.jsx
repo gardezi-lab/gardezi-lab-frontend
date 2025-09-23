@@ -16,7 +16,7 @@ export default function Header() {
 
     return (
         <nav
-            className="navbar navbar-top fixed-top navbar-slim justify-content-between navbar-expand-lg py-2"
+            className="navbar navbar-top fixed-top navbar-slim justify-content-between navbar-expand-lg py-2 primary"
             id="navbarComboSlim"
             data-navbar-top="combo"
             data-move-target="#navbarVerticalNav"
@@ -37,7 +37,7 @@ export default function Header() {
                 </button>
                 <Link className="navbar-brand me-1 me-sm-3" to="/">
                     <div className="d-flex align-items-center"  style={{ marginLeft: "-17%",color:'#283890'}}>
-                        <h1 className="logo-text fw-bold ms-2 d-none d-sm-block"
+                        <h1 className="logo-text fw-bold ms-2 d-none d-sm-block color-white"
                             >Gardezi Lab</h1>
                     </div>
                 </Link>

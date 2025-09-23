@@ -402,8 +402,8 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
                     data-bs-toggle="dropdown"
                     data-bs-auto-close="outside"
                 >
-                    <div className="dropdown-item-wrapper">
-                        <span className="uil fs-8 lh-1 dropdown-indicator-icon" />
+                    <div className="dropdown-item-wrapper ">
+                        <span className="uil fs-8 lh-1 dropdown-indicator-icon " />
                         <span>
                             <span className="me-2 uil" data-feather={icon} style={{ width: 16, height: 16 }} />
                             {label}
@@ -429,11 +429,11 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
 
 export default function NavMenu() {
     return (
-        <ul className="navbar-nav navbar-nav-top" data-dropdown-on-hover="data-dropdown-on-hover">
+        <ul className="navbar-nav navbar-nav-top"  data-dropdown-on-hover="data-dropdown-on-hover">
             {menuItems.map(({ title, iconClass, dropdown }) => (
-                <li key={title} className="nav-item dropdown">
+                <li key={title} className="nav-item dropdown ">
                     <a
-                        className="nav-link dropdown-toggle lh-1"
+                        className="nav-link dropdown-toggle lh-1 color-white"
                         href="#!"
                         role="button"
                         data-bs-toggle="dropdown"
@@ -441,10 +441,10 @@ export default function NavMenu() {
                         aria-haspopup="true"
                         aria-expanded="false"
                     >
-                        <span className={`uil fs-8 me-2 ${iconClass}`} />
+                        <span className={`uil fs-8 color-white me-2 ${iconClass} `} />
                         {title}
                     </a>
-                    <ul className="dropdown-menu navbar-dropdown-caret dropdown-scroll">
+                    <ul className="dropdown-menu  navbar-dropdown-caret dropdown-scroll">
                         {dropdown.map((item) => (
                             <DropdownItem key={item.label} {...item} />
                         ))}
