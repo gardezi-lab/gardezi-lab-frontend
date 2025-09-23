@@ -1,7 +1,7 @@
 import React from 'react'
-import Pagination from '../consultant/Pagination'
+import Pagination from '../../departments/consultant/Pagination'
 
-export default function AddBank() {
+export default function Expenses() {
     return (
         <>
             <div className="card  px-0">
@@ -15,7 +15,7 @@ export default function AddBank() {
                     }}
                 >
                     <h5 className="card-title mb-0" style={{ color: "#fff" }}>
-                      Add Bank Accounts
+                        Commission To Consultan
                     </h5>
                 </div>
 
@@ -25,51 +25,52 @@ export default function AddBank() {
                         <div className="col-md-2">
                             <div className="mb-2">
                                 <label className="fw-bold mb-2">
-                                    Name :
+                                    Expence :
                                 </label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    placeholder="Pathologist"
-                                />
+                                <select className="form-select" aria-label="Default select example">
+                                    <option selected="">Select</option>
+                                    <option value={1}>M&P</option>
+                                    <option value={2}>Two</option>
+                                    <option value={3}>Three</option>
+                                </select>
                             </div>
                         </div>
                         <div className="col-md-2">
                             <div className="mb-2">
                                 <label className="fw-bold mb-2">
-                                    Accoun No :
+                                    Amount  :
                                 </label>
                                 <input
                                     className="form-control"
                                     type="text"
-                                    placeholder="Accoun No "
+                                    placeholder="Amount "
                                 />
                             </div>
                         </div>
-                        <div className="col-md-2">
+                         <div className="col-md-2">
                             <div className="mb-2">
                                 <label className="fw-bold mb-2">
-                                    Branch  :
+                                    Description   :
                                 </label>
                                 <input
                                     className="form-control"
                                     type="text"
-                                    placeholder="Branch Name"
+                                    placeholder="Description "
                                 />
                             </div>
                         </div>
-
-                        <div className="col-md-2" style={{ marginTop: '5%' }}>
+                       
+                        <div className="col-md-2" style={{marginTop: '5%'}}>
                             <button
                                 className="btn btn-success"
-
+                                
                             >
                                 Submit
                             </button>
-                        </div>
+                        </div> 
 
                     </div>
-
+                 
                     <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
                         <button
                             className="btn"
@@ -107,33 +108,40 @@ export default function AddBank() {
                                             className="ps-3 text-white"
                                             data-sort="sr"
                                         >
-                                            Bank Name
+                                            Sr.
                                         </th>
                                         <th className="sort text-white border-top border-translucent" data-sort="test">
-                                            Account No
+                                           Expense Name
                                         </th>
                                         <th className="sort text-white border-top border-translucent" data-sort="header">
-                                            Branch
+                                            Description
                                         </th>
-                                        <th
-                                            className="sort text-white border-top border-translucent" data-sort="view"
-
-                                        >
+                                        <th className="sort text-white border-top border-translucent" data-sort="fee">
+                                            Date
+                                        </th>
+                                        <th className="sort text-white border-top border-translucent" data-sort="date">
+                                            CC
+                                        </th>
+                                        <th  className="sort text-white border-top border-translucent" data-sort="view" >
+                                            Reception
+                                        </th>
+                                        <th  className="sort text-white border-top border-translucent" data-sort="view" >
+                                            Amount
+                                        </th>
+                                        <th  className="sort text-white border-top border-translucent" data-sort="view" >
                                             Delete
-                                        </th>
-                                        <th
-                                            className="sort text-white border-top border-translucent" data-sort="view"
-
-                                        >
-                                            Edit
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="list">
                                     <tr>
-                                        <td className="align-middle ps-3">JazzCash</td>
-                                        <td className="align-middle" style={{ color: '#ff2929', fontWeight: 'bold' }}>121343242</td>
-                                        <td className="align-middle">HBL</td>
+                                        <td className="align-middle ps-3 name">1</td>
+                                        <td className="align-middle">YZ TO BWP</td>
+                                        <td className="align-middle">ahjshdjav</td>
+                                        <td className="align-middle">29-08-2024/06:34 pm</td>
+                                        <td className="align-middle">CC12- YGL</td>
+                                        <td className="align-middle">shahid</td>
+                                        <td className="align-middle">100</td>
                                         <td className="align-middle white-space-nowrap text-end pe-0">
                                             <div className="btn-reveal-trigger position-static">
                                                 <button
@@ -141,16 +149,6 @@ export default function AddBank() {
                                                     style={{ backgroundColor: "#dc3545", color: "#fff", width: "40px", height: "40px", borderRadius: "5px" }}
                                                 >
                                                     <span className="fas fa-trash-alt me-2" size={25} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className="align-middle white-space-nowrap text-end pe-0">
-                                            <div className="btn-reveal-trigger position-static">
-                                                <button
-                                                    className="btn d-flex align-items-center justify-content-center"
-                                                    style={{ backgroundColor: "#17a2b8", color: "#fff", width: "40px", height: "40px", borderRadius: "5px" }}
-                                                >
-                                                    <span className="fas fa-edit me-2" size={25} />
                                                 </button>
                                             </div>
                                         </td>

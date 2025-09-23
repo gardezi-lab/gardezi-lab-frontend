@@ -1,5 +1,6 @@
 import feather from "feather-icons";
-import Modal from "../../components/modal/Modal";
+import Modal from "../../../../components/modal/Modal";
+import TestProfileForm from "../../../../components/form/TestProfileForm";
 import { useEffect } from "react";
 
 export default function ProfilesScreen() {
