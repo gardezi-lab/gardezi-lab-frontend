@@ -5,6 +5,19 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import Login from "../pages/Auth/Login";
 import Departments from "../pages/Dashboard/departments/Departments";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import TestProfile from "../pages/testprofile/TestProfile";
+import Consultant from "../pages/consultant/Consultant";
+import CollectionCenter from "../pages/collectioncenter/CollectionCenter";
+import CCRateList from "../pages/cc-rate-list/CCRateList";
+import AddReception from "../pages/reception-add/AddReception";
+import AddTechnician from "../pages/technician-list/AddTechnician";
+import AddPathologist from "../pages/pathologist-add/AddPathologist";
+import AccountDepartment from "../pages/account-department/AccountDepartment";
+import ManagerAccount from "../pages/manager-add/ManagerAccount";
+import AddBank from "../pages/add-bank/AddBank";
+import AddPanel from "../pages/add-panel/AddPanel";
+import Payment from "../pages/add-payment/Payment";
+
 
 import Invoice from "../pages/Patients/invoice/Invoice";
 import DiscountApproval from "../pages/Patients/discount-approval/DiscountApproval";
@@ -46,41 +59,20 @@ function AppRoutes() {
       </Route>
 
       <Route element={<DashboardLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/departments" element={<Departments />} />
-        <Route path="/patient_entry" element={<PatientEntry />} />
-        <Route path="/invoice" element={<Invoice />} />
-        <Route path="/discount_approval" element={<DiscountApproval />} />
-        <Route path="/rejected_discount" element={<RejectedDiscount />} />
-        <Route path="/discount_manager" element={<DiscountManager />} />
-        <Route path="/delayed_test" element={<DelayedTest />} />
-        <Route path="/delete_record" element={<DeleteRecord />} />
-        <Route path="/verification" element={<Verification />} />
-        <Route path="/business" element={<Business />} />
-        <Route path="/patient-list" element={<PatientList />} />
-        <Route path="/lab_report" element={<LabReport />} />
-        <Route path="/technician_report" element={<TechnicianReport />} />
-        <Route path="/reception_report" element={<ReceptionReport />} />
-        <Route path="/department_report" element={<DepartmentReport />} />
-        <Route path="/consultant_report" element={<ConsultantReport />} />
-        <Route path="/general_sms" element={<GeneralSMS />} />
-        <Route path="/customdb" element={<CustomDatabase />} />
-        <Route path="/custom_sms" element={<CustomSMS />} />
-        <Route path="/all_patient" element={<AllPatient />} />
-        <Route path="/add_employ" element={<AddEmployees />} />
-        <Route path="/addpay" element={<AddPay />} />
-        <Route path="/loan" element={<Loans />} />
-        <Route path="/advance" element={<Advance />} />
-        <Route path="/pay_history" element={<PayHistory />} />
-        <Route path="/cash_book" element={<Cashbook />} />
-        <Route path="/trial_balance" element={<TrialBalance />} />
-        <Route path="/balance_sheet" element={<BalanceSheet />} />
-        <Route path="/profit_loss" element={<ProfitLoss />} />
-        <Route path="/income_expenses" element={<IncomeExpenses />} />
-        <Route path="/cash" element={<CPVCashSUM />} />
-        <Route path="/setting" element={<Setting />} />
-
-
+        <Route path="/" element={ <Dashboard /> } />
+        <Route path="/departments" element={ <Departments /> } />
+        <Route path="/testprofile" element={ <TestProfile /> } />
+        <Route path="/consultant" element={ <Consultant /> } />
+        <Route path="/collectioncenter" element={ <CollectionCenter /> } />
+        <Route path="/cc-rate-list" element={ <CCRateList /> } />
+        <Route path="/reception-add" element={ <AddReception /> } />
+        <Route path="/technician-list" element={ <AddTechnician /> } />
+        <Route path="/pathologist-add" element={ <AddPathologist /> } />
+        <Route path="/account-department" element={ <AccountDepartment /> } />
+        <Route path="/manager-add" element={ <ManagerAccount /> } />
+        <Route path="/add-bank" element={ <AddBank /> } />
+        <Route path="/add-panel" element={ <AddPanel /> } />
+        <Route path="/add-payment" element={ <Payment /> } />
       </Route>
     </Routes>
   );

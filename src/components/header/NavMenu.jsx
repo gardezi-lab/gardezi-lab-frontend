@@ -56,6 +56,66 @@ const menuItems = [
                 icon: "share-2",
                 href: "/departments",
             },
+            {
+                label: "Test & Profile",
+                icon: "share-2",
+                href: "/testprofile",
+            },
+            {
+                label: "Consultants",
+                icon: "share-2",
+                href: "/consultant",
+            },
+            {
+                label: "Collection Center",
+                icon: "share-2",
+                href: "/collectioncenter",
+            },
+             {
+                label: "CC Rate List",
+                icon: "share-2",
+                href: "/cc-rate-list",
+            },
+            {
+                label: "Add Reception",
+                icon: "share-2",
+                href: "/reception-add",
+            },
+            {
+                label: "Technicians",
+                icon: "share-2",
+                href: "/technician-list",
+            },
+             {
+                label: "Pathologist",
+                icon: "share-2",
+                href: "/pathologist-add",
+            },
+             {
+                label: "Account Department",
+                icon: "share-2",
+                href: "/account-department",
+            },
+             {
+                label: "Manager Account",
+                icon: "share-2",
+                href: "/manager-add",
+            },
+             {
+                label: "Add Banks",
+                icon: "share-2",
+                href: "/add-bank",
+            },
+             {
+                label: "Add Panels",
+                icon: "share-2",
+                href: "/add-panel",
+            },
+             {
+                label: "Payments",
+                icon: "share-2",
+                href: "/add-payment",
+            },
         ],
     },
 
