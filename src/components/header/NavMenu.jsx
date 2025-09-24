@@ -53,70 +53,87 @@ const menuItems = [
         dropdown: [
             {
                 label: "Departments",
+                icon: "uil-building", // 🏢
                 href: "/departments",
             },
             {
                 label: "Test & Profile",
+                icon: "uil-flask", // 🧪
                 href: "/testprofile",
             },
             {
                 label: "Consultants",
+                icon: "uil-user-md", // 👨‍⚕️
                 href: "/consultant",
             },
             {
                 label: "Collection Center",
+                icon: "uil-map-marker", // 📍
                 href: "/collection-center",
             },
             {
                 label: "CC Rate List",
+                icon: "uil-list-ul", // 📋
                 href: "/cc-rate-list",
             },
             {
                 label: "Add Reception",
+                icon: "uil-headphones", // 🎧 reception desk
                 href: "/reception-add",
             },
             {
                 label: "Technicians",
+                icon: "uil-users-alt", // 👥
                 href: "/technician-list",
             },
             {
                 label: "Pathologist",
+                icon: "uil-dna", // 🧬
                 href: "/pathologist-add",
             },
             {
                 label: "Account Department",
+                icon: "uil-analytics", // 📊
                 href: "/account-department",
             },
             {
                 label: "Manager Account",
+                icon: "uil-user-tie", // 👔
                 href: "/manager-add",
             },
             {
                 label: "Add Banks",
+                icon: "uil-university", // 🏦
                 href: "/add-bank",
             },
             {
                 label: "Add Panels",
+                icon: "uil-sliders-v-alt", // ⚙️
                 href: "/add-panel",
             },
             {
                 label: "Payments",
+                icon: "uil-money-bill", // 💵
                 href: "/add-payment",
             },
             {
                 label: "History",
+                icon: "uil-history", // ⏳
                 href: "/payment-history",
             },
             {
                 label: "Test Package",
+                icon: "uil-box", // 📦
                 href: "/test-package",
             },
             {
                 label: "Rate List",
+                icon: "uil-receipt", // 🧾
                 href: "/rate-list",
             },
         ],
     },
+
 
     {
         title: "Reportings",
@@ -429,7 +446,7 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
 
 export default function NavMenu() {
     return (
-        <ul className="navbar-nav navbar-nav-top"  data-dropdown-on-hover="data-dropdown-on-hover">
+        <ul className="navbar-nav navbar-nav-top" data-dropdown-on-hover="data-dropdown-on-hover">
             {menuItems.map(({ title, iconClass, dropdown }) => (
                 <li key={title} className="nav-item dropdown ">
                     <a

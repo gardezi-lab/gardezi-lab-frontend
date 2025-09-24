@@ -1,0 +1,1 @@
+ak function banana hy joo dynamic hoo js ma sirf url add karn aur body ka content be sath hoo 
