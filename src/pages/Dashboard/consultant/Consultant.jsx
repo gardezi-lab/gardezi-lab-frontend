@@ -71,7 +71,7 @@ export default function Consultant() {
                 </nav>
             </div>
 
-            <Modal show={show} onHide={handleClose} className="modal-md">
+            <Modal show={show} onHide={handleClose} className="modal sm">
                 <Modal.Header className="primary" >
                     <Modal.Title className="color-white fw-bold">Consultants</Modal.Title>
                 </Modal.Header>
