@@ -14,7 +14,7 @@ export default function DepartmentModal() {
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label> Name</Form.Label>
-                                <Form.Control type="email" placeholder="Enter name" />
+                                <Form.Control type="email" placeholder="Department name" />
                             </Form.Group>
                         </Col>
                     </Row>

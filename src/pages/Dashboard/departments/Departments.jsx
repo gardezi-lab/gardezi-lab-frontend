@@ -1,186 +1,93 @@
-import DepModal from "./DepModal";
+import { useEffect, useState } from "react";
+import feather from "feather-icons";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import DepartmentTable from "./DepartmentTable";
+import DepartmentModal from "./DepartmentModal";
 
-export default function Department() {
+export default function Departments() {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
+    useEffect(() => {
+        feather.replace();
+    }, []);
+
     return (
-        <div className="container-fluid mt-0 p-0" style={{ paddingRight: "1%" }}>
-            <div
-                className="card shadow-lg border-0 rounded-3"
-                style={{ width: "100%" }} 
-            >
-                <div
-                    className="card-header text-white d-flex justify-content-between align-items-center"
-                    style={{ backgroundColor: "rgba(243,156,18,255)" }}
-                >
-                    <h5 className="mb-1 text-white">Departments</h5>
+        <div>
+            <h5 className="fw-bold page-header">Department</h5>
+
+            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+                {/* Left side title */}
+
+                {/* Right side actions */}
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search name"
+                        style={{ width: "220px" }}
+                    />
                     <button
+                        className="btn btn-success primary"
                         type="button"
-                        className="btn btn-success"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addModal"
+                        onClick={handleShow}
                     >
-                        Add Header
+                        <i className="fas fa-plus me-2"></i> Add Department
                     </button>
-                    <DepModal />
-                </div>
-
-                <div className="card-body">
-                    <form
-                        className="d-flex align-items-center w-100 mb-4"
-                        role="search"
-                    >
-                        <button type="button" className="btn btn-secondary me-1 ">
-                            Excel
-                        </button>
-                        <div className="d-flex ms-auto">
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="Search"
-                                aria-label="Search"
-                            />
-                            <button
-                                className="btn btn-outline-success"
-                                type="submit"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
-
-                    {/* Table */}
-                    <div className="table-responsive">
-                        <table className="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Header
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Edit
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* Card Footer */}
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                    <div>Showing 1 to 7 of 7 entries</div>
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination mb-0">
-                            <li className="page-item disabled">
-                                <a className="page-link">Previous</a>
-                            </li>
-                            <li className="page-item active" aria-current="page">
-                                <a className="page-link" href="#">
-                                    1
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    2
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    3
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    Next
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
+
+            {/* Table Section */}
+            <DepartmentTable />
+            {/* Footer below table */}
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                {/* Left side export */}
+                <button className="btn btn-secondary primary">
+                    <i className="fas fa-file-excel me-2"></i> Export to Excel
+                </button>
+
+                {/* Right side pagination */}
+                <nav>
+                    <ul className="pagination mb-0 ">
+                        <li className="page-item disabled">
+                            <button className="page-link ">Previous</button>
+                        </li>
+                        <li className="page-item active ">
+                            <button className="page-link primary">1</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">2</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">3</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <Modal show={show} onHide={handleClose} className="modal sm">
+                <Modal.Header className="primary" >
+                    <Modal.Title className="color-white fw-bold">Department</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <DepartmentModal />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" className="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" className="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
