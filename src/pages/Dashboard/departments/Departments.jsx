@@ -81,11 +81,11 @@ export default function Departments() {
         </div>
       </div>
 
-      <DepartmentTable
+      {/* <DepartmentTable
         departments={departments}
         onDelete={handleDelete}
         onEdit={handleEdit}
-      />
+      /> */}
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <button className="btn btn-secondary primary">
