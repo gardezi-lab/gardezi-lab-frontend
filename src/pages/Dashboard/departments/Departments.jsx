@@ -1,93 +1,112 @@
 import { useEffect, useState } from "react";
-import feather from "feather-icons";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import DepartmentTable from "./DepartmentTable";
 import DepartmentModal from "./DepartmentModal";
+import httpClient from "../../../services/httpClient";
 
 export default function Departments() {
-    const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [selectedDept, setSelectedDept] = useState(null);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    setSelectedDept(null);
+  };
+  const handleShow = () => setShow(true);
 
+  const getDepartmentData = async () => {
+    try {
+      const data = await httpClient.get("/department");
+      setDepartments(data);
+    } catch (err) {
+      console.error("Fetch Departments Error:", err);
+    }
+  };
 
-    useEffect(() => {
-        feather.replace();
-    }, []);
+  const handleSave = async (formData) => {
+    try {
+      if (selectedDept) {
+        // Update
+        await httpClient.put(`/department/${selectedDept.id}`, formData);
+      } else {
+        // Create
+        await httpClient.post("/department", formData);
+      }
+      getDepartmentData();
+      handleClose();
+    } catch (err) {
+      console.error("Save Department Error:", err);
+    }
+  };
 
-    return (
-        <div>
-            <h5 className="fw-bold page-header">Department</h5>
+  const handleDelete = async (id) => {
+    try {
+      await httpClient.delete(`/departments/${id}`);
+      getDepartmentData();
+    } catch (err) {
+      console.error("Delete Department Error:", err);
+    }
+  };
 
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
-                {/* Left side title */}
+  const handleEdit = (dept) => {
+    setSelectedDept(dept);
+    handleShow();
+  };
 
-                {/* Right side actions */}
-                <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search name"
-                        style={{ width: "220px" }}
-                    />
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={handleShow}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Department
-                    </button>
-                </div>
-            </div>
+  useEffect(() => {
+    getDepartmentData();
+  }, []);
 
-            {/* Table Section */}
-            <DepartmentTable />
-            {/* Footer below table */}
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                {/* Left side export */}
-                <button className="btn btn-secondary primary">
-                    <i className="fas fa-file-excel me-2"></i> Export to Excel
-                </button>
+  return (
+    <div>
+      <h5 className="fw-bold page-header">Department</h5>
 
-                {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <Modal show={show} onHide={handleClose} className="modal sm">
-                <Modal.Header className="primary" >
-                    <Modal.Title className="color-white fw-bold">Department</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <DepartmentModal />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" className="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+      <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+        <div className="d-flex flex-wrap align-items-center gap-2">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search name"
+            style={{ width: "220px" }}
+          />
+          <button
+            className="btn btn-success primary"
+            type="button"
+            onClick={handleShow}
+          >
+            <i className="fas fa-plus me-2"></i> Add Department
+          </button>
         </div>
-    );
+      </div>
+
+      <DepartmentTable
+        departments={departments}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+      />
+
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <button className="btn btn-secondary primary">
+          <i className="fas fa-file-excel me-2"></i> Export to Excel
+        </button>
+      </div>
+
+      <Modal show={show} onHide={handleClose} className="modal sm">
+        <Modal.Header className="primary">
+          <Modal.Title className="color-white fw-bold">
+            {selectedDept ? "Edit Department" : "Add Department"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <DepartmentModal
+            onSave={handleSave}
+            department={selectedDept}
+            onCancel={handleClose}
+          />
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
 }

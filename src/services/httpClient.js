@@ -1,1 +1,47 @@
-ak function banana hy joo dynamic hoo js ma sirf url add karn aur body ka content be sath hoo 
+import axios from "axios";
+
+const baseURL = import.meta.env.REACT_APP_GARDEZI_LAB_BASE_URL;
+
+const httpClient = {
+  get: async (url, params = {}) => {
+    try {
+      const response = await axios.get(`${baseURL}${url}`, { params });
+      return response.data;
+    } catch (error) {
+      console.error("GET Error:", error);
+      throw error;
+    }
+  },
+
+  post: async (url, data = {}) => {
+    try {
+      const response = await axios.post(`${baseURL}${url}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("POST Error:", error);
+      throw error;
+    }
+  },
+
+  put: async (url, data = {}) => {
+    try {
+      const response = await axios.put(`${baseURL}${url}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("PUT Error:", error);
+      throw error;
+    }
+  },
+
+  delete: async (url) => {
+    try {
+      const response = await axios.delete(`${baseURL}${url}`);
+      return response.data;
+    } catch (error) {
+      console.error("DELETE Error:", error);
+      throw error;
+    }
+  },
+};
+
+export default httpClient;
