@@ -21,7 +21,6 @@ import PaymentHistory from "../pages/Dashboard/payment-history/PaymentHistory";
 import TestPackage from "../pages/Dashboard/test-package/TestPackage";
 import RateList from "../pages/Dashboard/rate-list/RateList";
 import CashAudit from "../pages/Accounts/cash-audit/CashAudit";
-// import PatientList from "../pages/Dashboard/accounts/due-patient-list/PatientList";
 import CashReceiving from "../pages/Accounts/cash-receive/CashReceiving";
 import CashReceiveReport from "../pages/Accounts/cash-receive-report/CashReceiveReport";
 import SaleStatement from "../pages/Accounts/sale-statement/SaleStatement";

@@ -6,19 +6,19 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 export default function DepartmentModal({ onSave, department, onCancel }) {
-  const [name, setName] = useState("");
+  const [departmentName, setDepartmentName] = useState("");
 
   useEffect(() => {
     if (department) {
-      setName(department.name);
+      setDepartmentName(department.department_name); // yahan correct key use karo
     } else {
-      setName("");
+      setDepartmentName("");
     }
   }, [department]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ name });
+    onSave({ departmentName });
   };
 
   return (
@@ -31,8 +31,8 @@ export default function DepartmentModal({ onSave, department, onCancel }) {
               <Form.Control
                 type="text"
                 placeholder="Department name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
                 required
               />
             </Form.Group>
@@ -40,7 +40,7 @@ export default function DepartmentModal({ onSave, department, onCancel }) {
         </Row>
         <div className="d-flex justify-content-end gap-2">
           <Button variant="secondary" onClick={onCancel}>
-            Cancel
+            Cancel & Close
           </Button>
           <Button variant="primary" type="submit">
             {department ? "Update" : "Save"}

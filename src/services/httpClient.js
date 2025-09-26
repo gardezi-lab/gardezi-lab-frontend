@@ -1,11 +1,14 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.REACT_APP_GARDEZI_LAB_BASE_URL;
+// const baseURL = "https://gardezi-lab-backend-1-zlp6.onrender.com/api";
+const baseURL = "http://127.0.0.1:5000/api"
 
 const httpClient = {
   get: async (url, params = {}) => {
     try {
-      const response = await axios.get(`${baseURL}${url}`, { params });
+      const response = await axios.get(`${baseURL}${url}`, {
+        params
+      });
       return response.data;
     } catch (error) {
       console.error("GET Error:", error);
@@ -15,7 +18,13 @@ const httpClient = {
 
   post: async (url, data = {}) => {
     try {
-      const response = await axios.post(`${baseURL}${url}`, data);
+      const response = await axios.post(`${baseURL}${url}`, data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("POST Error:", error);
@@ -25,7 +34,11 @@ const httpClient = {
 
   put: async (url, data = {}) => {
     try {
-      const response = await axios.put(`${baseURL}${url}`, data);
+      const response = await axios.put(`${baseURL}${url}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
       return response.data;
     } catch (error) {
       console.error("PUT Error:", error);
