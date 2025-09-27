@@ -48,20 +48,20 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                     <td>{dept.department_name}</td>
                     <td>
                       <div className="d-flex gap-3 align-items-center justify-content-center">
-                        
+
                         <button
-                          type="button"
-                          className="btn btn-primary"
                           onClick={() => onEdit(dept)}
                         >
-                          Edit
+                          <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
                         </button>
-                           <button
-                          type="button"
-                          className="btn btn-danger"
-                           onClick={() => onDelete(dept.department_id)}
+                        <button
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this department?")) {
+                              onDelete(dept.department_id);
+                            }
+                          }}
                         >
-                          Delete
+                          <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
                         </button>
                       </div>
                     </td>
