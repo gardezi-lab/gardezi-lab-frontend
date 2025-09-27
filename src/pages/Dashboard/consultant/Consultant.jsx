@@ -1,23 +1,92 @@
 import { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
-import TestProfilesModal from "./TestConsultantModal";
-import Button from 'react-bootstrap/Button';
-import feather from "feather-icons";
+import httpClient from "../../../services/httpClient";
 import TestConsultantTable from "./TestConsultantTable";
+import TestConsultantModal from "./TestConsultantModal";
 
 export default function Consultant() {
-    const [show, setShow] = useState(false);
+    const [showConsultantModal, setShowConsultantModal] = useState(false);
+    const [consultantList, setConsultantList] = useState([]);
+    const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+    const [selectedConsultant, setSelectedConsultant] = useState(null);
+    const [loading, setLoading] = useState(false); // ✅ new state for loader
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        setShowConsultantModal(false);
+        setIsCurrentEditModalOpen(false);
+        setSelectedConsultant(null);
+    };
+    const handleShow = () => setShowConsultantModal(true);
+
+    const getConsultantData = async () => {
+        setLoading(true); // ✅ start loader
+        try {
+            const data = await httpClient.get("/users/");
+            if (data) {
+                setConsultantList(data);
+            }
+            console.log("Consultant Data:", data);
+        } catch (err) {
+            console.error("Fetch Consultant Error:", err);
+        } finally {
+            setLoading(false); // ✅ stop loader
+        }
+    };
+
+    const handleSave = async (formData) => {
+        setLoading(true);
+        try {
+            const obj = {
+                name: formData.consultantName,
+                user_name: formData.consultantUserName,
+                contact_no: formData.consultantContact,
+                role: formData.role,
+                age: Number(formData.consultantAge),
+            };
+
+            if (isCurrentEditModalOpen && selectedConsultant) {
+                await httpClient.put(
+                    `/users/${selectedConsultant.id}`,
+                    obj
+                );
+            } else {
+                await httpClient.post("/users/", obj);
+            }
+
+            getConsultantData();
+        } catch (err) {
+            console.error("Save Consultant Error:", err);
+        } finally {
+            setLoading(false);
+            handleClose();
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await httpClient.delete(`/users/${id}`);
+            getConsultantData();
+        } catch (err) {
+            console.error("Delete Consultant Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = (dep) => {
+        setSelectedConsultant(dep);
+        setIsCurrentEditModalOpen(true);
+        handleShow();
+    };
 
     useEffect(() => {
-        feather.replace();
+        getConsultantData();
     }, []);
 
     return (
         <>
-            <h5 className="fw-bold page-header">Consultants</h5>
+            <h5 className="fw-bold page-header">Users</h5>
             <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
                 {/* Left side title */}
 
@@ -40,7 +109,11 @@ export default function Consultant() {
                 </div>
             </div>
 
-            <TestConsultantTable />
+            <TestConsultantTable
+                consultantList={consultantList}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                loading={loading} />
 
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
@@ -71,21 +144,18 @@ export default function Consultant() {
                 </nav>
             </div>
 
-            <Modal show={show} onHide={handleClose} className="modal sm">
+            <Modal show={showConsultantModal} onHide={handleClose} className="modal sm">
                 <Modal.Header className="primary" >
-                    <Modal.Title className="color-white fw-bold">Consultants</Modal.Title>
+                    <Modal.Title className="color-white fw-bold">
+                        {isCurrentEditModalOpen ? "Edit Consultant" : "Add Consultant"}
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <TestProfilesModal />
+                    <TestConsultantModal
+                        onSave={handleSave}
+                        consultant={selectedConsultant}
+                        onCancel={handleClose} />
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" className="primary" onClick={handleClose}>
-                        Submit
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </>
     )

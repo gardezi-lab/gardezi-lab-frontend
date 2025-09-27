@@ -104,7 +104,7 @@ export default function Departments() {
               handleShow();
             }}
           >
-            <i className="fas fa-plus me-2"></i> Add Department
+            <i className="fas fa-plus me-2"></i> Add Departments
           </button>
         </div>
       </div>
