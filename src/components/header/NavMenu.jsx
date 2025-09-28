@@ -1,3 +1,7 @@
+import { NavLink } from "react-router-dom";
+
+
+
 const menuItems = [
     {
         title: "Patients",
@@ -418,31 +422,47 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
     if (isSubDropdown) {
         return (
             <li className="dropdown">
-                <a
-                    className="dropdown-item dropdown-toggle"
-                    href={href}
+                <NavLink
+                    to={href}
+                    className={({ isActive }) =>
+                        `dropdown-item dropdown-toggle ${isActive ? "active" : ""}`
+                    }
                     data-bs-toggle="dropdown"
                     data-bs-auto-close="outside"
                 >
-                    <div className="dropdown-item-wrapper ">
+                    <div className="dropdown-item-wrapper">
                         <span className="uil fs-8 lh-1 dropdown-indicator-icon " />
                         <span>
-                            <span className="me-2 uil" data-feather={icon} style={{ width: 16, height: 16 }} />
+                            <span
+                                className="me-2 uil"
+                                data-feather={icon}
+                                style={{ width: 16, height: 16 }}
+                            />
                             {label}
                         </span>
                     </div>
-                </a>
+                </NavLink>
             </li>
         );
     }
+
     return (
         <li>
-            <a className="dropdown-item" href={href}>
+            <NavLink
+                to={href}
+                className={({ isActive }) =>
+                    `dropdown-item ${isActive ? "active" : ""}`
+                }
+            >
                 <div className="dropdown-item-wrapper">
-                    <span className="me-2" data-feather={icon} style={{ width: 16, height: 16 }} />
+                    <span
+                        className="me-2"
+                        data-feather={icon}
+                        style={{ width: 16, height: 16 }}
+                    />
                     {label}
                 </div>
-            </a>
+            </NavLink>
         </li>
     );
 }
