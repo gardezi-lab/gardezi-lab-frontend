@@ -42,7 +42,6 @@ export default function TestProfilesModal() {
                         </Col>
                     </Row>
                     <Row>
-
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Fee</Form.Label>
