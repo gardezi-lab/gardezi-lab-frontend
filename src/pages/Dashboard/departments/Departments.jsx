@@ -111,12 +111,12 @@ export default function Departments() {
 
       {/* ✅ Table hide when loading */}
       {/* {!loading && ( */}
-        <DepartmentTable
-          departmentList={departmentList}
-          onDelete={handleDelete}
-          onEdit={handleEdit}
-          loading={loading}
-        />
+      <DepartmentTable
+        departmentList={departmentList}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        loading={loading}
+      />
       {/* )} */}
 
       <div className="d-flex justify-content-between align-items-center mt-3">

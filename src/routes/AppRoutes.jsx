@@ -79,6 +79,7 @@ import IncomeExpenses from "../pages/Accounts/IncomeExpenses";
 import CPVCashSUM from "../pages/Accounts/CPVCashSUM";
 import Setting from "../pages/Accounts/Setting";
 import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
+import Parameter from "../pages/Dashboard/parameter/Parameter";
 
 function AppRoutes() {
   return (
@@ -133,6 +134,8 @@ function AppRoutes() {
         <Route path="/b-p-v" element={<BPV />} />
         <Route path="/voucher" element={<Voucher />} />
         <Route path="/ledger" element={<Ledger />} />
+        <Route path="/parameter" element={<Parameter />} />
+
       </Route>
     </Routes>
   );
