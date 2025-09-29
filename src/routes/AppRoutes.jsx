@@ -19,6 +19,7 @@ import AddPanel from "../pages/Dashboard/add-panel/AddPanel";
 import Payment from "../pages/Dashboard/add-payment/Payment";
 import PaymentHistory from "../pages/Dashboard/payment-history/PaymentHistory";
 import TestPackage from "../pages/Dashboard/test-package/TestPackage";
+import Interpertation from "../pages/Dashboard/interpertation/interpertation";
 import RateList from "../pages/Dashboard/rate-list/RateList";
 import CashAudit from "../pages/Accounts/cash-audit/CashAudit";
 import CashReceiving from "../pages/Accounts/cash-receive/CashReceiving";
@@ -105,6 +106,7 @@ function AppRoutes() {
         <Route path="/add-payment" element={<Payment />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/test-package" element={<TestPackage />} />
+         <Route path="/interpertation" element={<Interpertation />} />
         <Route path="/rate-list" element={<RateList />} />
         <Route path="/cash-audit" element={<CashAudit />} />
         <Route path="/due-patient-list" element={<PatientList />} />
@@ -135,6 +137,7 @@ function AppRoutes() {
         <Route path="/voucher" element={<Voucher />} />
         <Route path="/ledger" element={<Ledger />} />
         <Route path="/parameter" element={<Parameter />} />
+        <Route path="/patient-entry" element={<PatientEntry />} />
 
       </Route>
     </Routes>

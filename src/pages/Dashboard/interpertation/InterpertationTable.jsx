@@ -1,6 +1,12 @@
 import { ThreeCircles } from "react-loader-spinner";
 
-export default function TestConsultantTable({ consultantList, onDelete, onEdit, loading }) {
+export default function InterpertationTable({ interpertationList, onDelete, onEdit, loading }) {
+    function stripHtml(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    }
+
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -10,12 +16,10 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }} >
                                     <th scope="col">Sr.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">%Age</th>
-                                    <th scope="col">UserName</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Password</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Heading</th>
+                                    <th scope="col">Detail</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -42,29 +46,28 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                                         </td>
                                     </tr>
                                 </tbody>
-                            ) : consultantList?.length > 0 ? (
+                            ) : interpertationList?.length > 0 ? (
                                 <tbody >
-                                    {consultantList.map((consultant, index) => (
-                                        <tr key={consultant.users_id}>
+                                    {interpertationList.map((interpertation, index) => (
+                                        <tr key={interpertation.interpretations_id}>
                                             <td>{index + 1}</td>
-                                            <td>{consultant.name}</td>
-                                            <td>{consultant.contact_no}</td>
-                                            <td>{consultant.age}</td>
-                                            <td>{consultant.user_name}</td>
-                                            <td>{consultant.role}</td>
-                                           <td>{consultant.password}</td>
+                                            <td>{interpertation.type}</td>
+                                            <td>{interpertation.code}</td>
+                                            <td>{interpertation.heading}</td>
+                                            <td style={{ textAlign: "left" }}
+                                                dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
                                             <td>
                                                 <div className="d-flex gap-3 align-items-center justify-content-center">
 
                                                     <button
-                                                        onClick={() => onEdit(consultant)}
+                                                        onClick={() => onEdit(interpertation)}
                                                     >
                                                         <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
                                                     </button>
                                                     <button
                                                         onClick={() => {
                                                             if (window.confirm("Are you sure you want to delete this department?")) {
-                                                                onDelete(consultant.id);
+                                                                onDelete(interpertation.id);
                                                             }
                                                         }}
                                                     >
