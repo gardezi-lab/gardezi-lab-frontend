@@ -15,6 +15,7 @@ export default function DepartmentModal({ onSave, department, onCancel }) {
       setDepartmentName("");
     }
   }, [department]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
