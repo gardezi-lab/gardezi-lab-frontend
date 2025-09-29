@@ -71,6 +71,11 @@ const menuItems = [
                 href: "/consultant",
             },
             {
+                label: "Parameters",
+                icon: "uil-user-md", // 👨‍⚕️
+                href: "/parameter",
+            },
+            {
                 label: "Collection Center",
                 icon: "uil-map-marker", // 📍
                 href: "/collection-center",
@@ -440,7 +445,7 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
             </li>
         );
     }
-
+// commit by mazhar
     return (
         <li>
             <NavLink
