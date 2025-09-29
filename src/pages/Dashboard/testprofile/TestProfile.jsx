@@ -4,16 +4,94 @@ import Modal from 'react-bootstrap/Modal';
 import TestProfilesModal from "./TestProfilesModal";
 import Button from 'react-bootstrap/Button';
 import TestProfileTable from "./TestProfileTable";
+import httpClient from "../../../services/httpClient";
 
 export default function ProfilesScreen() {
+
     const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [selectedTestProfile, setSelectedTestProfile] = useState(null)
+    const [loading, setLoading] = useState(false);
+    const [TestProfileList, setTestProfileList] = useState([])
+    const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
 
+    const getTestProfileData = async () => {
+        console.log("testa and profile",)
+        setLoading(true);
+        try {
+            const data = await httpClient.get("/test_profile/");
+            console.log("response data:", data)
+            if (data) {
+                setTestProfileList(data);
+            }
+            console.log("TestProfile Data:", data);
+        } catch (err) {
+            console.error("Fetch TestProfile Error:", err);
+        } finally {
+            setLoading(false); // ✅ stop loader
+        }
+    };
+
+    const handleSave = async (formData) => {
+        setLoading(true);
+        console.log("formData:", formData)
+        try {
+            const obj = {
+                test_name: formData.test_name,
+                test_code: formData.test_code,
+                sample_required: formData.sample_required,
+                select_header: formData.select_header,
+                fee: formData.fee,
+                delivery_time: formData.delivery_time,
+                serology_elisa: formData.serology_elisa,
+                interpretation: formData.interpretation,
+            };
+
+            if (isCurrentEditModalOpen && selectedTestProfile) {
+                await httpClient.put(
+                    `/test_profile/${selectedTestProfile.id}`,
+                    obj
+                );
+            } else {
+                await httpClient.post("/test_profile", obj);
+            }
+
+            getTestProfileData();
+        } catch (err) {
+            console.error("Save TestProfile Error:", err);
+        } finally {
+            setLoading(false);
+            handleClose();
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await httpClient.delete(`/test_profile/${id}`);
+            getTestProfileData();
+        } catch (err) {
+            console.error("Delete TestPrfile Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = (TestProfile) => {
+        setSelectedTestProfile(TestProfile);
+        setIsCurrentEditModalOpen(true);
+        handleShow();
+    };
+
+    const handleClose = () => {
+        setShow(false);
+        setSelectedTestProfile(null);   // ✅ reset selected profile
+        setIsCurrentEditModalOpen(false); // ✅ reset edit mode
+    };
 
     useEffect(() => {
         feather.replace();
+        getTestProfileData();
     }, []);
 
     return (
@@ -48,7 +126,12 @@ export default function ProfilesScreen() {
             </div>
 
             {/* Table Section */}
-          <TestProfileTable />
+            <TestProfileTable
+                TestProfileList={TestProfileList}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                loading={loading}
+            />
 
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
@@ -84,16 +167,13 @@ export default function ProfilesScreen() {
                     <Modal.Title className="color-white fw-bold">Test Name or Profile Name</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <TestProfilesModal />
+                    <TestProfilesModal
+                        onSave={handleSave}
+                        TestProfile={selectedTestProfile}
+                        onCancel={handleClose}
+
+                    />
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className="secondary"  onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary"  className="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </div>
     );

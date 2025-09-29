@@ -1,21 +1,96 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import TestPanelModal from "./TestPanelModal";
 import Button from 'react-bootstrap/Button';
 import TestPanelTable from "./TestPanelTable";
-
+import httpClient from "../../../services/httpClient";
 
 export default function AddPanel() {
 
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [selectedCompany, setSlectedCompany] = useState(null)
+    const [companyList, setCompanyList] = useState([])
+    const [loading, setLoading] = useState(false);
+
+    const getCompanyData = async () => {
+        setLoading(true); // ✅ start loader
+        try {
+            const data = await httpClient.get("/companies_panel/");
+            if (data) {
+                setCompanyList(data);
+            }
+            console.log("Company Data:", data);
+        } catch (err) {
+            console.error("Fetch Company Error:", err);
+        } finally {
+            setLoading(false); // ✅ stop loader
+        }
+    };
+
+    const handleSave = async (formData) => {
+        console.log("HANDLE SAVE:", formData);
+        setLoading(true);
+
+        try {
+            const obj = {
+                company_name: formData.company_name,
+                head_name: formData.head_name,
+                contact_no: formData.contact_no,
+                user_name: formData.user_name,
+                age: formData.age
+            };
+            console.log("-> payload prepared:", obj);
+
+            if (selectedCompany) {
+
+                await httpClient.put(`/companies_panel/${selectedCompany.id}`, obj);
+                console.log("Company updated");
+            } else {
+                
+                await httpClient.post("/companies_panel", obj);
+                console.log("Company added");
+            }
+
+            await getCompanyData();
+        } catch (err) {
+            console.error("Save Company Error:", err);
+        } finally {
+            setLoading(false);
+            handleClose();
+            setSlectedCompany(null); 
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await httpClient.delete(`/companies_panel/${id}`);
+            getCompanyData();
+        } catch (err) {
+            console.error("Delete Company Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = (company) => {
+        setSlectedCompany(company);  // ✅ correct function use karo
+        handleShow();
+    };
+
+
+    useEffect(() => {
+        getCompanyData();
+    }, []);
+
+
 
     return (
         <>
 
-            <h5 className="fw-bold page-header">Panel Companies</h5>
+            <h5 className="fw-bold page-header">Companies</h5>
 
             <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
                 {/* Left side title */}
@@ -25,7 +100,7 @@ export default function AddPanel() {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Search profiles..."
+                        placeholder="Search company by name"
                         style={{ width: "220px" }}
                     />
 
@@ -34,12 +109,18 @@ export default function AddPanel() {
                         type="button"
                         onClick={handleShow}
                     >
-                        <i className="fas fa-plus me-2"></i> Add Panel
+                        <i className="fas fa-plus me-2"></i> Add Company
                     </button>
                 </div>
             </div>
 
-            <TestPanelTable />
+            <TestPanelTable
+                companyList={companyList}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                loading={loading}
+
+            />
 
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
@@ -72,19 +153,16 @@ export default function AddPanel() {
 
             <Modal show={show} onHide={handleClose} className="modal-md">
                 <Modal.Header className="primary" >
-                    <Modal.Title className="color-white fw-bold">Panel Companies</Modal.Title>
+                    <Modal.Title className="color-white fw-bold">Add Companies</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <TestPanelModal />
+                    <TestPanelModal
+                        onSave={handleSave}
+                        company={selectedCompany}
+                        onCancel={handleClose}
+                    />
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" className="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
+
             </Modal>
         </>
     )

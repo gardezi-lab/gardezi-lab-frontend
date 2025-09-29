@@ -1,189 +1,171 @@
+import { useEffect, useState } from "react";
 import feather from "feather-icons";
-// import Modal from "../../../../components/modal/Modal";
-import { useEffect } from "react";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import httpClient from "../../../services/httpClient";
+import TestPackageTable from "./TestPackageTable";
+import TestPackageModal from "./TestPackageModal";
 
 export default function TestPackage() {
+
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(true);
+    const [selectedTestPackage, setSelectedTestPackage] = useState(null)
+    const [loading, setLoading] = useState(false);
+    const [TestPackageList, setTestPackageList] = useState([])
+    const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+
+    const getTestPackageData = async () => {
+        setLoading(true);
+        try {
+            const data = await httpClient.get("/test-packages");
+            console.log("response data:", data)
+            if (data) {
+                setTestPackageList(data);
+            }
+            console.log("TestPackage Data:", data);
+        } catch (err) {
+            console.error("Fetch TestPackage Error:", err);
+        } finally {
+            setLoading(false); // ✅ stop loader
+        }
+    };
+
+    const handleSave = async (formData) => {
+        setLoading(true);
+       
+        try {
+            const obj = {
+                name: formData.name,
+                price: formData.price,
+                selected_test: formData.selected_test
+            };
+
+            if (isCurrentEditModalOpen && selectedTestPackage) {
+                await httpClient.put(
+                    `/test-packages/${selectedTestPackage.id}`,
+                    obj
+                );
+            } else {
+                await httpClient.post("/test-packages", obj);
+            }
+             console.log("formData:", obj)
+
+            getTestPackageData();
+        } catch (err) {
+            console.error("Save TestPackage Error:", err);
+        } finally {
+            setLoading(false);
+            handleClose();
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await httpClient.delete(`/test-packages/${id}`);
+            getTestPackageData();
+        } catch (err) {
+            console.error("Delete Test Package Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = (TestPackage) => {
+        setSelectedTestPackage(TestPackage);
+        setIsCurrentEditModalOpen(true);
+        handleShow();
+    };
+
+    const handleClose = () => {
+        setShow(false);
+        setSelectedTestPackage(null);   // ✅ reset selected profile
+        setIsCurrentEditModalOpen(false); // ✅ reset edit mode
+    };
+
     useEffect(() => {
         feather.replace();
+        getTestPackageData();
     }, []);
 
     return (
-        <>
-            <div className="card  px-0">
-                <div
-                    className="card-header d-flex justify-content-between align-items-center"
-                    style={{
-                        backgroundColor: "#f39c12",
-                        color: "#fff",
-                        padding: "2rem 1rem", // adjust top/bottom padding
-                        height: "48px"          // optional fixed height
-                    }}
-                >
-                    <h5 className="card-title mb-0" style={{ color: "#fff" }}>
-                       Test Packages
-                    </h5>
-                    <button className="btn btn-success btn-sm"
+        <div>
+            <h5 className="fw-bold page-header">Test Packages</h5>
+
+            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+                {/* Left side title */}
+
+                {/* Right side actions */}
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search profiles..."
+                        style={{ width: "220px" }}
+                    />
+
+                    <button
+                        className="btn btn-success primary"
                         type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addDealModal"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"><span className="fas fa-plus me-2" />
-                        Add Test Packages</button>
-                </div>
-
-                <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
-                        <button
-                            className="btn"
-                            style={{ backgroundColor: "#6c757d", color: "#fff" }}
-                        >
-                            Excel
-                        </button>
-
-                        <div className="d-flex align-items-center">
-                            <label
-                                className="form-label me-2 mb-0"
-                                htmlFor="inputPassword"
-                                style={{ whiteSpace: "nowrap" }}
-                            >
-                                Search:
-                            </label>
-                            <input
-                                className="form-control"
-                                id="inputPassword"
-                                type="password"
-                                style={{ width: "200px" }}
-                            />
-                        </div>
-                    </div>
-
-                    <div
-                        id="tableExample"
-                        data-list='{"valueNames":["name","email","age"],"page":5,"pagination":true}'
+                        onClick={handleShow}
                     >
-                        <div className="table-responsive mt-4">
-                            <table className="table table-lg fs-9 mb-0 w-100">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            className="ps-3"
-                                            data-sort="sr"
-                                        >
-                                            Sr.
-                                        </th>
-                                        <th className="sort border-top border-translucent" data-sort="test">
-                                            Package Name
-                                        </th>
-                                        <th className="sort border-top border-translucent" data-sort="fee">
-                                            Fees
-                                        </th>
-                                      
-                                        <th className="sort border-top border-translucent" data-sort="view">
-                                            Delete
-                                        </th>
-                                          <th className="sort border-top border-translucent" data-sort="view">
-                                            View/Edit Test
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="list">
-                                    <tr>
-                                        <td className="align-middle ps-3 name">1</td>
-                                        <td className="align-middle">Surgery Fitness</td>
-                                        <td className="align-middle">3700 Rs</td>                                      
-                                        <td className="align-middle">
-                                            <button className="btn btn-danger">Delete Package</button>
-                                        </td>
-                                        <td className="align-middle ">
-                                            <div className="btn-reveal-trigger">
-                                                <button
-                                                    className="btn d-flex align-items-center justify-content-center"
-                                                    style={{
-                                                        backgroundColor: "#28a745",
-                                                        color: "#fff",
-                                                        width: "40px",
-                                                        height: "40px",
-                                                        borderRadius: "5px",
-                                                    }}
-                                                >
-                                                    <span className="fas fa-search me-2" size={25} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="d-flex flex-between-center pt-3">
-                            <div className="pagination d-none">
-                                <li className="active">
-                                    <button className="page" type="button" data-i={1} data-page={5}>
-                                        1
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="page" type="button" data-i={2} data-page={5}>
-                                        2
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="page" type="button" data-i={3} data-page={5}>
-                                        3
-                                    </button>
-                                </li>
-                                <li className="disabled">
-                                    <button className="page" type="button">
-                                        ...
-                                    </button>
-                                </li>
-                            </div>
-                            <p className="mb-0 fs-9">
-                                <span
-                                    className="d-none d-sm-inline-block"
-                                    data-list-info="data-list-info"
-                                >
-                                    1 to 5 <span className="text-body-tertiary"> Items of </span>43
-                                </span>
-                                <span className="d-none d-sm-inline-block"> — </span>
-
-                            </p>
-                            <div className="d-flex">
-                                <nav aria-label="Page navigation example">
-                                    <ul className="pagination">
-                                        <li className="page-item">
-                                            <a className="page-link" href="#">
-                                                Previous
-                                            </a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link" href="#">
-                                                1
-                                            </a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link" href="#">
-                                                2
-                                            </a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link" href="#">
-                                                3
-                                            </a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link" href="#">
-                                                Next
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-
-                            </div>
-                        </div>
-                    </div>
+                        <i className="fas fa-plus me-2"></i> Add Package
+                    </button>
                 </div>
             </div>
-        </>
-    )
+
+            {/* Table Section */}
+            <TestPackageTable
+                TestPackageList={TestPackageList}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                loading={loading}
+            />
+
+
+            {/* Footer below table */}
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                {/* Left side export */}
+                <button className="btn btn-secondary primary">
+                    <i className="fas fa-file-excel me-2"></i> Export to Excel
+                </button>
+
+                {/* Right side pagination */}
+                <nav>
+                    <ul className="pagination mb-0 ">
+                        <li className="page-item disabled">
+                            <button className="page-link ">Previous</button>
+                        </li>
+                        <li className="page-item active ">
+                            <button className="page-link primary">1</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">2</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">3</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <Modal show={show} onHide={handleClose} className="modal sm">
+                <Modal.Header className="primary" >
+                    <Modal.Title className="color-white fw-bold">Add Package</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <TestPackageModal
+                        onSave={handleSave}
+                        TestPackage={selectedTestPackage}
+                        onCancel={handleClose}
+
+                    />
+                </Modal.Body>
+            </Modal>
+        </div>
+    );
 }
