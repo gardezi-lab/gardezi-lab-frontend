@@ -1,31 +1,68 @@
 import React, { useState } from "react";
+import httpClient from "../../services/httpClient";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-    const [email, setEmail] = useState("");
+    const [user_name, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Email:", email, "Password:", password);
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await httpClient.post("/users/login", {
+                user_name,
+                password,
+            });
+            // console.log("Full Response:", response);
+            // agar response ke andar data hai
+            const resData = response.data ? response.data : response;
+            if (resData.message === "Login successful") {
+                localStorage.setItem("user", JSON.stringify(resData.user));
+                // alert("Login successful ✅");
+                navigate("/"); // Dashboard khulega
+            } else {
+                setError(resData.error || "Invalid username or password");
+            }
+        } catch (err) {
+            console.error("Login Error:", err);
+            setError("Something went wrong! Please try again.");
+        }
+
+        finally {
+            setLoading(false);
+        }
     };
+
+
 
     return (
         <div className="d-flex align-items-center justify-content-center vh-100">
-            <div className="login shadow p-4" style={{ width: "50%" }}>
+            <div className="login shadow p-4" style={{ width: "400px" }}>
                 <form onSubmit={handleSubmit}>
+                    <h3 className="mb-3 text-center">Login</h3>
+
+                    {error && <p className="text-danger">{error}</p>}
+
                     <div className="mb-4">
                         <label className="form-label text-black">Username:</label>
                         <input
-                            type="email"
+                            type="text"
                             className="form-control"
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter username"
+                            value={user_name}
+                            onChange={(e) => setUserName(e.target.value)}
                             required
                         />
                     </div>
 
-                    <div className="mb-3 ">
+                    <div className="mb-3">
                         <label className="form-label text-black">Password:</label>
                         <input
                             type="password"
@@ -37,8 +74,8 @@ export default function Login() {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-success w-20 d-block mx-auto">
-                        Login
+                    <button type="submit" className="btn btn-success w-100" disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
             </div>

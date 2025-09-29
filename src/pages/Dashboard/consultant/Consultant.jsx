@@ -22,7 +22,9 @@ export default function Consultant() {
         setLoading(true); // ✅ start loader
         try {
             const data = await httpClient.get("/users/");
+            console.log(data);
             if (data) {
+                
                 setConsultantList(data);
             }
             console.log("Consultant Data:", data);
@@ -42,6 +44,7 @@ export default function Consultant() {
                 contact_no: formData.consultantContact,
                 role: formData.role,
                 age: Number(formData.consultantAge),
+                //  password: autopassword,
             };
 
             if (isCurrentEditModalOpen && selectedConsultant) {

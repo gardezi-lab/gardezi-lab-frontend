@@ -52,7 +52,7 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                                             <td>{consultant.age}</td>
                                             <td>{consultant.user_name}</td>
                                             <td>{consultant.role}</td>
-                                           <td>{"********"}</td>
+                                           <td>{consultant.plain_password}</td>
                                             <td>
                                                 <div className="d-flex gap-3 align-items-center justify-content-center">
 
