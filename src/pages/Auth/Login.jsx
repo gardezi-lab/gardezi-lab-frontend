@@ -16,7 +16,7 @@ export default function Login() {
         setError("");
 
         try {
-            const response = await httpClient.post("/users/login", {
+            const response = await httpClient.post("/auth/login", {
                 user_name,
                 password,
             });
