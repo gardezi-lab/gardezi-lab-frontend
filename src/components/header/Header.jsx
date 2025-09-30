@@ -16,7 +16,7 @@ export default function Header() {
 
     return (
         <nav
-            className="navbar navbar-top fixed-top navbar-slim justify-content-between navbar-expand-lg py-2 primary"
+            className="navbar navbar-top fixed-top navbar-slim justify-content-between navbar-expand-lg primary"
             id="navbarComboSlim"
             data-navbar-top="combo"
             data-move-target="#navbarVerticalNav"
