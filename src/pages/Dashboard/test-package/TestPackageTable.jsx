@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import { ThreeCircles } from "react-loader-spinner";
 
-export default function TestProfileTable({ TestProfileList, onDelete, onEdit, loading }) {
+export default function TestPackageTable({ TestPackageList, onDelete, onEdit, loading }) {
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -11,10 +11,9 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                                     <th scope="col">Sr.</th>
-                                    <th scope="col">Test</th>
-                                    <th scope="col">Header</th>
+                                    <th scope="col">Name</th>
                                     <th scope="col">Fees</th>
-                                    <th scope="col">Delivery Date</th>
+                                    <th scope="col"> Test</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -42,15 +41,14 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                         </td>
                                     </tr>
                                 </tbody>
-                            ) : TestProfileList?.length > 0 ? (
+                            ) : TestPackageList?.length > 0 ? (
                                 <tbody>
-                                    {TestProfileList.map((test, index) => (
+                                      {TestPackageList.map((test, index) => (
                                         <tr key={test.id || index}>
                                             <td>{index + 1}</td>
-                                            <td>{test.test_name}</td>
-                                            <td>{test.select_header}</td>
-                                            <td>{test.fee}</td>
-                                            <td>{test.delivery_time}</td>
+                                            <td>{test.name}</td>
+                                            <td>{test.price}</td>
+                                            <td>{test.selected_test}</td>
                                             <td>
                                                 <div className="d-flex gap-3 align-items-center justify-content-center">
                                                     <button onClick={() => onEdit(test)}>
@@ -72,7 +70,7 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                 <tbody>
                                     <tr>
                                         <td colSpan="6" className="text-center">
-                                            No Test Profiles Found
+                                            No  packages Found
                                         </td>
                                     </tr>
                                 </tbody>
