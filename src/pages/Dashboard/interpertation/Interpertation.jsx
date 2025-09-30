@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import httpClient from "../../../services/httpClient";
-import TestConsultantTable from "./TestConsultantTable";
-import TestConsultantModal from "./TestConsultantModal";
+import InterpertationTable from "./InterpertationTable";
+import InterpertationModal from "./InterpertationModal";
 
-export default function Consultant() {
-    const [showConsultantModal, setShowConsultantModal] = useState(false);
-    const [consultantList, setConsultantList] = useState([]);
+export default function Interpertation() {
+    const [showInterpertationModal, setShowgetInterpertationDataModal] = useState(false);
+    const [interpertationList, setInterpertationList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
-    const [selectedConsultant, setSelectedConsultant] = useState(null);
+    const [selectedInterpertation, setSelectedInterpertation] = useState(null);
     const [loading, setLoading] = useState(false); // ✅ new state for loader
 
     const handleClose = () => {
-        setShowConsultantModal(false);
+        setShowgetInterpertationDataModal(false);
         setIsCurrentEditModalOpen(false);
-        setSelectedConsultant(null);
+        setSelectedInterpertation(null);
     };
-    const handleShow = () => setShowConsultantModal(true);
+    const handleShow = () => setShowgetInterpertationDataModal(true);
 
-    const getConsultantData = async () => {
+    const getInterpertationData = async () => {
         setLoading(true); // ✅ start loader
         try {
-            const data = await httpClient.get("/users/");
+            const data = await httpClient.get("/interpretations");
             console.log(data);
             if (data) {
-                
-                setConsultantList(data);
+
+                setInterpertationList(data);
             }
             console.log("Consultant Data:", data);
         } catch (err) {
@@ -39,24 +39,22 @@ export default function Consultant() {
         setLoading(true);
         try {
             const obj = {
-                name: formData.consultantName,
-                user_name: formData.consultantUserName,
-                contact_no: formData.consultantContact,
-                role: formData.role,
-                age: Number(formData.consultantAge),
-                //  password: autopassword,
+                type: formData.interpertationType,
+                code: formData.interpertationCode,
+                heading: formData.interpertationHeading,
+                detail: formData.interpertationDetail,
             };
 
-            if (isCurrentEditModalOpen && selectedConsultant) {
+            if (isCurrentEditModalOpen && selectedInterpertation) {
                 await httpClient.put(
-                    `/users/${selectedConsultant.id}`,
+                    `/interpretations/${selectedInterpertation.id}`,
                     obj
                 );
             } else {
-                await httpClient.post("/users/", obj);
+                await httpClient.post("/interpretations/", obj);
             }
 
-            getConsultantData();
+            getInterpertationData();
         } catch (err) {
             console.error("Save Consultant Error:", err);
         } finally {
@@ -68,8 +66,8 @@ export default function Consultant() {
     const handleDelete = async (id) => {
         setLoading(true);
         try {
-            await httpClient.delete(`/users/${id}`);
-            getConsultantData();
+            await httpClient.delete(`/interpretations/${id}`);
+            getInterpertationData();
         } catch (err) {
             console.error("Delete Consultant Error:", err);
         } finally {
@@ -78,18 +76,18 @@ export default function Consultant() {
     };
 
     const handleEdit = (dep) => {
-        setSelectedConsultant(dep);
+        setSelectedInterpertation(dep);
         setIsCurrentEditModalOpen(true);
         handleShow();
     };
 
     useEffect(() => {
-        getConsultantData();
+        getInterpertationData();
     }, []);
 
     return (
         <>
-            <h5 className="fw-bold page-header">Users</h5>
+            <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
             <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
                 {/* Left side title */}
 
@@ -107,13 +105,13 @@ export default function Consultant() {
                         type="button"
                         onClick={handleShow}
                     >
-                        <i className="fas fa-plus me-2"></i> Add Consultant
+                        <i className="fas fa-plus me-2"></i> Add Interpertation
                     </button>
                 </div>
             </div>
 
-            <TestConsultantTable
-                consultantList={consultantList}
+            <InterpertationTable
+                interpertationList={interpertationList}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 loading={loading} />
@@ -147,16 +145,16 @@ export default function Consultant() {
                 </nav>
             </div>
 
-            <Modal show={showConsultantModal} onHide={handleClose} className="modal sm">
+            <Modal show={showInterpertationModal} onHide={handleClose} className="modal-md">
                 <Modal.Header className="primary" >
                     <Modal.Title className="color-white fw-bold">
-                        {isCurrentEditModalOpen ? "Edit Consultant" : "Add Consultant"}
+                        {isCurrentEditModalOpen ? "Edit Interpertation" : "Add Interpertation"}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <TestConsultantModal
+                    <InterpertationModal
                         onSave={handleSave}
-                        consultant={selectedConsultant}
+                        interpertation={selectedInterpertation}
                         onCancel={handleClose} />
                 </Modal.Body>
             </Modal>

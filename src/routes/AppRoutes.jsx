@@ -19,6 +19,7 @@ import AddPanel from "../pages/Dashboard/add-panel/AddPanel";
 import Payment from "../pages/Dashboard/add-payment/Payment";
 import PaymentHistory from "../pages/Dashboard/payment-history/PaymentHistory";
 import TestPackage from "../pages/Dashboard/test-package/TestPackage";
+import Interpertation from "../pages/Dashboard/interpertation/interpertation";
 import RateList from "../pages/Dashboard/rate-list/RateList";
 import CashAudit from "../pages/Accounts/cash-audit/CashAudit";
 import CashReceiving from "../pages/Accounts/cash-receive/CashReceiving";

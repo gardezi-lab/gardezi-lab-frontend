@@ -8,9 +8,9 @@ const menuItems = [
         iconClass: "uil-user",
         dropdown: [
             {
-                label: "Patients List",
+                label: "Patients Entry",
                 icon: "users",
-                href: "/patient-list",
+                href: "/patient-entry",
             },
             {
                 label: "Invoices",
@@ -134,6 +134,11 @@ const menuItems = [
                 label: "Test Package",
                 icon: "uil-box", // 📦
                 href: "/test-package",
+            },
+            {
+                label: "Interpertation ",
+                icon: "uil-receipt", // 🧾
+                href: "/interpertation ",
             },
             {
                 label: "Rate List",

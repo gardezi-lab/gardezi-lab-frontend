@@ -69,8 +69,6 @@ export default function ParameterModal({ onSave, onCancel, Parameter }) {
                                 />
                             </Form.Group>
                         </Col>
-                    </Row>
-                    <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Sub Heading</Form.Label>
@@ -84,9 +82,7 @@ export default function ParameterModal({ onSave, onCancel, Parameter }) {
                                 />
                             </Form.Group>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col>
+                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Input type</Form.Label>
                                 <Form.Select aria-label="Default select example"
