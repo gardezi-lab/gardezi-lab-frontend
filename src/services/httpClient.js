@@ -12,7 +12,7 @@ const httpClient = {
       return response.data;
     } catch (error) {
       console.error("GET Error:", error);
-      throw error;
+      throw error;  
     }
   },
 

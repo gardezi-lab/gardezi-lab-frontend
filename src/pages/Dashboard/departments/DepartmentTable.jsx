@@ -54,7 +54,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                           onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
                         <FaRegTrashCan onClick={() => {
                           if (window.confirm("Are you sure you want to delete this department?")) {
-                            onDelete(dept.department_id);
+                            onDelete(dept.id);
                           }
                         }} 
                          style={{ fontSize: "22px", cursor: "pointer", color:'red' }}
