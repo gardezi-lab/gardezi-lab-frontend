@@ -47,7 +47,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                 {departmentList.map((dept, index) => (
                   <tr key={dept.department_id}>
                     <td>{index + 1}</td>
-                    <td>{dept.department}</td>
+                    <td>{dept.department_name}</td>
                     <td>
                       <div className="d-flex gap-2 align-items-center justify-content-center">
                           <FaPenToSquare  
