@@ -1,8 +1,6 @@
 import { ThreeCircles } from "react-loader-spinner";
-import { FaBeer } from "react-icons/fa";
-import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
-export default function DepartmentTable({ departmentList, onDelete, onEdit, loading }) {
+export default function CreateAccountTable({ departmentList, onDelete, onEdit, loading }) {
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body p-0">
@@ -10,7 +8,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
           className="table-responsive"
           style={{ maxHeight: "62vh", overflowY: "scroll" }}
         >
-          <table className="table table-bordered" style={{ minHeight: '150px' }} >
+          <table className="table table-bordered">
             <thead>
               <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                 <th scope="col">Sr.</th>
@@ -20,7 +18,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
             </thead>
 
             {loading ? (
-              <tbody >
+              <tbody>
                 <tr>
                   <td colSpan="3">
                     <div
@@ -47,18 +45,24 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                 {departmentList.map((dept, index) => (
                   <tr key={dept.department_id}>
                     <td>{index + 1}</td>
-                    <td>{dept.department_name}</td>
+                    <td>{dept.head_code}</td>
                     <td>
-                      <div className="d-flex gap-2 align-items-center justify-content-center">
-                          <FaPenToSquare  
-                          onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                        <FaRegTrashCan onClick={() => {
-                          if (window.confirm("Are you sure you want to delete this department?")) {
-                            onDelete(dept.department_id);
-                          }
-                        }} 
-                         style={{ fontSize: "22px", cursor: "pointer", color:'red' }}
-                        />
+                      <div className="d-flex gap-3 align-items-center justify-content-center">
+
+                        <button
+                          onClick={() => onEdit(dept)}
+                        >
+                          <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this department?")) {
+                              onDelete(dept.department_id);
+                            }
+                          }}
+                        >
+                          <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
+                        </button>
                       </div>
                     </td>
                   </tr>
