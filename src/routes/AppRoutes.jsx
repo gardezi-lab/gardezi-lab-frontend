@@ -89,7 +89,7 @@ function AppRoutes() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
       </Route>
-      <Route element={<RequireAuth />}>
+      {/* <Route element={<RequireAuth />}> */}
         <Route element={<DashboardLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/departments" element={<Departments />} />
@@ -138,7 +138,7 @@ function AppRoutes() {
           <Route path="/ledger" element={<Ledger />} />
           <Route path="/parameter" element={<Parameter />} />
 
-        </Route>
+        {/* </Route> */}
       </Route >
       <Route path="*" element={<h1>404 - Not Found</h1>} />
     </Routes>

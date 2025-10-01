@@ -20,15 +20,15 @@ export default function Login() {
                 user_name,
                 password,
             });
-            // console.log("Full Response:", response);
+            console.log("Full Response:", response);
             // agar response ke andar data hai
-            const resData = response.data ? response.data : response;
-            if (resData.message === "Login successful") {
-                localStorage.setItem("user", JSON.stringify(resData.user));
+            // const resData = response.data ? response.data : response;
+            if (response.message === "Login successful") {
+                localStorage.setItem("user", JSON.stringify(response.user));
                 // alert("Login successful ✅");
                 navigate("/"); // Dashboard khulega
             } else {
-                setError(resData.error || "Invalid username or password");
+                setError(response.error || "Invalid username or password");
             }
         } catch (err) {
             console.error("Login Error:", err);
