@@ -1,194 +1,144 @@
-import React from 'react'
-import Pagination from '../../Dashboard/consultant/Pagination'
+import { useEffect, useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import CreateAccountTable from "./CreateAccountTable";
+import CreateAccountModal from "./CreateAccountModal";
+import httpClient from "../../../services/httpClient";
+import { ThreeCircles } from "react-loader-spinner";
 
 export default function CreateAccount() {
-    return (
-        <>
-            <div className="card  px-0">
-                <div
-                    className="card-header d-flex justify-content-between align-items-center"
-                    style={{
-                        backgroundColor: "#f39c12",
-                        color: "#fff",
-                        padding: "2rem 1rem", // adjust top/bottom padding
-                        height: "48px"          // optional fixed height
-                    }}
-                >
-                    <h5 className="card-title mb-0" style={{ color: "#fff" }}>
-                        CREATE ACCOUNTS
-                    </h5>
-                </div>
+  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
+  const [departmentList, setDepartmentList] = useState([]);
+  const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [loading, setLoading] = useState(false); // ✅ new state for loader
+
+  const handleClose = () => {
+    setShowDepartmentModal(false);
+    setIsCurrentEditModalOpen(false);
+    setSelectedDepartment(null);
+  };
+  const handleShow = () => setShowDepartmentModal(true);
+
+  const getDepartmentData = async () => {
+    setLoading(true); // ✅ start loader
+    try {
+      const data = await httpClient.get("/account");
+      if (data) {
+        setDepartmentList(data);
+      }
+      console.log("Department Data:", data);
+    } catch (err) {
+      console.error("Fetch Departments Error:", err);
+    } finally {
+      setLoading(false); // ✅ stop loader
+    }
+  };
+
+  const handleSave = async (formData) => {
+    setLoading(true);
+    try {
+      const obj = {
+        department_name: formData.departmentName,
+      };
+
+      if (isCurrentEditModalOpen && selectedDepartment) {
+        await httpClient.put(
+          `/department/${selectedDepartment.department_id}`,
+          obj
+        );
+      } else {
+        await httpClient.post("/department", obj);
+      }
+
+      getDepartmentData();
+    } catch (err) {
+      console.error("Save Department Error:", err);
+    } finally {
+      setLoading(false);
+      handleClose();
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      await httpClient.delete(`/department/${id}`);
+      getDepartmentData();
+    } catch (err) {
+      console.error("Delete Department Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (dep) => {
+    setSelectedDepartment(dep);
+    setIsCurrentEditModalOpen(true);
+    handleShow();
+  };
+
+  useEffect(() => {
+    getDepartmentData();
+  }, []);
+
+  return (
+    <div>
+      <h5 className="fw-bold page-header">Department</h5>
+
+      {/* ✅ Spinner show only when loading is true */}
 
 
-                <div className="card-body">
-                    <div className="row g-1">
-                        <div className="col-md-2">
-                            <div className="mb-2">
-                                <label className="fw-bold mb-2">
-                                    Account Name :
-                                </label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    placeholder="Account Name"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <div className="mb-2">
-                                <label className="fw-bold mb-2">
+      <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+        <div className="d-flex flex-wrap align-items-center gap-2">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search name"
+            style={{ width: "220px" }}
+          />
+          <button
+            className="btn btn-success primary"
+            type="button"
+            onClick={() => {
+              setIsCurrentEditModalOpen(false);
+              handleShow();
+            }}
+          >
+            <i className="fas fa-plus me-2"></i> Add Departments
+          </button>
+        </div>
+      </div>
 
-                                    Account Code :
-                                </label>
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    placeholder="Account Code"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <div className="mb-2">
-                                <label className="fw-bold mb-2">
-                                    Opening Dr :
-                                </label>
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    placeholder="0"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <div className="mb-2">
-                                <label className="fw-bold mb-2">
-                                    Opening Cr :
-                                </label>
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    placeholder="0"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <div className="mb-2">
-                                <label className="fw-bold mb-2">
-                                    Head Group :
-                                </label>
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected="">Select Head</option>
-                                    <option value={1}>Philbatmy</option>
-                                    <option value={2}>lab</option>
-                                </select>
-                            </div>
-                        </div>
+      {/* ✅ Table hide when loading */}
+      {/* {!loading && ( */}
+      <CreateAccountTable
+        departmentList={departmentList}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        loading={loading}
+      />
+      {/* )} */}
 
-                        <div className="col-md-2" style={{ marginTop: '3%' }}>
-                            <button
-                                className="btn btn-success"
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <button className="btn btn-secondary primary">
+          <i className="fas fa-file-excel me-2"></i> Export to Excel
+        </button>
+      </div>
 
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
-                        <button
-                            className="btn"
-                            style={{ backgroundColor: "#6c757d", color: "#fff" }}
-                        >
-                            Excel
-                        </button>
-
-                        <div className="d-flex align-items-center">
-                            <label
-                                className="form-label me-2 mb-0"
-                                htmlFor="inputPassword"
-                                style={{ whiteSpace: "nowrap" }}
-                            >
-                                Search:
-                            </label>
-                            <input
-                                className="form-control"
-                                id="inputPassword"
-                                type="password"
-                                style={{ width: "200px" }}
-                            />
-                        </div>
-                    </div>
-
-                    <div
-                        id="tableExample"
-                        data-list='{"valueNames":["name","email","age"],"page":5,"pagination":true}'
-                    >
-                        <div className="table-responsive mt-4">
-                            <table className="table table-bordered table-lg fs-9 mb-0 w-100">
-                                <thead className='bg-black'>
-                                    <tr>
-                                        <th
-                                            className="ps-3 text-white"
-                                            data-sort="sr"
-                                        >
-                                            Sr.
-                                        </th>
-                                        <th
-                                            className="ps-3 text-white"
-                                            data-sort="sr"
-                                        >
-                                            Name
-                                        </th>
-                                        <th className="sort text-white border-top border-translucent" data-sort="test">
-                                            Code
-                                        </th>
-                                        <th className="sort text-white border-top border-translucent" data-sort="header">
-                                            Head
-                                        </th>
-                                        <th className="sort text-white border-top border-translucent" data-sort="header">
-                                            Edit
-                                        </th>
-                                        <th className="sort text-white border-top border-translucent" data-sort="header">
-                                            Delete
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="list">
-                                    <tr>
-                                        <td className="align-middle ps-3 name">1</td>
-                                        <td className="align-middle ps-3 name">Acid/Tezab</td>
-                                        <td className="align-middle">0</td>
-                                        <td className="align-middle">phil</td>
-                                        <td className="align-middle text-center pe-0">
-                                            <div className="btn-reveal-trigger">
-                                                <button
-                                                    className="btn "
-                                                    style={{ backgroundColor: "#17a2b8", color: "#fff", width: "40px", height: "40px", borderRadius: "5px" }}
-                                                >
-                                                    <div className='d-flex align-items-center justify-content-center'>
-                                                        <span className="fas fa-edit me-2" size={25} /></div>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className="align-middle text-center pe-0">
-                                            <div className="btn-reveal-trigger">
-                                                <button
-                                                    className="btn"
-                                                    style={{ backgroundColor: "#dc3545", color: "#fff", width: "40px", height: "40px", borderRadius: "5px" }}
-                                                >
-                                                    <div className='d-flex align-items-center justify-content-center'>
-                                                        <span className="fas fa-trash-alt me-2" size={25} /></div>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <Pagination />
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+      <Modal show={showDepartmentModal} onHide={handleClose} className="modal sm">
+        <Modal.Header className="primary">
+          <Modal.Title className="color-white fw-bold">
+            {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CreateAccountModal
+            onSave={handleSave}
+            department={selectedDepartment}
+            onCancel={handleClose}
+          />
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
 }

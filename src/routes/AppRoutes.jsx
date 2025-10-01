@@ -81,6 +81,7 @@ import CPVCashSUM from "../pages/Accounts/CPVCashSUM";
 import Setting from "../pages/Accounts/Setting";
 import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
 import Parameter from "../pages/Dashboard/parameter/Parameter";
+import RequireAuth from "./RequireAuth";
 
 function AppRoutes() {
   return (
@@ -88,58 +89,58 @@ function AppRoutes() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
       </Route>
+      {/* <Route element={<RequireAuth />}> */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/departments" element={<Departments />} />
+          <Route path="/testprofile" element={<TestProfile />} />
+          <Route path="/consultant" element={<Consultant />} />
+          <Route path="/collection-center" element={<CollectionCenter />} />
+          <Route path="/cc-rate-list" element={<CCRateList />} />
+          <Route path="/reception-add" element={<AddReception />} />
+          <Route path="/technician-list" element={<AddTechnician />} />
+          <Route path="/pathologist-add" element={<AddPathologist />} />
+          <Route path="/account-department" element={<AccountDepartment />} />
+          <Route path="/manager-add" element={<ManagerAccount />} />
+          <Route path="/add-bank" element={<AddBank />} />
+          <Route path="/add-panel" element={<AddPanel />} />
+          <Route path="/add-payment" element={<Payment />} />
+          <Route path="/payment-history" element={<PaymentHistory />} />
+          <Route path="/test-package" element={<TestPackage />} />
+          <Route path="/rate-list" element={<RateList />} />
+          <Route path="/cash-audit" element={<CashAudit />} />
+          <Route path="/due-patient-list" element={<PatientList />} />
+          <Route path="/cash-receive" element={<CashReceiving />} />
+          <Route path="/cash-receive-report" element={<CashReceiveReport />} />
+          <Route path="/sale-statement" element={<SaleStatement />} />
+          <Route path="/statement-user" element={<StatementUser />} />
+          <Route path="/jazz-cash-report" element={<JazzCashReport />} />
+          <Route path="/discount-report" element={<DiscountReport />} />
+          <Route path="/advanced-receive-report" element={<AdvancedReceiveReport />} />
+          <Route path="/recovery-report" element={<RecoveryReport />} />
+          <Route path="/consultant-payment" element={<ConsultantPayment />} />
+          <Route path="/bank-transaction" element={<BankTransaction />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/expense-report" element={<ExpenseReport />} />
+          <Route path="/stock-dashboard" element={<StockDashboard />} />
+          <Route path="/add-stock" element={<AddStock />} />
+          <Route path="/cc-wise-issue-report" element={<CcWiseIssueReport />} />
+          <Route path="/stock-issue" element={<StockIssue />} />
+          <Route path="/stock-report" element={<StockReport />} />
+          <Route path="/near-expiry" element={<NearExpiry />} />
+          <Route path="/create-account" element={<CreateAccount />} />
+          <Route path="/journal-vocher" element={<JournalVocher />} />
+          <Route path="/c-r-v" element={<CRV />} />
+          <Route path="/c-p-v" element={<CPV />} />
+          <Route path="/b-r-v" element={<BRV />} />
+          <Route path="/b-p-v" element={<BPV />} />
+          <Route path="/voucher" element={<Voucher />} />
+          <Route path="/ledger" element={<Ledger />} />
+          <Route path="/parameter" element={<Parameter />} />
 
-      <Route element={<DashboardLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/departments" element={<Departments />} />
-        <Route path="/testprofile" element={<TestProfile />} />
-        <Route path="/consultant" element={<Consultant />} />
-        <Route path="/collection-center" element={<CollectionCenter />} />
-        <Route path="/cc-rate-list" element={<CCRateList />} />
-        <Route path="/reception-add" element={<AddReception />} />
-        <Route path="/technician-list" element={<AddTechnician />} />
-        <Route path="/pathologist-add" element={<AddPathologist />} />
-        <Route path="/account-department" element={<AccountDepartment />} />
-        <Route path="/manager-add" element={<ManagerAccount />} />
-        <Route path="/add-bank" element={<AddBank />} />
-        <Route path="/add-panel" element={<AddPanel />} />
-        <Route path="/add-payment" element={<Payment />} />
-        <Route path="/payment-history" element={<PaymentHistory />} />
-        <Route path="/test-package" element={<TestPackage />} />
-         <Route path="/interpertation" element={<Interpertation />} />
-        <Route path="/rate-list" element={<RateList />} />
-        <Route path="/cash-audit" element={<CashAudit />} />
-        <Route path="/due-patient-list" element={<PatientList />} />
-        <Route path="/cash-receive" element={<CashReceiving />} />
-        <Route path="/cash-receive-report" element={<CashReceiveReport />} />
-        <Route path="/sale-statement" element={<SaleStatement />} />
-        <Route path="/statement-user" element={<StatementUser />} />
-        <Route path="/jazz-cash-report" element={<JazzCashReport />} />
-        <Route path="/discount-report" element={<DiscountReport />} />
-        <Route path="/advanced-receive-report" element={<AdvancedReceiveReport />} />
-        <Route path="/recovery-report" element={<RecoveryReport />} />
-        <Route path="/consultant-payment" element={<ConsultantPayment />} />
-        <Route path="/bank-transaction" element={<BankTransaction />} />
-        <Route path="/expenses" element={<Expenses />} />
-        <Route path="/expense-report" element={<ExpenseReport />} />
-        <Route path="/stock-dashboard" element={<StockDashboard />} />
-        <Route path="/add-stock" element={<AddStock />} />
-        <Route path="/cc-wise-issue-report" element={<CcWiseIssueReport />} />
-        <Route path="/stock-issue" element={<StockIssue />} />
-        <Route path="/stock-report" element={<StockReport />} />
-        <Route path="/near-expiry" element={<NearExpiry />} />
-        <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/journal-vocher" element={<JournalVocher />} />
-        <Route path="/c-r-v" element={<CRV />} />
-        <Route path="/c-p-v" element={<CPV />} />
-        <Route path="/b-r-v" element={<BRV />} />
-        <Route path="/b-p-v" element={<BPV />} />
-        <Route path="/voucher" element={<Voucher />} />
-        <Route path="/ledger" element={<Ledger />} />
-        <Route path="/parameter" element={<Parameter />} />
-        <Route path="/patient-entry" element={<PatientEntry />} />
-
-      </Route>
+        {/* </Route> */}
+      </Route >
+      <Route path="*" element={<h1>404 - Not Found</h1>} />
     </Routes>
   );
 }
