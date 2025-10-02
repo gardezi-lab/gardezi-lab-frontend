@@ -180,7 +180,7 @@ export default function Departments() {
           </Pagination.Prev>
           {renderPaginationItems()}
           <Pagination.Next
-            
+
             onClick={() => page < totalPages && setPage(page + 1)}
             disabled={page === totalPages}
           >

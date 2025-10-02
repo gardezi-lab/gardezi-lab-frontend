@@ -1,5 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+
 
 export default function TestPackageTable({ TestPackageList, onDelete, onEdit, loading }) {
     return (
@@ -43,24 +45,23 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                 </tbody>
                             ) : TestPackageList?.length > 0 ? (
                                 <tbody>
-                                      {TestPackageList.map((test, index) => (
+                                    {TestPackageList.map((test, index) => (
                                         <tr key={test.id || index}>
                                             <td>{index + 1}</td>
                                             <td>{test.name}</td>
                                             <td>{test.price}</td>
                                             <td>{test.selected_test}</td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                    <button onClick={() => onEdit(test)}>
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            onDelete(test.id);
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(dept.department_id);
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>

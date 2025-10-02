@@ -15,13 +15,24 @@ export default function TestPackage() {
     const [TestPackageList, setTestPackageList] = useState([])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
 
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 5;
+
+    const [search, setSearch] = useState("");
+
+
+
     const getTestPackageData = async () => {
         setLoading(true);
         try {
-            const data = await httpClient.get("/test-packages");
-            console.log("response data:", data)
-            if (data) {
-                setTestPackageList(data);
+            const response = await httpClient.get("/test-packages");
+            console.log("response data:", response)
+            console.log("State TestPackageList:", TestPackageList);
+
+            if (response.data) {
+                setTestPackageList(response.data);
             }
             console.log("TestPackage Data:", data);
         } catch (err) {
@@ -33,7 +44,7 @@ export default function TestPackage() {
 
     const handleSave = async (formData) => {
         setLoading(true);
-       
+
         try {
             const obj = {
                 name: formData.name,
@@ -49,7 +60,7 @@ export default function TestPackage() {
             } else {
                 await httpClient.post("/test-packages", obj);
             }
-             console.log("formData:", obj)
+            console.log("formData:", obj)
 
             getTestPackageData();
         } catch (err) {
@@ -88,6 +99,49 @@ export default function TestPackage() {
         feather.replace();
         getTestPackageData();
     }, []);
+
+
+    const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
+
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
 
     return (
         <div>
@@ -132,25 +186,29 @@ export default function TestPackage() {
                 </button>
 
                 {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+                <div className="d-flex justify-content-between mt-2">
+                    <div>
+                        <button className="btn btn-sm btn-secondary primary">
+                            <i className="fas fa-file-excel me-2"></i> Export to Excel
+                        </button>
+                    </div>
+                    <Pagination>
+                        <Pagination.Prev
+                            onClick={() => page > 1 && setPage(page - 1)}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </Pagination.Prev>
+                        {renderPaginationItems()}
+                        <Pagination.Next
+
+                            onClick={() => page < totalPages && setPage(page + 1)}
+                            disabled={page === totalPages}
+                        >
+                            Next
+                        </Pagination.Next>
+                    </Pagination>
+                </div>
             </div>
 
             <Modal show={show} onHide={handleClose} className="modal sm">
