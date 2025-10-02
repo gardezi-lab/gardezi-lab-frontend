@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseURL = "https://gardezi-lab-backend-1-zlp6.onrender.com/api";
-// const baseURL = "http://127.0.0.1:5000/api"
+// const baseURL = "https://gardezi-lab-backend-1-zlp6.onrender.com/api";
+const baseURL = "http://127.0.0.1:5000/api"
 
 const httpClient = {
   get: async (url, params = {}) => {
@@ -12,7 +12,7 @@ const httpClient = {
       return response.data;
     } catch (error) {
       console.error("GET Error:", error);
-      throw error;
+      throw error;  
     }
   },
 

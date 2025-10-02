@@ -1,226 +1,226 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Modal from 'react-bootstrap/Modal';
+import PatientEntryModal from "./PatientEntryModal";
+import Button from 'react-bootstrap/Button';
+import httpClient from "../../../services/httpClient";
+import PatientEntryTable from "./PatientEntryTable";
+import Form from 'react-bootstrap/Form';
+
 
 export default function PatientEntry() {
-    const [form, setForm] = useState({
-        cell: "",
-        name: "",
-        father: "",
-        age: "",
-        email: "",
-        address: "",
-        remarks: "",
-        company: "",
-        referredBy: "",
-        gender: "",
-        sample: "",
-        packages: "",
-        priority: "",
-        test: "",
-    });
+    const [showPatientEntryModal, setShowPatientEntryModal] = useState(false);
+    const [patiententryList, setPatientEntryList] = useState([]);
+    const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+    const [selectedPatientEntry, setSelectedPatientEntry] = useState(null);
+    const [loading, setLoading] = useState(false); // ✅ new state for loader
 
-    const [filters, setFilters] = useState({
-        company: "",
-        referredBy: "",
-        gender: "",
-        sample: "",
-        packages: "",
-        priority: "",
-        test: "",
-    });
+    const handleClose = () => {
+        setShowPatientEntryModal(false);
+        setIsCurrentEditModalOpen(false);
+        setSelectedPatientEntry(null);
+    };
+    const handleShow = () => setShowPatientEntryModal(true);
 
-    const handleSelect = (field, value) => {
-        setForm({ ...form, [field]: value });
-        setFilters({ ...filters, [field]: "" }); // reset filter
+    const getPatientEntryData = async () => {
+        setLoading(true);
+        try {
+            const data = await httpClient.get("/patient_entry");
+            console.log("PatientEntry Data:", data);
+
+            // Agar data ke andar "data" key hai
+            if (Array.isArray(data)) {
+                setPatientEntryList(data);
+            } else if (Array.isArray(data.data)) {
+                setPatientEntryList(data.data);
+            } else {
+                setPatientEntryList([]);
+            }
+        } catch (err) {
+            console.error("Fetch PatientEntry Error:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+
+    const handleSave = async (formData) => {
+        setLoading(true);
+        try {
+            const obj = {
+                cell: formData.patiententryCell,
+                patient_name: formData.patiententryPatientName,
+                contact_no: formData.patiententryCell,
+                father_hasband_MR: formData.patiententryFatherHasbandMR,
+                age: Number(formData.patiententryAge),
+                company: formData.patiententryCompany,
+                reffered_by: formData.patiententryRefferedBy,
+                gender: formData.patiententryGender,
+                email: formData.patiententryEmail,
+                address: formData.patiententryAddress,
+                package: formData.patiententryPackage,
+                sample: formData.patiententrySample,
+                priority: formData.patiententryPriority,
+                remarks: formData.patiententryRemarks,
+                test: formData.patiententryTest,
+
+            };
+
+            if (isCurrentEditModalOpen && selectedPatientEntry) {
+                await httpClient.put(
+                    `/patient_entry/${selectedPatientEntry.id}`,
+                    obj
+                );
+            } else {
+                await httpClient.post("/patient_entry/", obj);
+            }
+
+            getPatientEntryData();
+        } catch (err) {
+            console.error("Save PatientEntry Error:", err);
+        } finally {
+            setLoading(false);
+            handleClose();
+        }
+    };
+     const handleEdit = (dep) => {
+        setSelectedPatientEntry(dep);
+        setIsCurrentEditModalOpen(true);
+        handleShow();
     };
 
-    const handleFilterChange = (field, value) => {
-        setFilters({ ...filters, [field]: value });
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await httpClient.delete(`/patient_entry/${id}`);
+            getPatientEntryData();
+        } catch (err) {
+            console.error("Delete PatientEntry Error:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const dropdowns = [
-        { field: "company", label: "Company", options: ["ABC Corp", "XYZ Ltd", "Nestle", "Unilever"] },
-        { field: "referredBy", label: "Referred By", options: ["Dr. Ali", "Dr. Khan", "Dr. Ayesha", "Dr. Bilal"] },
-        { field: "gender", label: "Gender", options: ["Male", "Female", "Other"] },
-        { field: "sample", label: "Sample", options: ["Blood", "Urine", "X-Ray", "MRI"] },
-        { field: "packages", label: "Packages", options: ["Basic", "Standard", "Premium", "Corporate"] },
-        { field: "priority", label: "Priority", options: ["Normal", "Urgent", "Emergency"] },
-        { field: "test", label: "Test", options: ["CBC", "LFT", "X-Ray", "MRI", "CT Scan"] },
-    ];
+
+    useEffect(() => {
+        getPatientEntryData();
+    }, []);
+
+
+
 
     return (
-        <div className="container-fluid mt-0 p-0" style={{ paddingRight: "1%" }}>
-            <div className="card shadow-lg border-0 rounded-3" style={{ width: "100%" }}>
-                <div
-                    className="card-header text-white d-flex justify-content-between align-items-center"
-                    style={{ backgroundColor: "rgba(243,156,18,255)" }}
-                >
-                    <h5 className="mb-1 text-white">New Patient</h5>
-                </div>
+        <>
 
-                <div className="card-body">
-                    <div className="row g-3">
-                        {/* First Row - 4 Inputs */}
-                        <div className="col-md-3">
-                            <label className="form-label">Cell#</label>
-                            <input
-                                type="text"
-                                name="cell"
-                                className="form-control"
-                                value={form.cell}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-3">
-                            <label className="form-label">Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                className="form-control"
-                                value={form.name}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-3">
-                            <label className="form-label">Father / Husband / MR#</label>
-                            <input
-                                type="text"
-                                name="father"
-                                className="form-control"
-                                value={form.father}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-3">
-                            <label className="form-label">Age</label>
-                            <input
-                                type="number"
-                                name="age"
-                                className="form-control"
-                                value={form.age}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        {/* Second Row - 4 Inputs */}
-                        <div className="col-md-3">
-                            <label className="form-label">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                className="form-control"
-                                value={form.email}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-3">
-                            <label className="form-label">Address</label>
-                            <input
-                                type="text"
-                                name="address"
-                                className="form-control"
-                                value={form.address}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        {/* Dropdowns (4 per row) */}
-                        {dropdowns.map((drop, i) => (
-                            <div className="col-md-3" key={i}>
-                                <label className="form-label">{drop.label}</label>
-                                <div className="dropdown w-100">
-                                    <button
-                                        className="form-control text-start dropdown-toggle"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        {form[drop.field] || `Select ${drop.label}`}
-                                    </button>
-                                    <ul className="dropdown-menu w-100 p-2">
-                                        {/* Search inside dropdown */}
-                                        <input
-                                            type="text"
-                                            className="form-control mb-2"
-                                            placeholder={`Search ${drop.label}`}
-                                            value={filters[drop.field]}
-                                            onChange={(e) => handleFilterChange(drop.field, e.target.value)}
-                                        />
-                                        {drop.options
-                                            .filter((opt) =>
-                                                opt.toLowerCase().includes(filters[drop.field].toLowerCase())
-                                            )
-                                            .map((opt, j) => (
-                                                <li key={j}>
-                                                    <button
-                                                        className="dropdown-item"
-                                                        type="button"
-                                                        onClick={() => handleSelect(drop.field, opt)}
-                                                    >
-                                                        {opt}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-
-                        {/* Last Row - 2 Inputs */}
-                        <div className="col-md-6">
-                            <label className="form-label">Remarks</label>
-                            <input
-                                name="remarks"
-                                className="form-control"
-                                
-                                value={form.remarks}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Test</label>
-                            <div className="dropdown w-100">
-                                <button
-                                    className="form-control text-start dropdown-toggle"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    {form.test || "Select Test"}
-                                </button>
-                                <ul className="dropdown-menu w-100 p-2">
-                                    <input
-                                        type="text"
-                                        className="form-control mb-2"
-                                        placeholder="Search Test"
-                                        value={filters.test}
-                                        onChange={(e) => handleFilterChange("test", e.target.value)}
-                                    />
-                                    {dropdowns
-                                        .find((d) => d.field === "test")
-                                        .options.filter((opt) =>
-                                            opt.toLowerCase().includes(filters.test.toLowerCase())
-                                        )
-                                        .map((opt, j) => (
-                                            <li key={j}>
-                                                <button
-                                                    className="dropdown-item"
-                                                    type="button"
-                                                    onClick={() => handleSelect("test", opt)}
-                                                >
-                                                    {opt}
-                                                </button>
-                                            </li>
-                                        ))}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+            <h5 className="fw-bold page-header">New Patient</h5>
+            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+                {/* Left side title */}
+                {/* Right side actions */}
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Company </Form.Label>
+                        <Form.Select>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Company </Form.Label>
+                        <Form.Select>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Company </Form.Label>
+                        <Form.Select>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>From :</Form.Label>
+                        <Form.Control type="text" placeholder="" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label> To :</Form.Label>
+                        <Form.Control type="text" placeholder="" />
+                    </Form.Group>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search profiles..."
+                        style={{ width: "220px" }}
+                    />
+                    <Form.Group className="mb-3 mt-3">
+                        <button className="btn btn-success primary">Show</button>
+                    </Form.Group>
+                    <button
+                        className="btn btn-success primary"
+                        type="button"
+                        onClick={handleShow}
+                    >
+                        <i className="fas fa-plus me-2"></i> Add Patient
+                    </button>
                 </div>
             </div>
-        </div>
-    );
+
+            <PatientEntryTable
+                patiententryList={patiententryList}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                loading={loading} />
+
+            {/* Footer below table */}
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                {/* Left side export */}
+                <button className="btn btn-secondary primary">
+                    <i className="fas fa-file-excel me-2"></i> Export to Excel
+                </button>
+
+                {/* Right side pagination */}
+                <nav>
+                    <ul className="pagination mb-0 ">
+                        <li className="page-item disabled">
+                            <button className="page-link ">Previous</button>
+                        </li>
+                        <li className="page-item active ">
+                            <button className="page-link primary">1</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">2</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">3</button>
+                        </li>
+                        <li className="page-item">
+                            <button className="page-link">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <Modal show={showPatientEntryModal} onHide={handleClose} className="modal-xl">
+                <Modal.Header className="primary" >
+                    <Modal.Title className="color-white fw-bold">New Patient</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <PatientEntryModal
+                        onSave={handleSave}
+                        patiententry={selectedPatientEntry}
+                        onCancel={handleClose} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" className="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" className="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
 }

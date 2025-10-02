@@ -10,7 +10,7 @@ export default function CreateAccount() {
   const [departmentList, setDepartmentList] = useState([]);
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [loading, setLoading] = useState(false); // ✅ new state for loader
+  const [loading, setLoading] = useState(false); 
 
   const handleClose = () => {
     setShowDepartmentModal(false);
@@ -35,19 +35,25 @@ export default function CreateAccount() {
   };
 
   const handleSave = async (formData) => {
+    console.log("formData", formData)
     setLoading(true);
     try {
       const obj = {
-        department_name: formData.departmentName,
-      };
+        name_head: formData.headName,
+        head_code: formData.headCode,
+        ob: formData.ob,
+        ob_date: formData.obDate,
+        parent_account: formData.parentAccount
+      }
 
       if (isCurrentEditModalOpen && selectedDepartment) {
+        obj["id"] = selectedDepartment.id
         await httpClient.put(
-          `/department/${selectedDepartment.department_id}`,
+          `/account/${selectedDepartment.id}`,
           obj
         );
       } else {
-        await httpClient.post("/department", obj);
+        await httpClient.post("/account", obj);
       }
 
       getDepartmentData();
@@ -62,7 +68,7 @@ export default function CreateAccount() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await httpClient.delete(`/department/${id}`);
+      await httpClient.delete(`/account/${id}`);
       getDepartmentData();
     } catch (err) {
       console.error("Delete Department Error:", err);
@@ -72,6 +78,7 @@ export default function CreateAccount() {
   };
 
   const handleEdit = (dep) => {
+    console.log("dep",dep)
     setSelectedDepartment(dep);
     setIsCurrentEditModalOpen(true);
     handleShow();
@@ -83,7 +90,7 @@ export default function CreateAccount() {
 
   return (
     <div>
-      <h5 className="fw-bold page-header">Department</h5>
+      <h5 className="fw-bold page-header">Accounts</h5>
 
       {/* ✅ Spinner show only when loading is true */}
 
@@ -104,7 +111,7 @@ export default function CreateAccount() {
               handleShow();
             }}
           >
-            <i className="fas fa-plus me-2"></i> Add Departments
+            <i className="fas fa-plus me-2"></i> Add Account
           </button>
         </div>
       </div>
@@ -128,7 +135,7 @@ export default function CreateAccount() {
       <Modal show={showDepartmentModal} onHide={handleClose} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
-            {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
+            {isCurrentEditModalOpen ? "Edit Account" : "Add Account"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

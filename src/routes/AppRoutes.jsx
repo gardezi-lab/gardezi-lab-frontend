@@ -108,6 +108,7 @@ function AppRoutes() {
           <Route path="/payment-history" element={<PaymentHistory />} />
           <Route path="/test-package" element={<TestPackage />} />
           <Route path="/rate-list" element={<RateList />} />
+          <Route path="/patient-entry" element={<PatientEntry />} />
           <Route path="/cash-audit" element={<CashAudit />} />
           <Route path="/due-patient-list" element={<PatientList />} />
           <Route path="/cash-receive" element={<CashReceiving />} />
