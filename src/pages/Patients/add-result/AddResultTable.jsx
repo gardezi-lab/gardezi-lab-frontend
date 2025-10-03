@@ -1,36 +1,36 @@
 import { ThreeCircles } from "react-loader-spinner";
-import { FaBeer } from "react-icons/fa";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
-export default function DepartmentTable({ departmentList, onDelete, onEdit, loading }) {
+export default function AddResultTable({ AddResultList, onDelete, onEdit, loading }) {
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body p-0">
-        <div
-          className="table-responsive"
-          style={{ maxHeight: "62vh", overflowY: "scroll" }}
-        >
-          <table className="table table-bordered" style={{ minHeight: '150px' }} >
+        <div className="table-responsive" style={{ maxHeight: "62vh", overflowY: "scroll" }}>
+          <table className="table table-bordered" style={{ minHeight: "150px" }}>
             <thead>
               <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                 <th scope="col">Sr.</th>
                 <th scope="col">Name</th>
+                <th scope="col">MR#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Sample</th>
+                <th scope="col">Result</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
 
             {loading ? (
-              <tbody >
+              <tbody>
                 <tr>
-                  <td colSpan="3">
+                  <td colSpan="7">
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "250px", // ✅ adjust karo apne table ke hisaab se
+                        height: "250px",
                       }}
-                    > 
+                    >
                       <ThreeCircles
                         visible={true}
                         height="60"
@@ -42,22 +42,30 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                   </td>
                 </tr>
               </tbody>
-            ) : departmentList?.length > 0 ? (
+            ) : AddResultList?.length > 0 ? (
               <tbody>
-                {departmentList.map((dept, index) => (
-                  <tr key={dept.department_id}>
+                {AddResultList.map((result, index) => (
+                  <tr key={result.id || result.results_id}>
                     <td>{index + 1}</td>
-                    <td>{dept.department_name}</td>
+                    <td>{result.name}</td>
+                    <td>{result.mr}</td>
+                    <td>{result.date}</td>
+                    <td>{result.sample}</td>
+                    <td style={{ textAlign: "left" }}
+                        dangerouslySetInnerHTML={{ __html: result.add_results }}></td>
                     <td>
                       <div className="d-flex gap-2 align-items-center justify-content-center">
                         <FaPenToSquare
-                          onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                        <FaRegTrashCan onClick={() => {
-                          if (window.confirm("Are you sure you want to delete this department?")) {
-                            onDelete(dept.id);
-                          }
-                        }}
-                          style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                          onClick={() => onEdit(result)}
+                          style={{ fontSize: "22px", cursor: "pointer" }}
+                        />
+                        <FaRegTrashCan
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this result?")) {
+                              onDelete(result.id || result.results_id);
+                            }
+                          }}
+                          style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
                         />
                       </div>
                     </td>
@@ -67,8 +75,8 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
             ) : (
               <tbody>
                 <tr>
-                  <td colSpan="3" className="text-center">
-                    No Departments Found
+                  <td colSpan="7" className="text-center">
+                    No Results Found
                   </td>
                 </tr>
               </tbody>

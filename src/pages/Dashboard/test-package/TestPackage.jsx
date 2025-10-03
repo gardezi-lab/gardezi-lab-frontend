@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
 import TestPackageTable from "./TestPackageTable";
 import TestPackageModal from "./TestPackageModal";
+import Pagination from "react-bootstrap/Pagination";
 
 export default function TestPackage() {
 
@@ -15,15 +16,28 @@ export default function TestPackage() {
     const [TestPackageList, setTestPackageList] = useState([])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
 
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 5;
+
+    const [search, setSearch] = useState("");
+
+
+
     const getTestPackageData = async () => {
         setLoading(true);
         try {
-            const data = await httpClient.get("/test-packages");
-            console.log("response data:", data)
-            if (data) {
-                setTestPackageList(data);
+            const url = `/test-packages?search=${encodeURIComponent(
+                search || ""
+            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+
+            const response = await httpClient.get(url);
+
+            if (response.data) {
+                setTestPackageList(response.data || []);
+                setTotalPages(response.totalPages || 1);
             }
-            console.log("TestPackage Data:", data);
         } catch (err) {
             console.error("Fetch TestPackage Error:", err);
         } finally {
@@ -33,7 +47,7 @@ export default function TestPackage() {
 
     const handleSave = async (formData) => {
         setLoading(true);
-       
+
         try {
             const obj = {
                 name: formData.name,
@@ -49,7 +63,7 @@ export default function TestPackage() {
             } else {
                 await httpClient.post("/test-packages", obj);
             }
-             console.log("formData:", obj)
+            console.log("formData:", obj)
 
             getTestPackageData();
         } catch (err) {
@@ -59,6 +73,7 @@ export default function TestPackage() {
             handleClose();
         }
     };
+
 
     const handleDelete = async (id) => {
         setLoading(true);
@@ -80,14 +95,58 @@ export default function TestPackage() {
 
     const handleClose = () => {
         setShow(false);
-        setSelectedTestPackage(null);   // ✅ reset selected profile
-        setIsCurrentEditModalOpen(false); // ✅ reset edit mode
+        setSelectedTestPackage(null);
+        setIsCurrentEditModalOpen(false);
     };
 
     useEffect(() => {
         feather.replace();
         getTestPackageData();
-    }, []);
+    }, [page, search]);
+
+
+    const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
+
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
+
 
     return (
         <div>
@@ -103,6 +162,11 @@ export default function TestPackage() {
                         className="form-control"
                         placeholder="Search profiles..."
                         style={{ width: "220px" }}
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1); // ✅ reset page on search change
+                            setSearch(e.target.value);
+                        }}
                     />
 
                     <button
@@ -123,7 +187,6 @@ export default function TestPackage() {
                 loading={loading}
             />
 
-
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
                 {/* Left side export */}
@@ -132,25 +195,24 @@ export default function TestPackage() {
                 </button>
 
                 {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
+
             </div>
 
             <Modal show={show} onHide={handleClose} className="modal sm">

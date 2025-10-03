@@ -134,7 +134,7 @@ export default function Departments() {
 
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <input
+          <input 
             type="text"
             className="form-control"
             placeholder="Search name"
@@ -180,7 +180,7 @@ export default function Departments() {
           </Pagination.Prev>
           {renderPaginationItems()}
           <Pagination.Next
-            
+
             onClick={() => page < totalPages && setPage(page + 1)}
             disabled={page === totalPages}
           >

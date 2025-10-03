@@ -1,4 +1,6 @@
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+
 
 export default function InterpertationTable({ interpertationList, onDelete, onEdit, loading }) {
     function stripHtml(html) {
@@ -57,22 +59,16 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                             <td style={{ textAlign: "left" }}
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-
-                                                    <button
-                                                        onClick={() => onEdit(interpertation)}
-                                                    >
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            if (window.confirm("Are you sure you want to delete this department?")) {
-                                                                onDelete(interpertation.id);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(interpertation.id);
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -82,7 +78,7 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                 <tbody>
                                     <tr>
                                         <td colSpan="3" className="text-center">
-                                            No Departments Found
+                                            No Interpertations Found
                                         </td>
                                     </tr>
                                 </tbody>
