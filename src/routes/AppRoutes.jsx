@@ -7,6 +7,7 @@ import Departments from "../pages/Dashboard/departments/Departments";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import TestProfile from "../pages/Dashboard/testprofile/TestProfile";
 import Consultant from "../pages/Dashboard/consultant/Consultant";
+import Role from "../pages/Dashboard/role/Role";
 import CollectionCenter from "../pages/Dashboard/collection-center/CollectionCenter";
 import CCRateList from "../pages/Dashboard/cc-rate-list/CCRateList";
 import AddReception from "../pages/Dashboard/reception-add/AddReception";
@@ -95,6 +96,7 @@ function AppRoutes() {
         <Route path="/departments" element={<Departments />} />
         <Route path="/testprofile" element={<TestProfile />} />
         <Route path="/consultant" element={<Consultant />} />
+         <Route path="/role" element={<Role />} />
         <Route path="/collection-center" element={<CollectionCenter />} />
         <Route path="/cc-rate-list" element={<CCRateList />} />
         <Route path="/reception-add" element={<AddReception />} />

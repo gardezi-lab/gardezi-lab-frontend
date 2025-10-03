@@ -1,6 +1,15 @@
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
+import { useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
-export default function PatientEntryTable({ patiententryList,onEdit, onDelete, loading }) {
+export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
+    const [show, setShow] = useState(false);
+
+    const handleOpen = () => setShow(true);
+    const handleClose = () => setShow(false);
+
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -58,22 +67,20 @@ export default function PatientEntryTable({ patiententryList,onEdit, onDelete, l
                                             <td>{patient.reffered_by}</td>
                                             <td>{patient.test}</td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                    <button
-                                                        onClick={() => {
-                                                            if (window.confirm("Are you sure you want to delete this patient?")) {
-                                                                onDelete(patient.id); {/* delete bhi id se karna hoga */ }
-                                                            }
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button onClick={() => onEdit(patient)}>
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button>
-                                                        <i className="fas fa-print" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(patient)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(patient.id);
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
+                                                    <FaPrint
+                                                        onClick={handleOpen}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: "#333" }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -91,6 +98,28 @@ export default function PatientEntryTable({ patiententryList,onEdit, onDelete, l
                             )}
                         </table>
                     </div>
+                    <Modal show={show} onHide={handleClose} centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Print Preview</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>Patient Name: {patiententryList.name}</p>
+                            <p>Age: {patiententryList.age}</p>
+                            <p>Contact: {patiententryList.contact_no}</p>
+                            {/* You can add a printable layout here */}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={() => window.print()} // trigger print
+                            >
+                                Print
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
         </>

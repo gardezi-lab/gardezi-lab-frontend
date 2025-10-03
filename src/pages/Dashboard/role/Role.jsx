@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import DepartmentTable from "./DepartmentTable";
-import DepartmentModal from "./DepartmentModal";
+import RoleTable from "./RoleTable";
+import RoleModal from "./RoleModal";
 import httpClient from "../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
-export default function Departments() {
-  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
-  const [departmentList, setDepartmentList] = useState([]);
+export default function Role() {
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roleList, setRoleList] = useState([]);
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -19,26 +19,27 @@ export default function Departments() {
   const [search, setSearch] = useState("");
 
   const handleClose = () => {
-    setShowDepartmentModal(false);
+    setShowRoleModal(false);
     setIsCurrentEditModalOpen(false);
-    setSelectedDepartment(null);
+    setSelectedRole(null);
   };
-  const handleShow = () => setShowDepartmentModal(true);
 
-  const getDepartmentData = async () => {
+  const handleShow = () => setShowRoleModal(true);
+
+  const getRoleData = async () => {
     setLoading(true);
     try {
-      const url = `/department?search=${encodeURIComponent(
+      const url = `/role?search=${encodeURIComponent(
         search || ""
       )}&currentpage=${page}&recordperpage=${recordPerPage}`;
 
       const response = await httpClient.get(url);
       if (response) {
-        setDepartmentList(response.data || []);
+        setRoleList(response.data || []);
         setTotalPages(response.totalPages || 1);
       }
     } catch (err) {
-      console.error("Fetch Departments Error:", err);
+      console.error("Fetch Role Error:", err);
     } finally {
       setLoading(false);
     }
@@ -47,16 +48,16 @@ export default function Departments() {
   const handleSave = async (formData) => {
     setLoading(true);
     try {
-      const obj = { department_name: formData.departmentName };
+      const obj = { role_name: formData.roleName };
 
-      if (isCurrentEditModalOpen && selectedDepartment) {
-        await httpClient.put(`/department/${selectedDepartment.id}`, obj);
+      if (isCurrentEditModalOpen && selectedRole) {
+        await httpClient.put(`/role/${selectedRole.id}`, obj);
       } else {
-        await httpClient.post("/department", obj);
+        await httpClient.post("/role", obj);
       }
-      getDepartmentData();
+      getRoleData();
     } catch (err) {
-      console.error("Save Department Error:", err);
+      console.error("Save Role Error:", err);
     } finally {
       setLoading(false);
       handleClose();
@@ -64,26 +65,25 @@ export default function Departments() {
   };
 
   const handleDelete = async (id) => {
-    console.log("id", id);
     setLoading(true);
     try {
-      await httpClient.delete(`/department/${id}`);
-      getDepartmentData();
+      await httpClient.delete(`/role/${id}`);
+      getRoleData();
     } catch (err) {
-      console.error("Delete Department Error:", err);
+      console.error("Delete Role Error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (dep) => {
-    setSelectedDepartment(dep);
+  const handleEdit = (role) => {
+    setSelectedRole(role);
     setIsCurrentEditModalOpen(true);
     handleShow();
   };
 
   useEffect(() => {
-    getDepartmentData();
+    getRoleData();
   }, [page, search]);
 
   const renderPaginationItems = () => {
@@ -130,14 +130,14 @@ export default function Departments() {
 
   return (
     <div>
-      <h5 className="fw-bold page-header">Department</h5>
+      <h5 className="fw-bold page-header">Role</h5>
 
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
           <input
             type="text"
             className="form-control"
-            placeholder="Search name"
+            placeholder="Search role"
             style={{ width: "220px" }}
             value={search}
             onChange={(e) => {
@@ -153,13 +153,13 @@ export default function Departments() {
               handleShow();
             }}
           >
-            <i className="fas fa-plus me-2"></i> Add Departments
+            <i className="fas fa-plus me-2"></i> Add Role
           </button>
         </div>
       </div>
 
-      <DepartmentTable
-        departmentList={departmentList}
+      <RoleTable
+        roleList={roleList}
         onDelete={handleDelete}
         onEdit={handleEdit}
         loading={loading}
@@ -180,7 +180,6 @@ export default function Departments() {
           </Pagination.Prev>
           {renderPaginationItems()}
           <Pagination.Next
-            
             onClick={() => page < totalPages && setPage(page + 1)}
             disabled={page === totalPages}
           >
@@ -189,16 +188,16 @@ export default function Departments() {
         </Pagination>
       </div>
 
-      <Modal show={showDepartmentModal} onHide={handleClose} className="modal sm">
+      <Modal show={showRoleModal} onHide={handleClose} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
-            {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
+            {isCurrentEditModalOpen ? "Edit Role" : "Add Role"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <DepartmentModal
+          <RoleModal
             onSave={handleSave}
-            department={selectedDepartment}
+            role={selectedRole}
             onCancel={handleClose}
           />
         </Modal.Body>

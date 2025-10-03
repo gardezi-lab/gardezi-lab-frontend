@@ -1,5 +1,5 @@
-import Button from 'react-bootstrap/Button';
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function ParameterTable({ parameterList, onDelete, onEdit, loading }) {
     return (
@@ -49,21 +49,16 @@ export default function ParameterTable({ parameterList, onDelete, onEdit, loadin
                                         <td>{dept.order}</td>
                                         <td>{dept.dropdowns}</td>
                                         <td>
-                                            <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={() => onEdit(dept)}
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-danger"
-                                                    onClick={() => onDelete(dept.id)}
-                                                >
-                                                    Delete
-                                                </button>
+                                            <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                <FaPenToSquare
+                                                    onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                <FaRegTrashCan onClick={() => {
+                                                    if (window.confirm("Are you sure you want to delete this department?")) {
+                                                        onDelete(dept.id);
+                                                    }
+                                                }}
+                                                    style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                />
                                             </div>
                                         </td>
                                     </tr>
