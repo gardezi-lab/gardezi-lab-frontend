@@ -1,8 +1,7 @@
 import { ThreeCircles } from "react-loader-spinner";
-import { FaBeer } from "react-icons/fa";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
-export default function DepartmentTable({ departmentList, onDelete, onEdit, loading }) {
+export default function RoleTable({ roleList, onDelete, onEdit, loading }) {
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body p-0">
@@ -20,7 +19,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
             </thead>
 
             {loading ? (
-              <tbody >
+              <tbody>
                 <tr>
                   <td colSpan="3">
                     <div
@@ -30,7 +29,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                         alignItems: "center",
                         height: "250px", // ✅ adjust karo apne table ke hisaab se
                       }}
-                    > 
+                    >
                       <ThreeCircles
                         visible={true}
                         height="60"
@@ -42,22 +41,25 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                   </td>
                 </tr>
               </tbody>
-            ) : departmentList?.length > 0 ? (
+            ) : roleList?.length > 0 ? (
               <tbody>
-                {departmentList.map((dept, index) => (
-                  <tr key={dept.department_id}>
+                {roleList.map((role, index) => (
+                  <tr key={role.role_id}>
                     <td>{index + 1}</td>
-                    <td>{dept.department_name}</td>
+                    <td>{role.role_name}</td>
                     <td>
                       <div className="d-flex gap-2 align-items-center justify-content-center">
                         <FaPenToSquare
-                          onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                        <FaRegTrashCan onClick={() => {
-                          if (window.confirm("Are you sure you want to delete this department?")) {
-                            onDelete(dept.id);
-                          }
-                        }}
-                          style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                          onClick={() => onEdit(role)}
+                          style={{ fontSize: "22px", cursor: "pointer" }}
+                        />
+                        <FaRegTrashCan
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this role?")) {
+                              onDelete(role.id);
+                            }
+                          }}
+                          style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
                         />
                       </div>
                     </td>
@@ -68,7 +70,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
               <tbody>
                 <tr>
                   <td colSpan="3" className="text-center">
-                    No Departments Found
+                    No Roles Found
                   </td>
                 </tr>
               </tbody>

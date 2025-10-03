@@ -3,39 +3,49 @@ import Modal from "react-bootstrap/Modal";
 import CreateAccountTable from "./CreateAccountTable";
 import CreateAccountModal from "./CreateAccountModal";
 import httpClient from "../../../services/httpClient";
-import { ThreeCircles } from "react-loader-spinner";
+import Pagination from "react-bootstrap/Pagination";
 
 export default function CreateAccount() {
-  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
-  const [departmentList, setDepartmentList] = useState([]);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [accountList, setAccountList] = useState([]);
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [loading, setLoading] = useState(false); 
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const recordPerPage = 5;
+
+  const [search, setSearch] = useState("");
 
   const handleClose = () => {
-    setShowDepartmentModal(false);
+    setShowAccountModal(false);
     setIsCurrentEditModalOpen(false);
-    setSelectedDepartment(null);
+    setSelectedAccount(null);
   };
-  const handleShow = () => setShowDepartmentModal(true);
 
-  const getDepartmentData = async () => {
-    setLoading(true); // ✅ start loader
+  const handleShow = () => setShowAccountModal(true);
+
+  const getAccountData = async () => {
+    setLoading(true);
     try {
-      const data = await httpClient.get("/account");
-      if (data) {
-        setDepartmentList(data);
+      const url = `/account?search=${encodeURIComponent(
+        search || ""
+      )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+
+      const response = await httpClient.get(url);
+      if (response) {
+        setDepartmentList(response.data || []);
+        setTotalPages(response.totalPages || 1);
       }
-      console.log("Department Data:", data);
     } catch (err) {
-      console.error("Fetch Departments Error:", err);
+      console.error("Fetch Account Error:", err);
     } finally {
-      setLoading(false); // ✅ stop loader
+      setLoading(false);
     }
   };
 
   const handleSave = async (formData) => {
-    console.log("formData", formData)
     setLoading(true);
     try {
       const obj = {
@@ -43,22 +53,19 @@ export default function CreateAccount() {
         head_code: formData.headCode,
         ob: formData.ob,
         ob_date: formData.obDate,
-        parent_account: formData.parentAccount
-      }
+        parent_account: formData.parentAccount,
+      };
 
-      if (isCurrentEditModalOpen && selectedDepartment) {
-        obj["id"] = selectedDepartment.id
-        await httpClient.put(
-          `/account/${selectedDepartment.id}`,
-          obj
-        );
+      if (isCurrentEditModalOpen && selectedAccount) {
+        obj["id"] = selectedAccount.id;
+        await httpClient.put(`/account/${selectedAccount.id}`, obj);
       } else {
         await httpClient.post("/account", obj);
       }
 
-      getDepartmentData();
+      getAccountData();
     } catch (err) {
-      console.error("Save Department Error:", err);
+      console.error("Save Account Error:", err);
     } finally {
       setLoading(false);
       handleClose();
@@ -69,39 +76,82 @@ export default function CreateAccount() {
     setLoading(true);
     try {
       await httpClient.delete(`/account/${id}`);
-      getDepartmentData();
+      getAccountData();
     } catch (err) {
-      console.error("Delete Department Error:", err);
+      console.error("Delete Account Error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (dep) => {
-    console.log("dep",dep)
-    setSelectedDepartment(dep);
+  const handleEdit = (account) => {
+    setSelectedAccount(account);
     setIsCurrentEditModalOpen(true);
     handleShow();
   };
 
   useEffect(() => {
-    getDepartmentData();
-  }, []);
+    getAccountData();
+  }, [page, search]);
+
+  const renderPaginationItems = () => {
+    let items = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(
+          <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+            {i}
+          </Pagination.Item>
+        );
+      }
+    } else {
+      items.push(
+        <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+          1
+        </Pagination.Item>
+      );
+
+      if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+      if (page > 2 && page < totalPages - 1) {
+        items.push(
+          <Pagination.Item key={page} active onClick={() => setPage(page)}>
+            {page}
+          </Pagination.Item>
+        );
+      }
+
+      if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          active={page === totalPages}
+          onClick={() => setPage(totalPages)}
+        >
+          {totalPages}
+        </Pagination.Item>
+      );
+    }
+    return items;
+  };
 
   return (
     <div>
       <h5 className="fw-bold page-header">Accounts</h5>
-
-      {/* ✅ Spinner show only when loading is true */}
-
 
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
           <input
             type="text"
             className="form-control"
-            placeholder="Search name"
+            placeholder="Search account"
             style={{ width: "220px" }}
+            value={search}
+            onChange={(e) => {
+              setPage(1);
+              setSearch(e.target.value);
+            }}
           />
           <button
             className="btn btn-success primary"
@@ -116,23 +166,37 @@ export default function CreateAccount() {
         </div>
       </div>
 
-      {/* ✅ Table hide when loading */}
-      {/* {!loading && ( */}
       <CreateAccountTable
-        departmentList={departmentList}
+        accountList={accountList}
         onDelete={handleDelete}
         onEdit={handleEdit}
         loading={loading}
       />
-      {/* )} */}
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <button className="btn btn-secondary primary">
           <i className="fas fa-file-excel me-2"></i> Export to Excel
         </button>
+
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => page > 1 && setPage(page - 1)}
+            disabled={page === 1}
+          >
+            Previous
+          </Pagination.Prev>
+          {renderPaginationItems()}
+          <Pagination.Next
+
+            onClick={() => page < totalPages && setPage(page + 1)}
+            disabled={page === totalPages}
+          >
+            Next
+          </Pagination.Next>
+        </Pagination>
       </div>
 
-      <Modal show={showDepartmentModal} onHide={handleClose} className="modal sm">
+      <Modal show={showAccountModal} onHide={handleClose} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isCurrentEditModalOpen ? "Edit Account" : "Add Account"}
@@ -141,7 +205,7 @@ export default function CreateAccount() {
         <Modal.Body>
           <CreateAccountModal
             onSave={handleSave}
-            department={selectedDepartment}
+            account={selectedAccount}
             onCancel={handleClose}
           />
         </Modal.Body>

@@ -70,6 +70,11 @@ const menuItems = [
                 icon: "uil-user-md", // 👨‍⚕️
                 href: "/consultant",
             },
+             {
+                label: "Add Role",
+                icon: "uil-user-md", // 👨‍⚕️
+                href: "/role",
+            },
             {
                 label: "Parameters",
                 icon: "uil-user-md", // 👨‍⚕️

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
 import PatientEntryTable from "./PatientEntryTable";
 import Form from 'react-bootstrap/Form';
+import Pagination from "react-bootstrap/Pagination";
 
 
 export default function PatientEntry() {
@@ -12,7 +13,14 @@ export default function PatientEntry() {
     const [patiententryList, setPatientEntryList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedPatientEntry, setSelectedPatientEntry] = useState(null);
-    const [loading, setLoading] = useState(false); // ✅ new state for loader
+    const [loading, setLoading] = useState(false);
+
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 5;
+
+    const [search, setSearch] = useState("");
 
     const handleClose = () => {
         setShowPatientEntryModal(false);
@@ -24,16 +32,14 @@ export default function PatientEntry() {
     const getPatientEntryData = async () => {
         setLoading(true);
         try {
-            const data = await httpClient.get("/patient_entry");
-            console.log("PatientEntry Data:", data);
+            const url = `/patient_entry?search=${encodeURIComponent(
+                search || ""
+            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
 
-            // Agar data ke andar "data" key hai
-            if (Array.isArray(data)) {
-                setPatientEntryList(data);
-            } else if (Array.isArray(data.data)) {
-                setPatientEntryList(data.data);
-            } else {
-                setPatientEntryList([]);
+            const response = await httpClient.get(url);
+            if (response) {
+                setPatientEntryList(response.data || []);
+                setTotalPages(response.totalPages || 1);
             }
         } catch (err) {
             console.error("Fetch PatientEntry Error:", err);
@@ -41,7 +47,6 @@ export default function PatientEntry() {
             setLoading(false);
         }
     };
-
 
     const handleSave = async (formData) => {
         setLoading(true);
@@ -82,7 +87,7 @@ export default function PatientEntry() {
             handleClose();
         }
     };
-     const handleEdit = (dep) => {
+    const handleEdit = (dep) => {
         setSelectedPatientEntry(dep);
         setIsCurrentEditModalOpen(true);
         handleShow();
@@ -103,8 +108,48 @@ export default function PatientEntry() {
 
     useEffect(() => {
         getPatientEntryData();
-    }, []);
+    }, [page, search]);
+    const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
 
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
 
 
 
@@ -117,7 +162,7 @@ export default function PatientEntry() {
                 {/* Right side actions */}
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Company </Form.Label>
+                        <Form.Label>Lab </Form.Label>
                         <Form.Select>
                             <option value="Doctor">Doctor</option>
                             <option value="Admin">Admin</option>
@@ -125,21 +170,21 @@ export default function PatientEntry() {
                         </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Company </Form.Label>
+                        <Form.Label>Receptionist </Form.Label>
                         <Form.Select>
                             <option value="Doctor">Doctor</option>
                             <option value="Admin">Admin</option>
                             <option value="User">User</option>
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Company </Form.Label>
                         <Form.Select>
                             <option value="Doctor">Doctor</option>
                             <option value="Admin">Admin</option>
                             <option value="User">User</option>
                         </Form.Select>
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>From :</Form.Label>
                         <Form.Control type="text" placeholder="" />
@@ -153,6 +198,11 @@ export default function PatientEntry() {
                         className="form-control"
                         placeholder="Search profiles..."
                         style={{ width: "220px" }}
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1);
+                            setSearch(e.target.value);
+                        }}
                     />
                     <Form.Group className="mb-3 mt-3">
                         <button className="btn btn-success primary">Show</button>
@@ -160,7 +210,10 @@ export default function PatientEntry() {
                     <button
                         className="btn btn-success primary"
                         type="button"
-                        onClick={handleShow}
+                        onClick={() => {
+                            setIsCurrentEditModalOpen(false);
+                            handleShow();
+                        }}
                     >
                         <i className="fas fa-plus me-2"></i> Add Patient
                     </button>
@@ -181,25 +234,22 @@ export default function PatientEntry() {
                 </button>
 
                 {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
             </div>
 
             <Modal show={showPatientEntryModal} onHide={handleClose} className="modal-xl">
