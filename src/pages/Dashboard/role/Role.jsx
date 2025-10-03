@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import CreateAccountTable from "./CreateAccountTable";
-import CreateAccountModal from "./CreateAccountModal";
+import RoleTable from "./RoleTable";
+import RoleModal from "./RoleModal";
 import httpClient from "../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
-export default function CreateAccount() {
-  const [showAccountModal, setShowAccountModal] = useState(false);
-  const [accountList, setAccountList] = useState([]);
+export default function Role() {
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roleList, setRoleList] = useState([]);
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -19,27 +19,27 @@ export default function CreateAccount() {
   const [search, setSearch] = useState("");
 
   const handleClose = () => {
-    setShowAccountModal(false);
+    setShowRoleModal(false);
     setIsCurrentEditModalOpen(false);
-    setSelectedAccount(null);
+    setSelectedRole(null);
   };
 
-  const handleShow = () => setShowAccountModal(true);
+  const handleShow = () => setShowRoleModal(true);
 
-  const getAccountData = async () => {
+  const getRoleData = async () => {
     setLoading(true);
     try {
-      const url = `/account?search=${encodeURIComponent(
+      const url = `/role?search=${encodeURIComponent(
         search || ""
       )}&currentpage=${page}&recordperpage=${recordPerPage}`;
 
       const response = await httpClient.get(url);
       if (response) {
-        setDepartmentList(response.data || []);
+        setRoleList(response.data || []);
         setTotalPages(response.totalPages || 1);
       }
     } catch (err) {
-      console.error("Fetch Account Error:", err);
+      console.error("Fetch Role Error:", err);
     } finally {
       setLoading(false);
     }
@@ -48,24 +48,16 @@ export default function CreateAccount() {
   const handleSave = async (formData) => {
     setLoading(true);
     try {
-      const obj = {
-        name_head: formData.headName,
-        head_code: formData.headCode,
-        ob: formData.ob,
-        ob_date: formData.obDate,
-        parent_account: formData.parentAccount,
-      };
+      const obj = { role_name: formData.roleName };
 
-      if (isCurrentEditModalOpen && selectedAccount) {
-        obj["id"] = selectedAccount.id;
-        await httpClient.put(`/account/${selectedAccount.id}`, obj);
+      if (isCurrentEditModalOpen && selectedRole) {
+        await httpClient.put(`/role/${selectedRole.id}`, obj);
       } else {
-        await httpClient.post("/account", obj);
+        await httpClient.post("/role", obj);
       }
-
-      getAccountData();
+      getRoleData();
     } catch (err) {
-      console.error("Save Account Error:", err);
+      console.error("Save Role Error:", err);
     } finally {
       setLoading(false);
       handleClose();
@@ -75,23 +67,23 @@ export default function CreateAccount() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await httpClient.delete(`/account/${id}`);
-      getAccountData();
+      await httpClient.delete(`/role/${id}`);
+      getRoleData();
     } catch (err) {
-      console.error("Delete Account Error:", err);
+      console.error("Delete Role Error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (account) => {
-    setSelectedAccount(account);
+  const handleEdit = (role) => {
+    setSelectedRole(role);
     setIsCurrentEditModalOpen(true);
     handleShow();
   };
 
   useEffect(() => {
-    getAccountData();
+    getRoleData();
   }, [page, search]);
 
   const renderPaginationItems = () => {
@@ -138,14 +130,14 @@ export default function CreateAccount() {
 
   return (
     <div>
-      <h5 className="fw-bold page-header">Accounts</h5>
+      <h5 className="fw-bold page-header">Role</h5>
 
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
           <input
             type="text"
             className="form-control"
-            placeholder="Search account"
+            placeholder="Search role"
             style={{ width: "220px" }}
             value={search}
             onChange={(e) => {
@@ -161,23 +153,24 @@ export default function CreateAccount() {
               handleShow();
             }}
           >
-            <i className="fas fa-plus me-2"></i> Add Account
+            <i className="fas fa-plus me-2"></i> Add Role
           </button>
         </div>
       </div>
 
-      <CreateAccountTable
-        accountList={accountList}
+      <RoleTable
+        roleList={roleList}
         onDelete={handleDelete}
         onEdit={handleEdit}
         loading={loading}
       />
 
-      <div className="d-flex justify-content-between align-items-center mt-3">
-        <button className="btn btn-secondary primary">
-          <i className="fas fa-file-excel me-2"></i> Export to Excel
-        </button>
-
+      <div className="d-flex justify-content-between mt-2">
+        <div>
+          <button className="btn btn-sm btn-secondary primary">
+            <i className="fas fa-file-excel me-2"></i> Export to Excel
+          </button>
+        </div>
         <Pagination>
           <Pagination.Prev
             onClick={() => page > 1 && setPage(page - 1)}
@@ -187,7 +180,6 @@ export default function CreateAccount() {
           </Pagination.Prev>
           {renderPaginationItems()}
           <Pagination.Next
-
             onClick={() => page < totalPages && setPage(page + 1)}
             disabled={page === totalPages}
           >
@@ -196,16 +188,16 @@ export default function CreateAccount() {
         </Pagination>
       </div>
 
-      <Modal show={showAccountModal} onHide={handleClose} className="modal sm">
+      <Modal show={showRoleModal} onHide={handleClose} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
-            {isCurrentEditModalOpen ? "Edit Account" : "Add Account"}
+            {isCurrentEditModalOpen ? "Edit Role" : "Add Role"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <CreateAccountModal
+          <RoleModal
             onSave={handleSave}
-            account={selectedAccount}
+            role={selectedRole}
             onCancel={handleClose}
           />
         </Modal.Body>

@@ -1,4 +1,5 @@
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function TestConsultantTable({ consultantList, onDelete, onEdit, loading }) {
     return (
@@ -22,7 +23,7 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                             {loading ? (
                                 <tbody>
                                     <tr>
-                                        <td colSpan="7">
+                                        <td colSpan="8">
                                             <div
                                                 style={{
                                                     display: "flex",
@@ -52,24 +53,18 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                                             <td>{consultant.age}</td>
                                             <td>{consultant.user_name}</td>
                                             <td>{consultant.role}</td>
-                                           <td>{consultant.password}</td>
+                                            <td>{consultant.password}</td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-
-                                                    <button
-                                                        onClick={() => onEdit(consultant)}
-                                                    >
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            if (window.confirm("Are you sure you want to delete this department?")) {
-                                                                onDelete(consultant.id);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(consultant)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(consultant.id);
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>

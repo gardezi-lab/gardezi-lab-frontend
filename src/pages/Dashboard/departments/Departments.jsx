@@ -141,7 +141,7 @@ export default function Departments() {
             style={{ width: "220px" }}
             value={search}
             onChange={(e) => {
-              setPage(1); // ✅ reset page on search change
+              setPage(1);
               setSearch(e.target.value);
             }}
           />

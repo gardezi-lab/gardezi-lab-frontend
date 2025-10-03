@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import httpClient from "../../../services/httpClient";
 
 
 export default function TestConsultantModal({ onSave, consultant, onCancel }) {
@@ -13,20 +14,39 @@ export default function TestConsultantModal({ onSave, consultant, onCancel }) {
     // const [consultantHospital, setConsultantHospital] = useState("");
     const [consultantUserName, setConsultantUserName] = useState("");
     const [consultantAge, setConsultantAge] = useState("");
-    const [consultantRole, setConsultantRole] = useState("Doctor");
+    const [roles, setRoles] = useState([]);
+    const [consultantRole, setConsultantRole] = useState("");
+
+
+    useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const res = await httpClient.get("/role");
+                if (Array.isArray(res)) {
+                    setRoles(res);
+                } else if (Array.isArray(res.data)) {
+                    setRoles(res.data);
+                }
+            } catch (err) {
+                console.error("Error role packages:", err);
+            }
+        };
+
+        fetchRoles();
+    }, []);
 
 
     useEffect(() => {
         if (consultant) {
             setConsultantName(consultant.name || "");
             setConsultantContact(consultant.contact_no || "");
-            setConsultantRole(consultant.role || "Doctor");
+            setConsultantRole(consultant.role || "");
             setConsultantUserName(consultant.user_name || "");
             setConsultantAge(consultant.age || "");
         } else {
             setConsultantName("");
             setConsultantContact("");
-            setConsultantRole("Doctor");
+            setConsultantRole("");
             setConsultantUserName("");
             setConsultantAge("");
         }
@@ -37,7 +57,7 @@ export default function TestConsultantModal({ onSave, consultant, onCancel }) {
         onSave({
             consultantName,
             consultantContact,
-            role: consultantRole,
+            consultantRole,
             consultantUserName,
             consultantAge,
         });
@@ -96,15 +116,18 @@ export default function TestConsultantModal({ onSave, consultant, onCancel }) {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Role</Form.Label>
                                 <Form.Select
                                     value={consultantRole}
                                     onChange={(e) => setConsultantRole(e.target.value)}
                                 >
-                                    <option value="Doctor">Doctor</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="User">User</option>
+                                    <option value="">Select Company</option>
+                                    {roles.map((roles) => (
+                                        <option key={roles.id} value={roles.role_name}>
+                                            {roles.role_name}
+                                        </option>
+                                    ))}
                                 </Form.Select>
                             </Form.Group>
                         </Col>

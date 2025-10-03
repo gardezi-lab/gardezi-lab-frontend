@@ -1,4 +1,5 @@
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function TestProfileTable({ companyList, onDelete, onEdit, loading }) {
     return (
@@ -54,21 +55,16 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                         <td>{company.password || "—"}</td>
                                         <td>{company.rate_list || "—"}</td>
                                         <td>
-                                            <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                <button
-                                                    onClick={() => onEdit(company)}
-                                                    className="btn btn-sm btn-light"
-                                                >
-                                                    <i className="fas fa-edit" style={{ fontSize: "18px" }}></i>
-                                                </button>
-                                                <button
-                                                    onClick={() => {
+                                            <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                <FaPenToSquare
+                                                    onClick={() => onEdit(company)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                <FaRegTrashCan onClick={() => {
+                                                    if (window.confirm("Are you sure you want to delete this department?")) {
                                                         onDelete(company.id);
-                                                    }}
-                                                    className="btn btn-sm btn-light"
-                                                >
-                                                    <i className="fas fa-trash-alt" style={{ fontSize: "18px" }}></i>
-                                                </button>
+                                                    }
+                                                }}
+                                                    style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                />
                                             </div>
                                         </td>
                                     </tr>

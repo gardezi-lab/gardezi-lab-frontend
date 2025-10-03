@@ -25,7 +25,6 @@ export default function Login() {
             // const resData = response.data ? response.data : response;
             if (response.message === "Login successful") {
                 localStorage.setItem("user", JSON.stringify(response.user));
-                // alert("Login successful ✅");
                 navigate("/"); // Dashboard khulega
             } else {
                 setError(response.error || "Invalid username or password");

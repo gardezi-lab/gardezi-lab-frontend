@@ -5,41 +5,52 @@ import Button from 'react-bootstrap/Button';
 import ParameterTable from "./ParameterTable";
 import ParameterModal from "./ParameterModal";
 import httpClient from "../../../services/httpClient";
+import Pagination from "react-bootstrap/Pagination";
 
 
 export default function Parameter() {
-    const [show, setShow] = useState(false);
-    const [parameter, setparameter] = useState([])
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const [parameterList, setparameterList] = useState([])
+    const [showParameterModal, setShowParameterModal] = useState(false);
+    const [parameterList, setParameterList] = useState([])
     const [selectedParameter, setselectedParameter] = useState([null])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [loading, setLoading] = useState(false); // ✅ new state for loader
 
 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 5;
+
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         feather.replace();
     }, []);
 
     const getParameterData = async () => {
-        setLoading(true); // ✅ start loader
+        setLoading(true);
         try {
-            const data = await httpClient.get("/parameter");
-            if (data) {
-                setparameterList(data);
+            const url = `/parameter?search=${encodeURIComponent(
+                search || ""
+            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+
+            const response = await httpClient.get(url);
+            if (response) {
+                setParameterList(response.data || []);
+                setTotalPages(response.totalPages || 1);
             }
-            console.log("Parameter Data:", data);
         } catch (err) {
             console.error("Fetch Parameter Error:", err);
         } finally {
-            setLoading(false); // ✅ stop loader
+            setLoading(false);
         }
     };
-    useEffect(() => {
-        getParameterData();
-    }, [])
+
+    const handleClose = () => {
+        setShowParameterModal(false);
+        setIsCurrentEditModalOpen(false);
+        setselectedParameter(null);
+    };
+    const handleShow = () => setShowParameterModal(true);
 
     const handleSave = async (formData) => {
         console.log("handleSave  aaya ", formData);
@@ -91,6 +102,52 @@ export default function Parameter() {
         handleShow();
     };
 
+    useEffect(() => {
+        getParameterData();
+    }, [page, search]);
+
+    const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
+
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
+
     return (
         <div>
             <h5 className="fw-bold page-header">Parameters</h5>
@@ -100,11 +157,24 @@ export default function Parameter() {
 
                 {/* Right side actions */}
                 <div className="d-flex flex-wrap align-items-center gap-2">
-
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search parameter"
+                        style={{ width: "220px" }}
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1);
+                            setSearch(e.target.value);
+                        }}
+                    />
                     <button
                         className="btn btn-success primary"
                         type="button"
-                        onClick={handleShow}
+                        onClick={() => {
+                            setIsCurrentEditModalOpen(false);
+                            handleShow();
+                        }}
                     >
                         <i className="fas fa-plus me-2"></i> Add Parameter
                     </button>
@@ -127,38 +197,37 @@ export default function Parameter() {
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-                {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
+
             </div>
 
-
-            <Modal show={show} onHide={handleClose} className="modal sm">
-                <Modal.Header className="primary" >
-                    <Modal.Title className="color-white fw-bold"> Add Parameter</Modal.Title>
+            <Modal show={showParameterModal} onHide={handleClose} className="modal">
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">
+                        {isCurrentEditModalOpen ? "Edit Parameter" : "Add Parameter"}
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <ParameterModal
                         onSave={handleSave}
+                        Parameter={selectedParameter}
                         onCancel={handleClose}
-                        Parameter={selectedParameter} />
+                    />
                 </Modal.Body>
             </Modal>
         </div>

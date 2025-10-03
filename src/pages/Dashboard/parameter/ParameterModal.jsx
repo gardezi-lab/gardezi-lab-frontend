@@ -126,7 +126,6 @@ export default function ParameterModal({ onSave, onCancel, Parameter }) {
                     </Col>
 
                     <Row>
-
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label >Enter Default Value For This Parameter</Form.Label>
@@ -146,7 +145,7 @@ export default function ParameterModal({ onSave, onCancel, Parameter }) {
                             Cancel & Close
                         </Button>
                         <Button variant="primary" type="submit">
-                            {Parameter.parameter_id ? "Update" : "Save"}
+                            {Parameter ? "Update" : "Save"}
                         </Button>
 
                     </div>
