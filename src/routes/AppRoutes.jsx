@@ -19,7 +19,7 @@ import AddPanel from "../pages/Dashboard/add-panel/AddPanel";
 import Payment from "../pages/Dashboard/add-payment/Payment";
 import PaymentHistory from "../pages/Dashboard/payment-history/PaymentHistory";
 import TestPackage from "../pages/Dashboard/test-package/TestPackage";
-import Interpertation from "../pages/Dashboard/interpertation/interpertation";
+import Interpertation from "../pages/Dashboard/interpertation/Interpertation";
 import RateList from "../pages/Dashboard/rate-list/RateList";
 import CashAudit from "../pages/Accounts/cash-audit/CashAudit";
 import CashReceiving from "../pages/Accounts/cash-receive/CashReceiving";
@@ -82,6 +82,7 @@ import Setting from "../pages/Accounts/Setting";
 import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
 import Parameter from "../pages/Dashboard/parameter/Parameter";
 import RequireAuth from "./RequireAuth";
+import AddResult from "../pages/Patients/add-result/AddResult";
 
 function AppRoutes() {
   return (
@@ -138,6 +139,8 @@ function AppRoutes() {
           <Route path="/voucher" element={<Voucher />} />
           <Route path="/ledger" element={<Ledger />} />
           <Route path="/parameter" element={<Parameter />} />
+          <Route path="/interpertation" element={<Interpertation />} />
+          <Route path="/add-result" element={<AddResult />} />
 
         {/* </Route> */}
       </Route >

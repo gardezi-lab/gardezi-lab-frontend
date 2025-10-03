@@ -30,7 +30,7 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
                         alignItems: "center",
                         height: "250px", // ✅ adjust karo apne table ke hisaab se
                       }}
-                    >
+                    > 
                       <ThreeCircles
                         visible={true}
                         height="60"

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
 import TestPackageTable from "./TestPackageTable";
 import TestPackageModal from "./TestPackageModal";
+import Pagination from "react-bootstrap/Pagination";
 
 export default function TestPackage() {
 
@@ -27,14 +28,16 @@ export default function TestPackage() {
     const getTestPackageData = async () => {
         setLoading(true);
         try {
-            const response = await httpClient.get("/test-packages");
-            console.log("response data:", response)
-            console.log("State TestPackageList:", TestPackageList);
+            const url = `/test-packages?search=${encodeURIComponent(
+                search || ""
+            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+
+            const response = await httpClient.get(url);
 
             if (response.data) {
-                setTestPackageList(response.data);
+                setTestPackageList(response.data || []);
+                setTotalPages(response.totalPages || 1);
             }
-            console.log("TestPackage Data:", data);
         } catch (err) {
             console.error("Fetch TestPackage Error:", err);
         } finally {
@@ -71,6 +74,7 @@ export default function TestPackage() {
         }
     };
 
+
     const handleDelete = async (id) => {
         setLoading(true);
         try {
@@ -91,14 +95,14 @@ export default function TestPackage() {
 
     const handleClose = () => {
         setShow(false);
-        setSelectedTestPackage(null);   // ✅ reset selected profile
-        setIsCurrentEditModalOpen(false); // ✅ reset edit mode
+        setSelectedTestPackage(null);
+        setIsCurrentEditModalOpen(false);
     };
 
     useEffect(() => {
         feather.replace();
         getTestPackageData();
-    }, []);
+    }, [page, search]);
 
 
     const renderPaginationItems = () => {
@@ -143,6 +147,7 @@ export default function TestPackage() {
         return items;
     };
 
+
     return (
         <div>
             <h5 className="fw-bold page-header">Test Packages</h5>
@@ -157,6 +162,11 @@ export default function TestPackage() {
                         className="form-control"
                         placeholder="Search profiles..."
                         style={{ width: "220px" }}
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1); // ✅ reset page on search change
+                            setSearch(e.target.value);
+                        }}
                     />
 
                     <button
@@ -177,7 +187,6 @@ export default function TestPackage() {
                 loading={loading}
             />
 
-
             {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
                 {/* Left side export */}
@@ -186,29 +195,24 @@ export default function TestPackage() {
                 </button>
 
                 {/* Right side pagination */}
-                <div className="d-flex justify-content-between mt-2">
-                    <div>
-                        <button className="btn btn-sm btn-secondary primary">
-                            <i className="fas fa-file-excel me-2"></i> Export to Excel
-                        </button>
-                    </div>
-                    <Pagination>
-                        <Pagination.Prev
-                            onClick={() => page > 1 && setPage(page - 1)}
-                            disabled={page === 1}
-                        >
-                            Previous
-                        </Pagination.Prev>
-                        {renderPaginationItems()}
-                        <Pagination.Next
 
-                            onClick={() => page < totalPages && setPage(page + 1)}
-                            disabled={page === totalPages}
-                        >
-                            Next
-                        </Pagination.Next>
-                    </Pagination>
-                </div>
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
+
             </div>
 
             <Modal show={show} onHide={handleClose} className="modal sm">

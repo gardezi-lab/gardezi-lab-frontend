@@ -2,7 +2,6 @@ import Button from 'react-bootstrap/Button';
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
-
 export default function TestPackageTable({ TestPackageList, onDelete, onEdit, loading }) {
     return (
         <>
@@ -36,7 +35,7 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                                     visible={true}
                                                     height="60"
                                                     width="60"
-                                                    color="#fcb040"
+                                                     color="#fcb040"
                                                     ariaLabel="three-circles-loading"
                                                 />
                                             </div>
@@ -54,10 +53,10 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                             <td>
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
                                                     <FaPenToSquare
-                                                        onClick={() => onEdit(dept)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                        onClick={() => onEdit(test)} style={{ fontSize: "22px", cursor: "pointer" }} />
                                                     <FaRegTrashCan onClick={() => {
                                                         if (window.confirm("Are you sure you want to delete this department?")) {
-                                                            onDelete(dept.department_id);
+                                                            onDelete(test.id);
                                                         }
                                                     }}
                                                         style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
