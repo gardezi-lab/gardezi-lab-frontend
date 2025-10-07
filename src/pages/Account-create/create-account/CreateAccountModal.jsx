@@ -6,45 +6,42 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import httpClient from "../../../services/httpClient";
 
-export default function CreateAccountModal({ onSave, department, onCancel }) {
-  const [departmentName, setDepartmentName] = useState("");
-  const [headCode, setheadCode] = useState("");
+export default function CreateAccountModal({ onSave, account, onCancel }) {
+  const [headCode, setHeadCode] = useState("");
   const [headName, setHeadName] = useState("");
   const [ob, setOb] = useState("");
   const [obDate, setObDate] = useState("");
   const [parentAccount, setParentAccount] = useState("");
 
+  const [parentOptions, setParentOptions] = useState([]);
 
-  const [parentOptions, setParentOption] = useState([]);
-  const getDepartmentData = async () => {
+  const getAccountData = async () => {
     try {
       const data = await httpClient.get("/account");
       if (data) {
-        setParentOption(data);
+        setParentOptions(data);
       }
     } catch (err) {
       console.error(err);
-    } finally {
     }
   };
 
-
   useEffect(() => {
-    getDepartmentData();
-    if (department) {
-      setheadCode(department.head_code);
-      setHeadName(department.head_name);
-      setOb(department.ob);
-      setObDate(department.ob_date);
-      setParentAccount(department.parent_account);
+    getAccountData();
+    if (account) {
+      setHeadCode(account.head_code);
+      setHeadName(account.head_name);
+      setOb(account.ob);
+      setObDate(account.ob_date);
+      setParentAccount(account.parent_account);
     } else {
-      setheadCode("");
+      setHeadCode("");
       setHeadName("");
       setOb("");
       setObDate("");
       setParentAccount("");
     }
-  }, [department]);
+  }, [account]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,10 +54,10 @@ export default function CreateAccountModal({ onSave, department, onCancel }) {
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Account name</Form.Label>
+              <Form.Label>Account Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Head name"
+                placeholder="Enter account name"
                 value={headName}
                 onChange={(e) => setHeadName(e.target.value)}
                 required
@@ -72,9 +69,9 @@ export default function CreateAccountModal({ onSave, department, onCancel }) {
               <Form.Label>Account Code</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Head Code"
+                placeholder="Enter account code"
                 value={headCode}
-                onChange={(e) => setheadCode(e.target.value)}
+                onChange={(e) => setHeadCode(e.target.value)}
                 required
               />
             </Form.Group>
@@ -87,7 +84,7 @@ export default function CreateAccountModal({ onSave, department, onCancel }) {
               <Form.Label>Opening Balance</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Opening balence"
+                placeholder="Enter opening balance"
                 value={ob}
                 onChange={(e) => setOb(e.target.value)}
                 required
@@ -99,7 +96,6 @@ export default function CreateAccountModal({ onSave, department, onCancel }) {
               <Form.Label>Opening Balance Date</Form.Label>
               <Form.Control
                 type="date"
-                placeholder="ob date"
                 value={obDate}
                 onChange={(e) => setObDate(e.target.value)}
                 required
@@ -134,7 +130,7 @@ export default function CreateAccountModal({ onSave, department, onCancel }) {
             Cancel & Close
           </Button>
           <Button variant="primary" type="submit">
-            {department ? "Update" : "Save"}
+            {account ? "Update Account" : "Save Account"}
           </Button>
         </div>
       </Form>

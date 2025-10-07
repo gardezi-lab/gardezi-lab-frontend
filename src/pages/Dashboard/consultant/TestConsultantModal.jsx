@@ -71,7 +71,7 @@ export default function TestConsultantModal({ onSave, consultant, onCancel }) {
                     <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Doctor Name :</Form.Label>
+                                <Form.Label>Name :</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Enter Name"

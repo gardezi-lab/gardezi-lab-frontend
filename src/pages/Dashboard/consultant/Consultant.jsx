@@ -167,7 +167,7 @@ export default function Consultant() {
                             handleShow();
                         }}
                     >
-                        <i className="fas fa-plus me-2"></i> Add Consultant
+                        <i className="fas fa-plus me-2"></i> Add User
                     </button>
                 </div>
             </div >

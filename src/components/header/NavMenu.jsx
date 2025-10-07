@@ -66,11 +66,11 @@ const menuItems = [
                 href: "/testprofile",
             },
             {
-                label: "Consultants",
+                label: "User",
                 icon: "uil-user-md", // 👨‍⚕️
                 href: "/consultant",
             },
-             {
+            {
                 label: "Add Role",
                 icon: "uil-user-md", // 👨‍⚕️
                 href: "/role",
@@ -429,6 +429,23 @@ const menuItems = [
 ];
 
 function DropdownItem({ label, icon, href, isSubDropdown }) {
+    const handleClick = () => {
+        // close all open dropdowns
+        const dropdowns = document.querySelectorAll(".dropdown-menu.show");
+        dropdowns.forEach((dropdown) => {
+            const parent = dropdown.closest(".dropdown");
+            if (parent) {
+                const toggle = parent.querySelector('[data-bs-toggle="dropdown"]');
+                if (toggle) {
+                    const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                    if (bsDropdown) {
+                        bsDropdown.hide();
+                    }
+                }
+            }
+        });
+    };
+
     if (isSubDropdown) {
         return (
             <li className="dropdown">
@@ -455,7 +472,8 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
             </li>
         );
     }
-// commit by mazhar
+
+    // ✅ Normal dropdown item (auto close after click)
     return (
         <li>
             <NavLink
@@ -463,6 +481,7 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
                 className={({ isActive }) =>
                     `dropdown-item ${isActive ? "active" : ""}`
                 }
+                onClick={handleClick} // 👈 add auto-close here
             >
                 <div className="dropdown-item-wrapper">
                     <span
@@ -476,6 +495,7 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
         </li>
     );
 }
+
 
 
 

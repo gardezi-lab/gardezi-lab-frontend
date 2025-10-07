@@ -249,14 +249,17 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                     onChange={(e) => setPatientEntryRefferedBy(e.target.value)}
                                 >
                                     <option value="">Select Consultant</option>
-                                    {users.map((user) => (
-                                        <option key={user.id} value={user.name}>
-                                            {user.name}
-                                        </option>
-                                    ))}
+                                    {users
+                                        .filter((user) => user.role === "Doctor") // ✅ sirf Doctor role
+                                        .map((doctor) => (
+                                            <option key={doctor.id} value={doctor.name}>
+                                                {doctor.name}
+                                            </option>
+                                        ))}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
+
 
                         <Col>
                             <Form.Group className="mb-3">
@@ -469,19 +472,16 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Button className="btn btn-primary fw-bold mt-4"> Verify </Button>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group className="mb-3 mt-4" controlId="exampleForm.ControlInput1">
-                                <Button variant="primary" type="submit">
-                                    {patiententry ? "Update" : "Submit"}
-                                </Button>
-                            </Form.Group>
-                        </Col>
                     </Row>
+                    <hr />
+                    <div className="d-flex justify-content-end gap-2">
+                        <Button variant="secondary">
+                            Verify
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            {patiententry ? "Update" : "Submit"}
+                        </Button>
+                    </div>
                 </Form>
             </Container >
 
