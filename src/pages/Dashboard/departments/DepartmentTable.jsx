@@ -13,9 +13,9 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
           <table className="table table-bordered" style={{ minHeight: '150px' }} >
             <thead>
               <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
-                <th scope="col">Sr.</th>
-                <th scope="col">Name</th>
-                <th scope="col">Action</th>
+                <th scope="col" style={{ width: '5%' }}>Sr.</th>
+                <th scope="col ">Name</th>
+                <th scope="col" style={{ width: '8%' }}>Action</th>
               </tr>
             </thead>
 

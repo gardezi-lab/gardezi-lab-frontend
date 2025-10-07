@@ -10,7 +10,7 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                         <table class="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }} >
-                                    <th scope="col">Sr.</th>
+                                    <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Phone</th>
                                     <th scope="col">%Age</th>
@@ -47,7 +47,7 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                                 <tbody >
                                     {consultantList.map((consultant, index) => (
                                         <tr key={consultant.users_id}>
-                                            <td>{index + 1}</td>
+                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                             <td>{consultant.name}</td>
                                             <td>{consultant.contact_no}</td>
                                             <td>{consultant.age}</td>

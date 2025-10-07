@@ -2,33 +2,48 @@ import { useEffect, useState } from "react";
 import feather from "feather-icons";
 import Modal from 'react-bootstrap/Modal';
 import TestProfilesModal from "./TestProfilesModal";
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import TestProfileTable from "./TestProfileTable";
 import httpClient from "../../../services/httpClient";
+import Pagination from "react-bootstrap/Pagination";
 
-export default function ProfilesScreen() {
+export default function TestProfile() {
 
-    const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true);
+    const [showTestProfilesModal, setShowTestProfilesModal] = useState(false);
     const [selectedTestProfile, setSelectedTestProfile] = useState(null)
     const [loading, setLoading] = useState(false);
-    const [TestProfileList, setTestProfileList] = useState([])
+    const [testProfileList, setTestProfileList] = useState([])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 5;
+
+    const [search, setSearch] = useState("");
+
+    const handleClose = () => {
+        setShowTestProfilesModal(false);
+        setIsCurrentEditModalOpen(false);
+        setSelectedTestProfile(null);
+    };
+    const handleShow = () => setShowTestProfilesModal(true);
+
     const getTestProfileData = async () => {
-        console.log("testa and profile",)
         setLoading(true);
         try {
-            const data = await httpClient.get("/test_profile/");
-            console.log("response data:", data)
-            if (data) {
-                setTestProfileList(data);
+            const url = `/test_profile?search=${encodeURIComponent(
+                search || ""
+            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+
+            const response = await httpClient.get(url);
+            if (response) {
+                setTestProfileList(response.data || []);
+                setTotalPages(response.totalPages || 1);
             }
-            console.log("TestProfile Data:", data);
         } catch (err) {
-            console.error("Fetch TestProfile Error:", err);
+            console.error("Fetch testprofile Error:", err);
         } finally {
-            setLoading(false); // ✅ stop loader
+            setLoading(false);
         }
     };
 
@@ -42,9 +57,12 @@ export default function ProfilesScreen() {
                 sample_required: formData.sample_required,
                 select_header: formData.select_header,
                 fee: formData.fee,
+                department_id: formData.department_id,
                 delivery_time: formData.delivery_time,
                 serology_elisa: formData.serology_elisa,
                 interpretation: formData.interpretation,
+                unit_ref_range: formData.unit_ref_range || true,
+                test_formate: formData.test_formate || true,
             };
 
             if (isCurrentEditModalOpen && selectedTestProfile) {
@@ -83,16 +101,53 @@ export default function ProfilesScreen() {
         handleShow();
     };
 
-    const handleClose = () => {
-        setShow(false);
-        setSelectedTestProfile(null);   // ✅ reset selected profile
-        setIsCurrentEditModalOpen(false); // ✅ reset edit mode
-    };
 
     useEffect(() => {
         feather.replace();
         getTestProfileData();
-    }, []);
+    }, [page, search]);
+
+    const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
+
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
 
     return (
         <div>
@@ -108,6 +163,11 @@ export default function ProfilesScreen() {
                         className="form-control"
                         placeholder="Search profiles..."
                         style={{ width: "220px" }}
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1);
+                            setSearch(e.target.value);
+                        }}
                     />
 
                     <select className="form-select" style={{ width: "180px" }}>
@@ -118,7 +178,10 @@ export default function ProfilesScreen() {
                     <button
                         className="btn btn-success primary"
                         type="button"
-                        onClick={handleShow}
+                        onClick={() => {
+                            setIsCurrentEditModalOpen(false);
+                            handleShow();
+                        }}
                     >
                         <i className="fas fa-plus me-2"></i> Add Profile
                     </button>
@@ -127,7 +190,7 @@ export default function ProfilesScreen() {
 
             {/* Table Section */}
             <TestProfileTable
-                TestProfileList={TestProfileList}
+                TestProfileList={testProfileList}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 loading={loading}
@@ -141,37 +204,42 @@ export default function ProfilesScreen() {
                 </button>
 
                 {/* Right side pagination */}
-                <nav>
-                    <ul className="pagination mb-0 ">
-                        <li className="page-item disabled">
-                            <button className="page-link ">Previous</button>
-                        </li>
-                        <li className="page-item active ">
-                            <button className="page-link primary">1</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">2</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">3</button>
-                        </li>
-                        <li className="page-item">
-                            <button className="page-link">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
             </div>
 
-            <Modal show={show} onHide={handleClose} className="modal-xl">
-                <Modal.Header className="primary" >
-                    <Modal.Title className="color-white fw-bold">Test Name or Profile Name</Modal.Title>
+            <Modal show={showTestProfilesModal} onHide={handleClose}
+                backdrop="static" keyboard={false} className="modal-md">
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">
+                        {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
+                    </Modal.Title>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={handleClose} // ✅ sirf is button pe close hoga
+                        aria-label="Close"
+                    ></button>
                 </Modal.Header>
                 <Modal.Body>
                     <TestProfilesModal
                         onSave={handleSave}
                         TestProfile={selectedTestProfile}
                         onCancel={handleClose}
-
                     />
                 </Modal.Body>
             </Modal>

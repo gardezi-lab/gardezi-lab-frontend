@@ -252,25 +252,31 @@ export default function PatientEntry() {
                 </Pagination>
             </div>
 
-            <Modal show={showPatientEntryModal} onHide={handleClose} className="modal-xl">
-                <Modal.Header className="primary" >
+            <Modal
+                show={showPatientEntryModal}
+                onHide={handleClose}
+                backdrop="static"   // ✅ side click se close nahi hoga
+                keyboard={false}    // ✅ ESC press karne se close nahi hoga
+                className="modal-xl"
+            >
+                <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">New Patient</Modal.Title>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={handleClose} // ✅ sirf is button pe close hoga
+                        aria-label="Close"
+                    ></button>
                 </Modal.Header>
                 <Modal.Body>
                     <PatientEntryModal
                         onSave={handleSave}
                         patiententry={selectedPatientEntry}
-                        onCancel={handleClose} />
+                        onCancel={handleClose}
+                    />
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" className="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
             </Modal>
+
         </>
     )
 }

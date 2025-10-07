@@ -27,7 +27,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <table className="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
-                                    <th scope="col">Sr.</th>
+                                    <th scope="col" style={{width: '5%',textAlign: 'center'}}>Sr.</th>
                                     <th scope="col">X</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Name</th>
@@ -66,7 +66,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tbody>
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
-                                            <td>{index + 1}</td>
+                                            <td style={{textAlign: 'center'}}>{index + 1}</td>
                                             <td></td>
                                             <td></td>
                                             <td>{patient.patient_name}</td>

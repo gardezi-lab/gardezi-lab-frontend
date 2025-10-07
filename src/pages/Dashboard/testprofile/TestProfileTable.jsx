@@ -1,7 +1,19 @@
-import Button from 'react-bootstrap/Button';
+import { useState } from "react";
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+import Modal from 'react-bootstrap/Modal';
+import ParameterModal from "./ParameterModal";
+
 
 export default function TestProfileTable({ TestProfileList, onDelete, onEdit, loading }) {
+    const [selectedTest, setSelectedTest] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => {
+        setShowModal(false);
+        setSelectedTest(null);
+    };
+
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -10,11 +22,12 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                         <table className="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
-                                    <th scope="col">Sr.</th>
+                                    <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
                                     <th scope="col">Test</th>
                                     <th scope="col">Header</th>
                                     <th scope="col">Fees</th>
                                     <th scope="col">Delivery Date</th>
+                                    <th scope="col">Parameter</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -22,7 +35,7 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                             {loading ? (
                                 <tbody>
                                     <tr>
-                                        <td colSpan="6">
+                                        <td colSpan="7">
                                             <div
                                                 style={{
                                                     display: "flex",
@@ -46,23 +59,35 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                 <tbody>
                                     {TestProfileList.map((test, index) => (
                                         <tr key={test.id || index}>
-                                            <td>{index + 1}</td>
+                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                             <td>{test.test_name}</td>
                                             <td>{test.select_header}</td>
                                             <td>{test.fee}</td>
                                             <td>{test.delivery_time}</td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                    <button onClick={() => onEdit(test)}>
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
+                                                <button
+                                                    className="btn btn-sm btn-outline-primary"
+                                                    onClick={() => {
+                                                        setSelectedTest(test);
+                                                        setShowModal(true);
+                                                    }}
+                                                >
+                                                    Manage Parameters
+                                                </button></td>
+                                            <td>
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(test)}
+                                                        style={{ fontSize: "22px", cursor: "pointer" }}
+                                                    />
+                                                    <FaRegTrashCan
                                                         onClick={() => {
-                                                            onDelete(test.id);
+                                                            if (window.confirm("Are you sure you want to delete this department?")) {
+                                                                onDelete(test.id);
+                                                            }
                                                         }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -80,6 +105,27 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                         </table>
                     </div>
                 </div>
+                <Modal
+                    show={showModal}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    className="modal-xl"
+                >
+                    <Modal.Header className="primary">
+                        <Modal.Title  className="color-white fw-bold"
+                        >Manage Parameters for Test Profile: {selectedTest?.test_name}</Modal.Title>
+
+                        <button type="button" className="btn-close" onClick={handleClose}></button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {selectedTest && (
+                            <ParameterModal 
+                            test={selectedTest} 
+                            onClose={handleClose} />
+                        )}
+                    </Modal.Body>
+                </Modal>
             </div>
         </>
     );

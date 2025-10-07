@@ -196,11 +196,18 @@ export default function CreateAccount() {
         </Pagination>
       </div>
 
-      <Modal show={showAccountModal} onHide={handleClose} className="modal sm">
+      <Modal show={showAccountModal} onHide={handleClose}
+        backdrop="static" keyboard={false} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isCurrentEditModalOpen ? "Edit Account" : "Add Account"}
           </Modal.Title>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={handleClose} // ✅ sirf is button pe close hoga
+            aria-label="Close"
+          ></button>
         </Modal.Header>
         <Modal.Body>
           <CreateAccountModal

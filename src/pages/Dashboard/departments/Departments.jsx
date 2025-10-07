@@ -180,7 +180,7 @@ export default function Departments() {
           </Pagination.Prev>
           {renderPaginationItems()}
           <Pagination.Next
-            
+
             onClick={() => page < totalPages && setPage(page + 1)}
             disabled={page === totalPages}
           >
@@ -189,11 +189,18 @@ export default function Departments() {
         </Pagination>
       </div>
 
-      <Modal show={showDepartmentModal} onHide={handleClose} className="modal sm">
+      <Modal show={showDepartmentModal} onHide={handleClose}
+        backdrop="static" keyboard={false} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
           </Modal.Title>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={handleClose} // ✅ sirf is button pe close hoga
+            aria-label="Close"
+          ></button>
         </Modal.Header>
         <Modal.Body>
           <DepartmentModal
