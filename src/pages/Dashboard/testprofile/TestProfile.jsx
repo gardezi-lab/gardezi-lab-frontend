@@ -226,7 +226,7 @@ export default function TestProfile() {
                 backdrop="static" keyboard={false} className="modal-md">
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">
-                        {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
+                        {isCurrentEditModalOpen ? "Edit Department" : "Test & Profile"}
                     </Modal.Title>
                     <button
                         type="button"
