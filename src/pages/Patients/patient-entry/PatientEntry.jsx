@@ -54,14 +54,14 @@ export default function PatientEntry() {
     };
 
     const handleSave = async (formData) => {
+
         setLoading(true);
         try {
             const obj = {
                 cell: formData.patiententryCell,
                 patient_name: formData.patiententryPatientName,
-                contact_no: formData.patiententryCell,
                 father_hasband_MR: formData.patiententryFatherHasbandMR,
-                age: Number(formData.patiententryAge),
+                age: formData.patiententryAge,
                 company: formData.patiententryCompany,
                 reffered_by: formData.patiententryRefferedBy,
                 gender: formData.patiententryGender,
@@ -71,9 +71,9 @@ export default function PatientEntry() {
                 sample: formData.patiententrySample,
                 priority: formData.patiententryPriority,
                 remarks: formData.patiententryRemarks,
-                test: formData.patiententryTest,
-
+                test: formData.test   // ✅ already array of {name, fee}
             };
+
 
             if (isCurrentEditModalOpen && selectedPatientEntry) {
                 await httpClient.put(
@@ -81,7 +81,26 @@ export default function PatientEntry() {
                     obj
                 );
             } else {
-                await httpClient.post("/patient_entry/", obj);
+                const obj1 = {
+                    "cell": "03111234567",
+                    "patient_name": "Murtaza Hussain",
+                    "father_hasband_MR": "Mr. Hussain",
+                    "age": "30 days",
+                    "company": "ABC Diagnostics",
+                    "reffered_by": "Dr. Bilal",
+                    "gender": "Male",
+                    "email": "murtaza@example.com",
+                    "address": "Street 5, Lahore",
+                    "package": "Basic Health",
+                    "sample": "Blood, Urine",
+                    "priority": "Normal",
+                    "remarks": "No special instructions",
+                    "test": [
+                        { "name": "Complete Blood Count", "fee": 1200 },
+                        { "name": "Liver Function Test", "fee": 1500 }
+                    ]
+                }
+                await httpClient.post("/patient_entry/", obj1);
             }
 
             getPatientEntryData();

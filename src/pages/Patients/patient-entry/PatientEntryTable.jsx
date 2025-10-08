@@ -11,15 +11,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [showResultModal, setShowResultModal] = useState(false);
-
-    // ✅ States for result modal
+    //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
     const [selectedTest, setSelectedTest] = useState("");
     const [resultData, setResultData] = useState({});
     const [saving, setSaving] = useState(false);
 
-    // ✅ Fetch test list when modal opens
+    //  Fetch test list when modal opens
     useEffect(() => {
         if (!showResultModal || !selectedPatient) return;
 
@@ -30,7 +29,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient?.patient_entry_id ||
                     selectedPatient?.id;
 
-                const response = await httpClient.get(`/patient_entry/tests_result/${patient_Id}`);
+                const response = await httpClient.get(`/results/patient/${patient_Id}`);
                 const apiData = response.data ?? response;
                 const dataArray = Array.isArray(apiData.tests) ? apiData.tests : [];
 
@@ -106,6 +105,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
     const dynamicColumns = [...new Set(parameters.flatMap((p) => Object.keys(p)))];
 
+
+    // cell numbe , gender , 
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -114,10 +115,11 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <table className="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
-                                    <th scope="col" style={{width: '5%',textAlign: 'center'}}>Sr.</th>
+                                    <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
+                                    <th>Name</th>
                                     <th scope="col">X</th>
                                     <th>Date</th>
-                                    <th>Name</th>
+
                                     <th>MR#</th>
                                     <th scope="col">Reception</th>
                                     <th scope="col">Fees</th>
@@ -155,10 +157,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tbody>
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
-                                            <td style={{textAlign: 'center'}}>{index + 1}</td>
+                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                            <td>{patient.patient_name}</td>
                                             <td></td>
                                             <td>{patient.date || "-"}</td>
-                                            <td>{patient.patient_name}</td>
                                             <td>{patient.father_hasband_MR}</td>
                                             <td></td>
                                             <td></td>

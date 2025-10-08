@@ -229,7 +229,7 @@ export default function Departments() {
           <button
             type="button"
             className="btn-close"
-            onClick={handleClose} // ✅ sirf is button pe close hoga
+            onClick={handleClose} // sirf is button pe close hoga
             aria-label="Close"
           ></button>
         </Modal.Header>

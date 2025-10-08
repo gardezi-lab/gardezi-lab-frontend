@@ -37,9 +37,12 @@ export default function PatientEntryModal({ onSave }) {
     const [balance, setBalance] = useState(0);
     const [rows, setRows] = useState([]);
     useEffect(() => {
-        const totalPrice = rows.reduce((sum, row) => sum + (parseFloat(row.price) || 0), 0);
+        console.log("Rows updated:", rows);
+        const totalPrice = rows.reduce((sum, row) => sum + (parseFloat(row.fee) || 0), 0);
+        console.log("Total price calculated:", totalPrice);
         setTotal(totalPrice);
     }, [rows]);
+
 
     useEffect(() => {
         let discountAmount = dscPkr;
@@ -211,9 +214,11 @@ export default function PatientEntryModal({ onSave }) {
             setErrorMessage(" Please select Test");
             return;
         }
-
-        // ✅ sab valid ho gaya — form submit karo
-        setErrorMessage(""); // clear error message
+        const formattedTests = rows.map(row => ({
+            name: row.test_name,
+            fee: parseFloat(row.fee) || 0
+        }));
+        setErrorMessage("");
         onSave({
             patiententryCell,
             patiententryPatientName,
@@ -228,7 +233,7 @@ export default function PatientEntryModal({ onSave }) {
             patiententrySample,
             patiententryPriority,
             patiententryRemarks,
-            patiententryTest,
+            test: formattedTests
         });
     };
 
@@ -239,23 +244,19 @@ export default function PatientEntryModal({ onSave }) {
         if (!patiententryTest) {
             return;
         }
-
         const selectedTest = testProfiles.find(
             (test) => test.test_name === patiententryTest
-        );
-
+        )
         const newRow = {
             id: selectedTest?.id || rows.length + 1,
             test_name: selectedTest?.test_name || patiententryTest,
             sample_required: selectedTest?.sample_required || "N/A",
             delivery_time: selectedTest?.delivery_time || "N/A",
-            price: selectedTest?.price || 0,
+            fee: selectedTest?.fee || "N/A",
         };
 
         setRows([...rows, newRow]);
     };
-
-
     const handleDelete = (index) => {
         setRows(rows.filter((_, i) => i !== index));
     };
@@ -487,8 +488,8 @@ export default function PatientEntryModal({ onSave }) {
                                                         <td>{row.test_name}</td>
                                                         <td>{row.sample_required}</td>
                                                         <td>{row.delivery_time}</td>
-                                                        <td>{row.price}</td>
-                                                        <td>
+                                                        <td>{row.fee}</td>
+                                                        <td className="text-center">
                                                             <span
                                                                 className="text-danger fw-bold"
                                                                 style={{ cursor: "pointer" }}
