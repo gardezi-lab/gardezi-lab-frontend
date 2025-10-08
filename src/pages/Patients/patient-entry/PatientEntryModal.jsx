@@ -43,6 +43,18 @@ export default function PatientEntryModal({ onSave }) {
         setTotal(totalPrice);
     }, [rows]);
 
+    useEffect(() => {
+        let discountAmount = dscPkr;
+
+        if (dscPercent > 0) {
+            discountAmount = (total * dscPercent) / 100;
+            setDscPkr(discountAmount.toFixed(0));
+        }
+
+        const newNet = total - discountAmount;
+        setNet(newNet >= 0 ? newNet : 0);
+        setBalance(newNet - paid);
+    }, [total, dscPkr, dscPercent, paid]);
 
     useEffect(() => {
         let discountAmount = dscPkr;

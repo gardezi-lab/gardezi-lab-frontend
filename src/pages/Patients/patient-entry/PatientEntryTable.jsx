@@ -29,7 +29,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient?.patient_entry_id ||
                     selectedPatient?.id;
 
-                const response = await httpClient.get(`/results/patient/${patient_Id}`);
+                const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
                 const apiData = response.data ?? response;
                 const dataArray = Array.isArray(apiData.tests) ? apiData.tests : [];
 
@@ -157,7 +157,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tbody>
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
-                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                            <td>{index + 1}</td>
+                                            <td></td>
+                                            <td>{patient.date || "-"}</td>
                                             <td>{patient.patient_name}</td>
                                             <td></td>
                                             <td>{patient.date || "-"}</td>
