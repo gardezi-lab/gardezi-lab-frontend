@@ -6,12 +6,14 @@ import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
 import httpClient from "../../../services/httpClient";
 
-export default function TestProfilesModal({ onSave, TestProfile, onCancel, existingTests }) {
+export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
     const [departments, setDepartments] = useState([]);
     const [interpretations, setInterpretations] = useState([]);
     const [error, setError] = useState("");
+    const [testCodeError, setTestCodeError] = useState("");
 
-    // ✅ Fetch departments
+
+    // Fetch departments
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
@@ -25,7 +27,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
         fetchDepartments();
     }, []);
 
-    // ✅ Fetch interpretations
+    // Fetch interpretations
     useEffect(() => {
         const fetchInterpretations = async () => {
             try {
@@ -38,7 +40,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
         fetchInterpretations();
     }, []);
 
-    // ✅ Form state
+    // Form state
     const [formData, setFormData] = useState({
         test_name: "",
         test_code: "",
@@ -49,11 +51,11 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
         delivery_time: "",
         serology_elisa: "",
         interpretation: "",
-        unit_ref_range: true,
-        test_formate: true
+        unit_ref_range: false,
+        test_formate: false
     });
 
-    // ✅ When editing test
+    //  When editing test
     useEffect(() => {
         if (TestProfile) {
             const selectedDept = departments.find(
@@ -75,51 +77,97 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
         }
     }, [TestProfile, departments]);
 
-    // ✅ Handle all field changes
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+    // Add this below handleChange
+    const handleBlur = async (e) => {
+        const { name, value } = e.target;
 
-        if (name === "department_id") {
-            const selectedDept = departments.find(d => d.id == value);
-            setFormData({
-                ...formData,
-                department_id: selectedDept ? selectedDept.id : "",
-                select_header: selectedDept ? selectedDept.department_name : ""
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [name]: type === "checkbox" ? checked : value.trimStart()
-            });
+        if (name === "test_code" && value.trim() !== "") {
+            try {
+                const response = await httpClient.post("/test_profile/check_test_code", {
+                    test_code: value.trim(),
+                });
+
+                // 👇 handle nested or direct response safely
+                const isUnique =
+                    response?.data?.unique ??
+                    response?.data?.data?.unique ??
+                    response?.unique ??
+                    response?.data?.[0]?.unique;
+
+                console.log("Backend returned unique:", isUnique, response.data);
+
+                if (isUnique === false) {
+                    setTestCodeError((prev) =>
+                        prev === "This test code already exists."
+                            ? prev
+                            : "This test code already exists."
+                    );
+                } else if (isUnique === true) {
+                    setTestCodeError("");
+                } else {
+                    setTestCodeError("Something went wrong while checking test code.");
+                }
+            } catch (error) {
+                console.error("Error checking test code:", error);
+                setTestCodeError("Something went wrong while checking test code.");
+            }
         }
     };
 
+    // Handle all field changes
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
 
-    // ✅ Submit form
+        // Jab user test_code likh raha ho → error clear
+        if (name === "test_code") {
+            setTestCodeError(""); // clear while typing
+        }
+
+        if (name === "department_id") {
+            const selectedDept = departments.find(d => d.id == value);
+            setFormData(prev => ({
+                ...prev,
+                department_id: selectedDept ? selectedDept.id : "",
+                select_header: selectedDept ? selectedDept.department_name : ""
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === "checkbox" ? checked : value.trimStart()
+            }));
+        }
+    };
+
+    // Submit form
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formData.test_name.trim() || !formData.test_code.trim()) {
-            setError("Test Name and Test Code cannot be empty.");
+        const { test_name, test_code, fee, delivery_time } = formData;
+        // Only 4 are truly required
+        if (!test_name.trim() || !test_code.trim() || !fee.trim() || !delivery_time) {
+            setError("Please fill in Test Name, Test Code, Fee, and Delivery Time.");
             return;
         }
-        // ✅ Make sure department_id is properly set before saving
+        // Get department if selected
         const selectedDept = departments.find(d => d.id == formData.department_id);
+        //  Always send all expected fields — even if empty
         const payload = {
-            ...formData,
+            test_name: formData.test_name || "",
+            test_code: formData.test_code || "",
+            sample_required: formData.sample_required || "",
+            select_header: selectedDept ? selectedDept.department_name : "",
             department_id: selectedDept ? selectedDept.id : "",
-            select_header: selectedDept ? selectedDept.department_name : formData.select_header
+            fee: formData.fee || "",
+            delivery_time: formData.delivery_time || "",
+            serology_elisa: formData.serology_elisa || "",
+            interpretation: formData.interpretation || "",
+            unit_ref_range: formData.unit_ref_range ? 1 : 0,
+            test_formate: formData.test_formate ? 1 : 0
         };
-
-        if (!payload.department_id) {
-            setError("Please select a valid department.");
-            return;
-        }
 
         setError("");
         onSave(payload);
     };
-
 
     return (
         <Container>
@@ -134,7 +182,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                                 value={formData.test_name}
                                 onChange={handleChange}
                                 placeholder="Will Show on Report"
-                                required
                             />
                         </Form.Group>
                     </Col>
@@ -147,11 +194,15 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                                 name="test_code"
                                 value={formData.test_code}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 placeholder="For search short code"
-                                required
                             />
+                            {testCodeError && (
+                                <small className="text-danger mt-1 d-block">{testCodeError}</small>
+                            )}
                         </Form.Group>
                     </Col>
+
 
                     <Col>
                         <Form.Group className="mb-3">
@@ -162,7 +213,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                                 value={formData.sample_required}
                                 onChange={handleChange}
                                 placeholder="Sample Required"
-                                required
                             />
                         </Form.Group>
                     </Col>
@@ -205,12 +255,13 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                         <Form.Group className="mb-3">
                             <Form.Label>Delivery Time</Form.Label>
                             <Form.Control
-                                type="date"
-                                placeholder="Delivery time in hr"
                                 name="delivery_time"
                                 value={formData.delivery_time}
+                                type= "number"
                                 onChange={handleChange}
-                            />
+                            >
+                            </Form.Control>
+
                         </Form.Group>
                     </Col>
                     <Col>
@@ -234,7 +285,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                                 name="interpretation"
                                 value={formData.interpretation}
                                 onChange={handleChange}
-                                required
                             >
                                 <option value="">Select Interpretation</option>
                                 {interpretations.map((inter) => (
@@ -247,7 +297,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                     </Col>
                 </Row>
 
-                {/* ✅ Checkbox Row 1 */}
+                {/* Checkbox Row 1 */}
                 <Row>
                     <Col>
                         <Form.Check
@@ -261,13 +311,13 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel, exist
                     </Col>
                 </Row>
 
-                {/* ✅ Checkbox Row 2 */}
+                {/* Checkbox Row 2 */}
                 <Row>
                     <Col>
                         <Form.Check
                             type="checkbox"
                             id="checkbox2"
-                            name="widal_format_change"
+                            name="test_formate"
                             label="Check box for test like WIDAL and Other test types whose formate change"
                             checked={formData.test_formate}
                             onChange={handleChange}
