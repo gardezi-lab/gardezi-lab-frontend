@@ -11,6 +11,8 @@ export default function Departments() {
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -130,21 +132,10 @@ export default function Departments() {
 
   return (
     <div>
-      <h5 className="fw-bold page-header">Department</h5>
 
-      <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+      <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
+        <h5 className="fw-bold page-header">Department</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <input 
-            type="text"
-            className="form-control"
-            placeholder="Search name"
-            style={{ width: "220px" }}
-            value={search}
-            onChange={(e) => {
-              setPage(1);
-              setSearch(e.target.value);
-            }}
-          />
           <button
             className="btn btn-success primary"
             type="button"
@@ -155,7 +146,16 @@ export default function Departments() {
           >
             <i className="fas fa-plus me-2"></i> Add Departments
           </button>
+          {/* Filter Button */}
+          <button
+            className="btn btn-outline-primary"
+            type="button"
+            onClick={() => setShowFilterModal(true)}
+          >
+            <i className="fas fa-filter"></i>
+          </button>
         </div>
+
       </div>
 
       <DepartmentTable
@@ -189,8 +189,39 @@ export default function Departments() {
         </Pagination>
       </div>
 
-      <Modal show={showDepartmentModal} onHide={handleClose}
-        backdrop="static" keyboard={false} className="modal sm">
+      <Modal show={showFilterModal} >
+        <Modal.Header >
+          {/* <Modal.Title>Filters</Modal.Title> */}
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <label className="form-label">Search by Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search name"
+              value={search}
+              onChange={(e) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={() => setShowFilterModal(false)}>
+            Close
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowFilterModal(false)}
+          >
+            Apply
+          </button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showDepartmentModal} className="modal sm">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isCurrentEditModalOpen ? "Edit Department" : "Add Department"}
@@ -198,7 +229,7 @@ export default function Departments() {
           <button
             type="button"
             className="btn-close"
-            onClick={handleClose} // ✅ sirf is button pe close hoga
+            onClick={handleClose} // sirf is button pe close hoga
             aria-label="Close"
           ></button>
         </Modal.Header>

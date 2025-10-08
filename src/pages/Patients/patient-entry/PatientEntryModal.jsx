@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
 
-export default function PatientEntryModal({ onSave, patiententry }) {
+export default function PatientEntryModal({ onSave }) {
 
     const [patiententryCell, setPatientEntryCell] = useState("");
     const [patiententryPatientName, setPatientEntryPatientName] = useState("");
@@ -26,8 +26,48 @@ export default function PatientEntryModal({ onSave, patiententry }) {
     const [users, setUsers] = useState([]);
     const [testProfiles, setTestProfiles] = useState([]);
     const [packages, setPackages] = useState([]);
+    const [patiententry, setPatientEntry] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("");
     // const [patiententryCompany, setPatientEntryCompany] = useState("");
+    const [total, setTotal] = useState(0);
+    const [dscPkr, setDscPkr] = useState(0);
+    const [dscPercent, setDscPercent] = useState(0);
+    const [net, setNet] = useState(0);
+    const [paid, setPaid] = useState(0);
+    const [balance, setBalance] = useState(0);
+    const [rows, setRows] = useState([]);
+    useEffect(() => {
+        console.log("Rows updated:", rows);
+        const totalPrice = rows.reduce((sum, row) => sum + (parseFloat(row.fee) || 0), 0);
+        console.log("Total price calculated:", totalPrice);
+        setTotal(totalPrice);
+    }, [rows]);
 
+    useEffect(() => {
+        let discountAmount = dscPkr;
+
+        if (dscPercent > 0) {
+            discountAmount = (total * dscPercent) / 100;
+            setDscPkr(discountAmount.toFixed(0));
+        }
+
+        const newNet = total - discountAmount;
+        setNet(newNet >= 0 ? newNet : 0);
+        setBalance(newNet - paid);
+    }, [total, dscPkr, dscPercent, paid]);
+
+    useEffect(() => {
+        let discountAmount = dscPkr;
+
+        if (dscPercent > 0) {
+            discountAmount = (total * dscPercent) / 100;
+            setDscPkr(discountAmount.toFixed(0));
+        }
+
+        const newNet = total - discountAmount;
+        setNet(newNet >= 0 ? newNet : 0);
+        setBalance(newNet - paid);
+    }, [total, dscPkr, dscPercent, paid]);
 
     useEffect(() => {
         if (patiententry) {
@@ -66,7 +106,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
     useEffect(() => {
         const fetchCompanies = async () => {
             try {
-                const res = await httpClient.get("/companies_panel"); // ✅ API call
+                const res = await httpClient.get("/companies_panel");
                 if (Array.isArray(res)) {
                     setCompanies(res);
                 } else if (Array.isArray(res.data)) {
@@ -83,7 +123,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await httpClient.get("/users"); // ✅ API call
+                const res = await httpClient.get("/users");
                 if (Array.isArray(res)) {
                     setUsers(res);
                 } else if (Array.isArray(res.data)) {
@@ -100,7 +140,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
     useEffect(() => {
         const fetchTestProfiles = async () => {
             try {
-                const res = await httpClient.get("/test_profile"); // ✅ endpoint
+                const res = await httpClient.get("/test_profile");
                 if (Array.isArray(res)) {
                     setTestProfiles(res);
                 } else if (Array.isArray(res.data)) {
@@ -132,8 +172,65 @@ export default function PatientEntryModal({ onSave, patiententry }) {
     }, []);
 
 
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     onSave({
+    //         patiententryCell,
+    //         patiententryPatientName,
+    //         patiententryFatherHasbandMR,
+    //         patiententryAge,
+    //         patiententryCompany,
+    //         patiententryRefferedBy,
+    //         patiententryGender,
+    //         patiententryEmail,
+    //         patiententryAddress,
+    //         patiententryPackage,
+    //         patiententrySample,
+    //         patiententryPriority,
+    //         patiententryRemarks,
+    //         patiententryTest,
+    //     });
+    // };
+
+    // --- baqi states same rehengi (tumhara original code) ---
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // ✅ Manual Validation
+        if (!patiententryCell.trim()) {
+            setErrorMessage(" Please enter Cell#");
+            return;
+        }
+        if (!patiententryPatientName.trim()) {
+            setErrorMessage(" Please enter Patient Name");
+            return;
+        }
+        if (!patiententryAge.trim()) {
+            setErrorMessage(" Please enter Age");
+            return;
+        }
+        if (!patiententryRefferedBy.trim()) {
+            setErrorMessage(" Please select Referred By");
+            return;
+        }
+        if (!patiententryGender.trim()) {
+            setErrorMessage(" Please select Gender");
+            return;
+        }
+        if (!patiententrySample.trim()) {
+            setErrorMessage(" Please select Sample Type");
+            return;
+        }
+        if (!patiententryTest.trim()) {
+            setErrorMessage(" Please select Test");
+            return;
+        }
+        const formattedTests = rows.map(row => ({
+            name: row.test_name,
+            fee: parseFloat(row.fee) || 0
+        }));
+        setErrorMessage("");
         onSave({
             patiententryCell,
             patiententryPatientName,
@@ -148,28 +245,30 @@ export default function PatientEntryModal({ onSave, patiententry }) {
             patiententrySample,
             patiententryPriority,
             patiententryRemarks,
-            patiententryTest,
+            test: formattedTests
         });
     };
 
-    const [rows, setRows] = useState([]);
     const [dr, setDr] = useState("");
     const [cr, setCr] = useState("");
 
     const handleClick = () => {
-        // if (!head) return;
-
+        if (!patiententryTest) {
+            return;
+        }
+        const selectedTest = testProfiles.find(
+            (test) => test.test_name === patiententryTest
+        )
         const newRow = {
-            dr: dr === "" ? 0 : Number(dr),
-            cr: cr === "" ? 0 : Number(cr),
+            id: selectedTest?.id || rows.length + 1,
+            test_name: selectedTest?.test_name || patiententryTest,
+            sample_required: selectedTest?.sample_required || "N/A",
+            delivery_time: selectedTest?.delivery_time || "N/A",
+            fee: selectedTest?.fee || "N/A",
         };
 
         setRows([...rows, newRow]);
-
-        setDr("");
-        setCr("");
     };
-
     const handleDelete = (index) => {
         setRows(rows.filter((_, i) => i !== index));
     };
@@ -180,6 +279,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
         <>
             <Container>
                 <Form onSubmit={handleSubmit}>
+                    {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
                     <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -243,7 +343,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
 
                         <Col>
                             <Form.Group className="mb-3">
-                                <Form.Label>Referred By :</Form.Label>
+                                <Form.Label>Referred By:</Form.Label>
                                 <Form.Select
                                     value={patiententryRefferedBy}
                                     onChange={(e) => setPatientEntryRefferedBy(e.target.value)}
@@ -321,8 +421,8 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                     value={patiententrySample}
                                     onChange={(e) => setPatientEntrySample(e.target.value)}
                                 >
-                                    <option value="Take In Lab">Blood</option>
-                                    <option value="Received From Outside">Urine</option>
+                                    <option value="Take In Lab">Take In Lab</option>
+                                    <option value="Received From Outside">Taken Outside Lab</option>
                                 </Form.Select>
                             </Form.Group>
                         </Col>
@@ -343,7 +443,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Remarks</Form.Label>
-                                <Form.Control type="text" placeholder="Address  Here "
+                                <Form.Control type="text" placeholder="remarks "
                                     value={patiententryRemarks}
                                     onChange={(e) => setPatientEntryRemarks(e.target.value)} />
                             </Form.Group>
@@ -362,6 +462,7 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                         </option>
                                     ))}
                                 </Form.Select>
+
                             </Form.Group>
                         </Col>
 
@@ -395,12 +496,12 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                             <tbody>
                                                 {rows.map((row, index) => (
                                                     <tr key={index}>
-                                                        <td>{row.dr}</td>
-                                                        <td>{row.cr}</td>
-                                                        <td>{ }</td>
-                                                        <td>{ }</td>
-                                                        <td>{ }</td>
-                                                        <td>
+                                                        <td>{index + 1}</td>
+                                                        <td>{row.test_name}</td>
+                                                        <td>{row.sample_required}</td>
+                                                        <td>{row.delivery_time}</td>
+                                                        <td>{row.fee}</td>
+                                                        <td className="text-center">
                                                             <span
                                                                 className="text-danger fw-bold"
                                                                 style={{ cursor: "pointer" }}
@@ -411,14 +512,9 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                                                         </td>
                                                     </tr>
                                                 ))}
-                                                {/* <tr style={{ backgroundColor: "salmon" }}>
-                                                    <td><b>TOTAL</b></td>
-                                                    <td><b>{totalDr}</b></td>
-                                                    <td><b>{totalCr}</b></td>
-                                                    <td></td>
-                                                </tr> */}
                                             </tbody>
                                         )}
+
                                     </table>
                                 </div>
                             </div>
@@ -427,61 +523,83 @@ export default function PatientEntryModal({ onSave, patiententry }) {
                     <hr />
                     <Row>
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Total  </Form.Label>
-                                <Form.Control type="text" placeholder="" />
+                            <Form.Group className="mb-3">
+                                <Form.Label>Total</Form.Label>
+                                <Form.Control type="number" value={total} readOnly />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>DSC PKR  </Form.Label>
-                                <Form.Control type="number" placeholder="" />
+                            <Form.Group className="mb-3">
+                                <Form.Label>DSC PKR</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    value={dscPkr}
+                                    onChange={(e) => setDscPkr(parseFloat(e.target.value) || 0)}
+                                />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3">
                                 <Form.Label>DSC %</Form.Label>
-                                <Form.Control type="number" placeholder="" />
+                                <Form.Control
+                                    type="number"
+                                    value={dscPercent}
+                                    onChange={(e) => setDscPercent(parseFloat(e.target.value) || 0)}
+                                />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Net</Form.Label>
-                                <Form.Control type="number" placeholder="" />
+                                <Form.Control type="number" value={net} readOnly />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Paid</Form.Label>
-                                <Form.Control type="number" placeholder="" />
+                                <Form.Control
+                                    type="number"
+                                    value={paid}
+                                    onChange={(e) => setPaid(parseFloat(e.target.value) || 0)}
+                                />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3">
                                 <Form.Label>Balance</Form.Label>
-                                <Form.Control type="number" placeholder="" />
+                                <Form.Control type="number" value={balance} readOnly />
                             </Form.Group>
                         </Col>
+
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label> Method : </Form.Label>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Method</Form.Label>
                                 <Form.Select>
-                                    <option value="Doctor"> Select Method</option>
+                                    <option value="">Select Method</option>
                                     <option value="Cash">Cash</option>
                                     <option value="JazzCash">JazzCash</option>
                                 </Form.Select>
                             </Form.Group>
                         </Col>
+                        {/* <Col>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                <Button className="btn btn-primary fw-bold mt-4"> Verify </Button>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3 mt-4">
+                                <Button variant="primary" type="submit">
+                                    {patiententry ? "Update" : "Submit"}
+                                </Button>
+                            </Form.Group>
+                        </Col> */}
                     </Row>
-                    <hr />
-                    <div className="d-flex justify-content-end gap-2">
-                        <Button variant="secondary">
-                            Verify
-                        </Button>
-                        <Button variant="primary" type="submit">
-                            {patiententry ? "Update" : "Submit"}
-                        </Button>
-                    </div>
+
                 </Form>
             </Container >
 

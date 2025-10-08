@@ -12,9 +12,9 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                                     <th scope="col">Sr.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Fees</th>
-                                    <th scope="col"> Test</th>
+                                    <th scope="col" className="text-start">Name</th>
+                                    <th scope="col" className="text-start">Fees</th>
+                                    <th scope="col" className="text-start"> Test</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -47,9 +47,9 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                     {TestPackageList.map((test, index) => (
                                         <tr key={test.id || index}>
                                             <td>{index + 1}</td>
-                                            <td>{test.name}</td>
-                                            <td>{test.price}</td>
-                                            <td>{test.selected_test}</td>
+                                            <td className="text-start">{test.name}</td>
+                                            <td className="text-start">{test.price}</td>
+                                            <td className="text-start">{test.selected_test}</td>
                                             <td>
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
                                                     <FaPenToSquare

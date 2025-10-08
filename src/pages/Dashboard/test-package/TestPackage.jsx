@@ -15,6 +15,8 @@ export default function TestPackage() {
     const [loading, setLoading] = useState(false);
     const [TestPackageList, setTestPackageList] = useState([])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+    const [showFilterModal, setShowFilterModal] = useState(false);
+
 
 
     const [page, setPage] = useState(1);
@@ -150,24 +152,9 @@ export default function TestPackage() {
 
     return (
         <div>
-            <h5 className="fw-bold page-header">Test Packages</h5>
-
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
-                {/* Left side title */}
-
-                {/* Right side actions */}
+            <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
+                <h5 className="fw-bold page-header">Test Packages</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search profiles..."
-                        style={{ width: "220px" }}
-                        value={search}
-                        onChange={(e) => {
-                            setPage(1); // ✅ reset page on search change
-                            setSearch(e.target.value);
-                        }}
-                    />
 
                     <button
                         className="btn btn-success primary"
@@ -176,10 +163,16 @@ export default function TestPackage() {
                     >
                         <i className="fas fa-plus me-2"></i> Add Package
                     </button>
+                    {/* Filter Button */}
+                    <button
+                        className="btn btn-outline-primary"
+                        type="button"
+                        onClick={() => setShowFilterModal(true)}
+                    >
+                        <i className="fas fa-filter"></i>
+                    </button>
                 </div>
             </div>
-
-            {/* Table Section */}
             <TestPackageTable
                 TestPackageList={TestPackageList}
                 onDelete={handleDelete}
@@ -187,15 +180,10 @@ export default function TestPackage() {
                 loading={loading}
             />
 
-            {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
-                {/* Left side export */}
                 <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
-
-                {/* Right side pagination */}
-
                 <Pagination>
                     <Pagination.Prev
                         onClick={() => page > 1 && setPage(page - 1)}
@@ -214,8 +202,38 @@ export default function TestPackage() {
                 </Pagination>
 
             </div>
+            <Modal show={showFilterModal} >
+                <Modal.Header >
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="mb-3">
+                        <label className="form-label">Search by Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search by name"
+                            value={search}
+                            onChange={(e) => {
+                                setPage(1);
+                                setSearch(e.target.value);
+                            }}
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className="btn btn-secondary" onClick={() => setShowFilterModal(false)}>
+                        Close
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowFilterModal(false)}
+                    >
+                        Apply
+                    </button>
+                </Modal.Footer>
+            </Modal>
 
-            <Modal show={show} onHide={handleClose} className="modal sm">
+            <Modal show={show} className="modal sm">
                 <Modal.Header className="primary" >
                     <Modal.Title className="color-white fw-bold">Add Package</Modal.Title>
                 </Modal.Header>
@@ -224,7 +242,6 @@ export default function TestPackage() {
                         onSave={handleSave}
                         TestPackage={selectedTestPackage}
                         onCancel={handleClose}
-
                     />
                 </Modal.Body>
             </Modal>
