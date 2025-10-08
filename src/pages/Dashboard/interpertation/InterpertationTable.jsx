@@ -1,4 +1,6 @@
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+
 
 export default function InterpertationTable({ interpertationList, onDelete, onEdit, loading }) {
     function stripHtml(html) {
@@ -15,11 +17,11 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                         <table class="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }} >
-                                    <th scope="col">Sr.</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Code</th>
-                                    <th scope="col">Heading</th>
-                                    <th scope="col">Detail</th>
+                                    <th scope="col" className="py-2 px-2" >Sr.</th>
+                                    <th scope="col" className="text-start py-2 px-2">Type</th>
+                                    <th scope="col" className="text-start py-2 px-2">Code</th>
+                                    <th scope="col" className="text-start py-2 px-2">Heading</th>
+                                    <th scope="col" className="text-start py-2 px-2">Detail</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -49,30 +51,24 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                             ) : interpertationList?.length > 0 ? (
                                 <tbody >
                                     {interpertationList.map((interpertation, index) => (
-                                        <tr key={interpertation.interpretations_id}>
-                                            <td>{index + 1}</td>
-                                            <td>{interpertation.type}</td>
-                                            <td>{interpertation.code}</td>
-                                            <td>{interpertation.heading}</td>
+                                        <tr style={{ height: "20px" }} key={interpertation.interpretations_id}>
+                                            <td className="py-2 px-2">{index + 1}</td>
+                                            <td className="text-start py-2 px-2">{interpertation.type}</td>
+                                            <td className="text-start py-2 px-2">{interpertation.code}</td>
+                                            <td className="text-start py-2 px-2" >{interpertation.heading}</td>
                                             <td style={{ textAlign: "left" }}
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
-                                            <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-
-                                                    <button
-                                                        onClick={() => onEdit(interpertation)}
-                                                    >
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            if (window.confirm("Are you sure you want to delete this department?")) {
-                                                                onDelete(interpertation.id);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                            <td className="py-2 px-2">
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(interpertation.id);
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -82,7 +78,7 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                 <tbody>
                                     <tr>
                                         <td colSpan="3" className="text-center">
-                                            No Departments Found
+                                            No Interpertations Found
                                         </td>
                                     </tr>
                                 </tbody>

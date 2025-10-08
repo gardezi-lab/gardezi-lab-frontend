@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import { ThreeCircles } from "react-loader-spinner";
+import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function TestPackageTable({ TestPackageList, onDelete, onEdit, loading }) {
     return (
@@ -11,9 +12,9 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                                     <th scope="col">Sr.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Fees</th>
-                                    <th scope="col"> Test</th>
+                                    <th scope="col" className="text-start">Name</th>
+                                    <th scope="col" className="text-start">Fees</th>
+                                    <th scope="col" className="text-start"> Test</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -34,7 +35,7 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                                     visible={true}
                                                     height="60"
                                                     width="60"
-                                                    color="#fcb040"
+                                                     color="#fcb040"
                                                     ariaLabel="three-circles-loading"
                                                 />
                                             </div>
@@ -43,24 +44,23 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                 </tbody>
                             ) : TestPackageList?.length > 0 ? (
                                 <tbody>
-                                      {TestPackageList.map((test, index) => (
+                                    {TestPackageList.map((test, index) => (
                                         <tr key={test.id || index}>
                                             <td>{index + 1}</td>
-                                            <td>{test.name}</td>
-                                            <td>{test.price}</td>
-                                            <td>{test.selected_test}</td>
+                                            <td className="text-start">{test.name}</td>
+                                            <td className="text-start">{test.price}</td>
+                                            <td className="text-start">{test.selected_test}</td>
                                             <td>
-                                                <div className="d-flex gap-3 align-items-center justify-content-center">
-                                                    <button onClick={() => onEdit(test)}>
-                                                        <i className="fas fa-edit" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
+                                                <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(test)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
                                                             onDelete(test.id);
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash-alt" style={{ fontSize: "20px", cursor: "pointer" }}></i>
-                                                    </button>
+                                                        }
+                                                    }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>

@@ -20,7 +20,7 @@ const menuItems = [
             {
                 label: "Add Results",
                 icon: "check-square",
-                href: "/invoice",
+                href: "/add-result",
             },
             {
                 label: "Discount Approvals",

@@ -12,23 +12,23 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
         >
           <table className="table table-bordered" style={{ minHeight: '150px' }} >
             <thead>
-              <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
-                <th scope="col" style={{ width: '5%' }}>Sr.</th>
-                <th scope="col ">Name</th>
-                <th scope="col" style={{ width: '8%' }}>Action</th>
+              <tr style={{ backgroundColor: "#1c2765", color: "white", }}>
+                <th scope="col" className="text-center" style={{ width: "80px" }}>Sr.</th>
+                <th scope="col" className="text-start">Name</th>
+                <th scope="col" className="text-center" style={{ width: "120px" }}>Action</th>
               </tr>
             </thead>
 
             {loading ? (
               <tbody >
-                <tr>
+                <tr style={{ height: "20px" }}>
                   <td colSpan="3">
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "250px", // ✅ adjust karo apne table ke hisaab se
+                        height: "250px",
                       }}
                     >
                       <ThreeCircles
@@ -45,9 +45,9 @@ export default function DepartmentTable({ departmentList, onDelete, onEdit, load
             ) : departmentList?.length > 0 ? (
               <tbody>
                 {departmentList.map((dept, index) => (
-                  <tr key={dept.department_id}>
+                  <tr style={{ height: "20px" }}  key={dept.department_id}>
                     <td>{index + 1}</td>
-                    <td>{dept.department_name}</td>
+                    <td className="text-start">{dept.department_name}</td>
                     <td>
                       <div className="d-flex gap-2 align-items-center justify-content-center">
                         <FaPenToSquare
