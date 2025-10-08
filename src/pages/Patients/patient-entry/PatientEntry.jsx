@@ -14,13 +14,18 @@ export default function PatientEntry() {
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedPatientEntry, setSelectedPatientEntry] = useState(null);
     const [loading, setLoading] = useState(false);
-
-
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const recordPerPage = 5;
-
     const [search, setSearch] = useState("");
+
+    const handleSubmit = () => {
+        console.log("Submit / Update clicked");
+    };
+
+    const handleVerify = () => {
+        console.log("Verify clicked");
+    };
 
     const handleClose = () => {
         setShowPatientEntryModal(false);
@@ -158,8 +163,7 @@ export default function PatientEntry() {
 
             <h5 className="fw-bold page-header">New Patient</h5>
             <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
-                {/* Left side title */}
-                {/* Right side actions */}
+
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Lab </Form.Label>
@@ -226,9 +230,8 @@ export default function PatientEntry() {
                 onEdit={handleEdit}
                 loading={loading} />
 
-            {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
-                {/* Left side export */}
+
                 <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
@@ -275,8 +278,34 @@ export default function PatientEntry() {
                         onCancel={handleClose}
                     />
                 </Modal.Body>
-            </Modal>
+                <Modal.Footer>
 
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            handleVerify();
+                        }} >
+                        Verify
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            const form = document.querySelector("form");
+                            if (form) {
+                                form.requestSubmit();
+                            }
+                        }}  >
+                        {selectedPatientEntry ? "Update" : "Submit"}
+                    </Button>
+
+                    <Button variant="secondary" className="secondary text-start" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" className="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal >
         </>
     )
 }

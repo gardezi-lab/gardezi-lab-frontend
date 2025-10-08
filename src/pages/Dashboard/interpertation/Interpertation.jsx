@@ -11,13 +11,12 @@ export default function Interpertation() {
     const [interpertationList, setInterpertationList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedInterpertation, setSelectedInterpertation] = useState(null);
-    const [loading, setLoading] = useState(false); // ✅ new state for loader
-
+    const [loading, setLoading] = useState(false);
+    const [showFilterModal, setShowFilterModal] = useState(false);
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const recordPerPage = 5;
-
     const [search, setSearch] = useState("");
 
     const handleClose = () => {
@@ -28,7 +27,7 @@ export default function Interpertation() {
     const handleShow = () => setShowgetInterpertationDataModal(true);
 
     const getInterpertationData = async () => {
-        setLoading(true); // ✅ start loader
+        setLoading(true);
         try {
             const url = `/interpretations?search=${encodeURIComponent(
                 search || ""
@@ -145,30 +144,22 @@ export default function Interpertation() {
 
     return (
         <>
-            <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
-                {/* Left side title */}
-
-                {/* Right side actions */}
+            <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
+                <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search profiles..."
-                        value={search}
-                        style={{ width: "220px" }}
-                        onChange={(e) => {
-                            setPage(1); // ✅ reset page on search change
-                            setSearch(e.target.value);
-                        }}
-                    />
-
                     <button
                         className="btn btn-success primary"
                         type="button"
                         onClick={handleShow}
                     >
                         <i className="fas fa-plus me-2"></i> Add Interpertation
+                    </button>
+                    <button
+                        className="btn btn-outline-primary"
+                        type="button"
+                        onClick={() => setShowFilterModal(true)}
+                    >
+                        <i className="fas fa-filter"></i>
                     </button>
                 </div>
             </div>
@@ -179,14 +170,11 @@ export default function Interpertation() {
                 onEdit={handleEdit}
                 loading={loading} />
 
-            {/* Footer below table */}
             <div className="d-flex justify-content-between align-items-center mt-3">
-                {/* Left side export */}
                 <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-                {/* Right side pagination */}
                 <Pagination>
                     <Pagination.Prev
                         onClick={() => page > 1 && setPage(page - 1)}
@@ -205,7 +193,39 @@ export default function Interpertation() {
                 </Pagination>
             </div>
 
-            <Modal show={showInterpertationModal} onHide={handleClose} className="modal-md">
+
+            <Modal show={showFilterModal} >
+                <Modal.Header >
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="mb-3">
+                        <label className="form-label">Search by Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search name"
+                            value={search}
+                            onChange={(e) => {
+                                setPage(1);
+                                setSearch(e.target.value);
+                            }}
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className="btn btn-secondary" onClick={() => setShowFilterModal(false)}>
+                        Close
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowFilterModal(false)}
+                    >
+                        Apply
+                    </button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showInterpertationModal} className="modal-md">
                 <Modal.Header className="primary" >
                     <Modal.Title className="color-white fw-bold">
                         {isCurrentEditModalOpen ? "Edit Interpertation" : "Add Interpertation"}

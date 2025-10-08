@@ -17,11 +17,11 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                         <table class="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }} >
-                                    <th scope="col">Sr.</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Code</th>
-                                    <th scope="col">Heading</th>
-                                    <th scope="col">Detail</th>
+                                    <th scope="col" className="py-2 px-2" >Sr.</th>
+                                    <th scope="col" className="text-start py-2 px-2">Type</th>
+                                    <th scope="col" className="text-start py-2 px-2">Code</th>
+                                    <th scope="col" className="text-start py-2 px-2">Heading</th>
+                                    <th scope="col" className="text-start py-2 px-2">Detail</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -51,14 +51,14 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                             ) : interpertationList?.length > 0 ? (
                                 <tbody >
                                     {interpertationList.map((interpertation, index) => (
-                                        <tr key={interpertation.interpretations_id}>
-                                            <td>{index + 1}</td>
-                                            <td>{interpertation.type}</td>
-                                            <td>{interpertation.code}</td>
-                                            <td>{interpertation.heading}</td>
+                                        <tr style={{ height: "20px" }} key={interpertation.interpretations_id}>
+                                            <td className="py-2 px-2">{index + 1}</td>
+                                            <td className="text-start py-2 px-2">{interpertation.type}</td>
+                                            <td className="text-start py-2 px-2">{interpertation.code}</td>
+                                            <td className="text-start py-2 px-2" >{interpertation.heading}</td>
                                             <td style={{ textAlign: "left" }}
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
-                                            <td>
+                                            <td className="py-2 px-2">
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
                                                     <FaPenToSquare
                                                         onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
