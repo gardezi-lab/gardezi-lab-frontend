@@ -74,7 +74,7 @@ export default function TestConsultantTable({ consultantList, onDelete, onEdit, 
                                 <tbody>
                                     <tr>
                                         <td colSpan="3" className="text-center">
-                                            No Departments Found
+                                            No Users Found
                                         </td>
                                     </tr>
                                 </tbody>
