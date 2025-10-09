@@ -12,9 +12,9 @@ export default function PatientEntryModal({ onSave }) {
     const [patiententryPatientName, setPatientEntryPatientName] = useState("");
     const [patiententryFatherHasbandMR, setPatientEntryFatherHasbandMR] = useState("");
     const [patiententryAge, setPatientEntryAge] = useState("");
-    const [patiententryCompany, setPatientEntryCompany] = useState("Doctor");
+    const [patiententryCompany, setPatientEntryCompany] = useState("");
     const [patiententryRefferedBy, setPatientEntryRefferedBy] = useState("");
-    const [patiententryGender, setPatientEntryGender] = useState("Male");
+    const [patiententryGender, setPatientEntryGender] = useState("");
     const [patiententryEmail, setPatientEntryEmail] = useState("");
     const [patiententryAddress, setPatientEntryAddress] = useState("");
     const [patiententryPackage, setPatientEntryPackage] = useState("");
@@ -75,9 +75,10 @@ export default function PatientEntryModal({ onSave }) {
             setPatientEntryPatientName(patiententry.patient_name || "");
             setPatientEntryFatherHasbandMR(patiententry.father_hasband_MR || "");
             setPatientEntryAge(patiententry.age || "");
-            setPatientEntryCompany(patiententry.company || "Doctor");
+            setPatientEntryCompany(patiententry.company || "");
             setPatientEntryRefferedBy(patiententry.reffered_by);
             setPatientEntryGender(patiententry.gender);
+
             setPatientEntryEmail(patiententry.email || "");
             setPatientEntryAddress(patiententry.address || "");
             setPatientEntryPackage(patiententry.package || "");
@@ -90,7 +91,7 @@ export default function PatientEntryModal({ onSave }) {
             setPatientEntryPatientName("");
             setPatientEntryFatherHasbandMR("");
             setPatientEntryAge("");
-            setPatientEntryCompany("Doctor");
+            setPatientEntryCompany("");
             setPatientEntryRefferedBy("");
             setPatientEntryGender("");
             setPatientEntryEmail("");
@@ -172,28 +173,6 @@ export default function PatientEntryModal({ onSave }) {
         fetchPackages();
     }, []);
 
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     onSave({
-    //         patiententryCell,
-    //         patiententryPatientName,
-    //         patiententryFatherHasbandMR,
-    //         patiententryAge,
-    //         patiententryCompany,
-    //         patiententryRefferedBy,
-    //         patiententryGender,
-    //         patiententryEmail,
-    //         patiententryAddress,
-    //         patiententryPackage,
-    //         patiententrySample,
-    //         patiententryPriority,
-    //         patiententryRemarks,
-    //         patiententryTest,
-    //     });
-    // };
-
-    // --- baqi states same rehengi (tumhara original code) ---
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -361,8 +340,6 @@ export default function PatientEntryModal({ onSave }) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-
-
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Gender :</Form.Label>
@@ -370,9 +347,12 @@ export default function PatientEntryModal({ onSave }) {
                                     value={patiententryGender}
                                     onChange={(e) => setPatientEntryGender(e.target.value)}
                                 >
+                                    <option value="">Select gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
                                 </Form.Select>
+
                             </Form.Group>
                         </Col>
                         <Col>
@@ -423,6 +403,7 @@ export default function PatientEntryModal({ onSave }) {
                                     value={patiententrySample}
                                     onChange={(e) => setPatientEntrySample(e.target.value)}
                                 >
+                                    <option value="">Select Lab</option>
                                     <option value="Take In Lab">Take In Lab</option>
                                     <option value="Received From Outside">Taken Outside Lab</option>
                                 </Form.Select>

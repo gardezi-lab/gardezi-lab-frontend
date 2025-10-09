@@ -15,6 +15,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [testDetails, setTestDetails] = useState([]);
     const [selectedTest, setSelectedTest] = useState("");
     const [selectedParameters, setSelectedParameters] = useState([]);
     const [resultData, setResultData] = useState({});
@@ -182,9 +184,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         }
     };
 
-    const [showModal, setShowModal] = useState(false);
-    const [testDetails, setTestDetails] = useState(null);
-
     // Handle modal open
     const handleShow = async (patient) => {
         setSelectedPatient(patient);
@@ -196,22 +195,16 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 patient?.patient_entry_id ||
                 patient?.id;
 
-            console.log("Fetching tests for patient_Id:", patient_Id);
-
-            // ✅ Correct API call
             const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
             console.log("Fetched tests:", response.data);
 
-            // ✅ Some APIs return { tests: [...] }, others return an array directly
-            const testList = response.data?.tests || response.data || [];
+            setTestDetails(response.tests || response.data?.tests || []);
 
-            setTestDetails(testList);
         } catch (error) {
             console.error("Error fetching test details:", error);
             setTestDetails([]);
         }
     };
-
 
     // Handle modal close
     const handleClose = () => {
@@ -377,12 +370,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </div>
 
             {/* ✅ Add Result Modal */}
-            <Modal show={showResultModal}
-                className="modal-md"
-                backdrop="static"
-                keyboard={false}
-                onHide={() => setShowResultModal(false)}>
-                <Modal.Header closeButton className="primary">
+            <Modal show={showResultModal} size="lg" onHide={() => setShowResultModal(false)}>
+                <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
 
@@ -430,8 +419,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <Col md={4}>
                                         <Form.Label className="fw-semibold">{param.parameter_name}</Form.Label>
                                     </Col>
-
-                                    {/* Editable Input Field */}
                                     <Col md={4}>
                                         <Form.Control
                                             type="text"
@@ -463,78 +450,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     Add Result
                                 </Button>
                             </div>
-
-
-
                         </>
                     )}
 
-
-                    {/* {selectedParameters.length > 0 && (
-                        <>
-                            <h5>Parameters</h5>
-                            {selectedParameters.map((param, index) => (
-                                <Row key={param.parameter_id} className="align-items-center mb-3">
-                                    <Col md={4}>
-                                        <Form.Label>{param.parameter_name}</Form.Label>
-                                    </Col>
-                                    <Col md={3}>
-                                        <Form.Control
-                                            type="text"
-                                            value={param.default_value}
-                                            onChange={(e) =>
-                                                selectedTestFunc(index, e.target.value)
-                                            }
-                                        />
-                                    </Col>
-                                    <Col md={2}>{param.unit}</Col>
-                                    <Col md={3} className="text-muted">
-                                        Normal: {param.normalvalue}
-                                    </Col>
-                                </Row>
-                            ))}
-                        </>
-                    )} */}
-                    {/* {selectedParameters.length > 0 && (
-                        // <>
-                        //     <h5 className="mb-3">Parameters</h5>
-                            
-                        // </>
-                    )} */}
-                    {/* {selectedParameters.length > 0 && (
-                        <Table bordered hover responsive>
-                            <thead style={{ backgroundColor: "#f8f9fa" }}>
-                                <tr>
-                                    <th>Sr.</th>
-                                    {dynamicColumns.map((col) => (
-                                        <th key={col}>{col}</th>
-                                    ))}
-                                    <th>Result</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {parameters.map((p, idx) => {
-                                    const pid = p.id ?? p.parameter_id ?? idx;
-                                    return (
-                                        <tr key={pid}>
-                                            <td>{idx + 1}</td>
-                                            {dynamicColumns.map((col) => (
-                                                <td key={col}>{p[col]}</td>
-                                            ))}
-                                            <td>
-                                                <Form.Control
-                                                    type="text"
-                                                    placeholder="Enter result"
-                                                    value={resultData[pid] ?? ""}
-                                                    onChange={(e) => handleResultChange(pid, e.target.value)}
-                                                />
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                    )} */}
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -548,25 +466,36 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </Modal>
 
             {/* test show modal */}
-            <Modal show={showModal} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Test Details</Modal.Title>
+            <Modal show={showModal}  centered>
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">Test Details</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                    {testDetails && testDetails.length > 0 ? (
-                        <ul>
-                            {testDetails.map((test, index) => (
-                                <li key={index}>
-                                    <strong>{test.test_name || test.name || `Test ${index + 1}`}</strong>
-                                    {test.fee && <span> — Fee: {test.fee} Rs</span>}
-                                </li>
-                            ))}
-                        </ul>
+                    {Array.isArray(testDetails) && testDetails.length > 0 ? (
+                        <Table bordered hover responsive size="md">
+                            <thead>
+                                <tr>
+                                    <th>Sr.</th>
+                                    <th>Test Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {testDetails.map((test, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{test.test_name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     ) : (
-                        <p>No tests found for this patient.</p>
+                        <p>Loading...</p>
                     )}
                 </Modal.Body>
+
+
+
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -574,17 +503,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-        </>
-    );
-}
-
-
-
-
-
-
-
 
             {/* Patient Log Modal */}
             <Modal
@@ -624,14 +542,21 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-
-
-
-
         </>
     );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 //-------------------------- pahlay wala jis mein add result wala coioum addnhi hain--------------------
 
