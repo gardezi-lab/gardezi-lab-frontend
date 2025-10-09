@@ -81,26 +81,8 @@ export default function PatientEntry() {
                     obj
                 );
             } else {
-                const obj1 = {
-                    "cell": "03111234567",
-                    "patient_name": "Murtaza Hussain",
-                    "father_hasband_MR": "Mr. Hussain",
-                    "age": "30 days",
-                    "company": "ABC Diagnostics",
-                    "reffered_by": "Dr. Bilal",
-                    "gender": "Male",
-                    "email": "murtaza@example.com",
-                    "address": "Street 5, Lahore",
-                    "package": "Basic Health",
-                    "sample": "Blood, Urine",
-                    "priority": "Normal",
-                    "remarks": "No special instructions",
-                    "test": [
-                        { "name": "Complete Blood Count", "fee": 1200 },
-                        { "name": "Liver Function Test", "fee": 1500 }
-                    ]
-                }
-                await httpClient.post("/patient_entry/", obj1);
+                
+                await httpClient.post("/patient_entry/", obj);
             }
 
             getPatientEntryData();
@@ -320,9 +302,9 @@ export default function PatientEntry() {
                     <Button variant="secondary" className="secondary text-start" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" className="primary" onClick={handleClose}>
+                    {/* <Button variant="primary" className="primary" onClick={handleClose}>
                         Save Changes
-                    </Button>
+                    </Button> */}
                 </Modal.Footer>
             </Modal >
         </>

@@ -123,9 +123,10 @@ export default function PatientEntryModal({ onSave }) {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await httpClient.get("/users");
+                const res = await httpClient.get("/users/doctors");
                 if (Array.isArray(res)) {
                     setUsers(res);
+                    console.log("response",res.data  )
                 } else if (Array.isArray(res.data)) {
                     setUsers(res.data);
                 }
@@ -353,6 +354,7 @@ export default function PatientEntryModal({ onSave }) {
                                         .filter((user) => user.role === "Doctor") // ✅ sirf Doctor role
                                         .map((doctor) => (
                                             <option key={doctor.id} value={doctor.name}>
+                
                                                 {doctor.name}
                                             </option>
                                         ))}

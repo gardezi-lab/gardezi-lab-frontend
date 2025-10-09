@@ -190,7 +190,7 @@ export default function Consultant() {
                     <Pagination.Prev
                         onClick={() => page > 1 && setPage(page - 1)}
                         disabled={page === 1}
-                    >
+                     >
                         Previous
                     </Pagination.Prev>
                     {renderPaginationItems()}

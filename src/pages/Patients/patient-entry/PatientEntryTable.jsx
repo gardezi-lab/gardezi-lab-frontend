@@ -1,11 +1,12 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Table from "react-bootstrap/Table";
+// import Modal from "react-bootstrap/Modal";
+// import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import Table from "react-bootstrap/Table";
 import httpClient from "../../../services/httpClient";
+import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
     const [show, setShow] = useState(false);
@@ -15,6 +16,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
     const [selectedTest, setSelectedTest] = useState("");
+    const [selectedParameters, setSelectedParameters] = useState([]);
     const [resultData, setResultData] = useState({});
     const [saving, setSaving] = useState(false);
 
@@ -37,6 +39,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     id: i + 1,
                     name: t.name || t.test_name || t || `Test ${i + 1}`,
                     test_id: t.test_id || i + 1,
+                    patient_test_id: t.patient_test_id,
                 }));
 
                 setTests(formatted);
@@ -49,7 +52,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         fetchTests();
     }, [showResultModal, selectedPatient]);
 
-    // ✅ Fetch parameters when test changes
     useEffect(() => {
         if (!selectedTest) {
             setParameters([]);
@@ -59,7 +61,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
         const fetchParams = async () => {
             try {
-                const res = await httpClient.get(`/test_parameters?test_id=${selectedTest}`);
+                console.log("Selected patient_test_id:", selectedTest);
+                const res = await httpClient.get(`/parameter/by_test/${selectedTest}`); // ✅ patient_test_id jaa raha hai
                 const data = res?.data ?? res ?? [];
                 setParameters(Array.isArray(data) ? data : []);
             } catch (err) {
@@ -71,17 +74,23 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         fetchParams();
     }, [selectedTest]);
 
-    // ✅ Handle Save
+    // ✅ Handle Result Input Change
+    const handleResultChange = (paramId, value) => {
+        setResultData((prev) => ({ ...prev, [paramId]: value }));
+    };
+
+    // ✅ Handle Save Results
     const handleSaveAll = async () => {
         if (!selectedTest) return alert("Select a test first");
         setSaving(true);
+
         try {
             const payload = {
                 patient_entry_id:
                     selectedPatient.id ||
                     selectedPatient.results_id ||
                     selectedPatient.patient_entry_id,
-                test_id: selectedTest,
+                test_id: selectedTest, // ✅ ID jaa rahi hai (Number format me)
                 results: Object.entries(resultData).map(([paramId, value]) => ({
                     parameter_id: paramId,
                     value,
@@ -93,20 +102,87 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             setShowResultModal(false);
         } catch (err) {
             console.error("Save error:", err);
-            alert("Save failed. Check console.");
+            alert("Save failed. Check console for details.");
         } finally {
             setSaving(false);
         }
     };
 
-    const handleResultChange = (paramId, value) => {
-        setResultData((prev) => ({ ...prev, [paramId]: value }));
-    };
-
     const dynamicColumns = [...new Set(parameters.flatMap((p) => Object.keys(p)))];
 
+    const handleTestChange = (e) => {
+        const selectedId = e.target.value;
+        setSelectedTest(selectedId);
+        const test = tests.find((t) => t.patient_test_id.toString() === selectedId);
+        setSelectedParameters(test ? test.parameters : []);
+    };
 
-    // cell numbe , gender , 
+    const handleParameterChange = (index, value) => {
+        const updated = [...parameters];
+        updated[index].default_value = value;
+        setParameters(updated);
+    };
+
+    const selectedTestFunc = async (e) => {
+        const TestId = e.target.value;
+        setSelectedTest(TestId);
+        try {
+            if (TestId) {
+                const res = await httpClient.get(`/parameter/by_test/${TestId}`);
+                console.log("API Response:", res.parameters);
+                setSelectedParameters(res.parameters || []); // <-- store parameter array
+            } else {
+                setSelectedParameters([]); // clear when no test selected
+            }
+        } catch (error) {
+            console.error("Error fetching parameters:", error);
+        }
+
+    };
+
+    const handleParameterValueChange = (index, value) => {
+        const updatedParams = [...selectedParameters];
+        updatedParams[index].default_value = value;
+        setSelectedParameters(updatedParams);
+    };
+
+    const submitResult = async () => {
+        try {
+            if (!selectedPatient || !selectedTest) {
+                alert("Please select a patient and a test first!");
+                return;
+            }
+        
+            const patientId =
+                selectedPatient.patient_id ||
+                selectedPatient.patient_entry_id ||
+                selectedPatient.id;
+
+            const patientTestId = selectedTest;
+            const testProfileId = selectedParameters[0]?.test_profile_id || 3;
+
+            const payload = {
+                patient_id: patientId,
+                patient_test_id: patientTestId,
+                test_profile_id: testProfileId,
+                parameters: selectedParameters.map((param) => ({
+                    parameter_id: param.parameter_id,
+                    result_value: param.default_value || "",
+                })),
+            };
+            console.log("Payload sending:", payload);
+            const response = await httpClient.post(`/results/add-parameters`, payload);
+
+            console.log("Response:", response.data || response);
+            alert("Results saved successfully!");
+            setShowResultModal(false);
+        } catch (err) {
+            console.error("Save Parameter Error:", err);
+        }
+    };
+
+
+    //post ki call results/add-parameters
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -117,14 +193,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tr style={{ backgroundColor: "#1c2765" }}>
                                     <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
                                     <th>Name</th>
-                                    <th scope="col">X</th>
-                                    <th>Date</th>
-
-                                    <th>MR#</th>
-                                    <th scope="col">Reception</th>
-                                    <th scope="col">Fees</th>
-                                    <th>Consultant</th>
-                                    <th>Test</th>
+                                    <th>Age</th>
+                                    {/* <th scope="col">X</th> */}
+                                    {/* <th>Date</th> */}
+                                    {/* <th>MR#</th> */}
+                                    <th scope="col">Doctor</th>
+                                    {/* <th scope="col">Fees</th> */}
+                                    {/* <th>Consultant</th> */}
+                                    {/* <th>Test</th> */}
                                     <th>Results</th>
                                     <th>Action</th>
                                 </tr>
@@ -158,16 +234,16 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
                                             <td>{index + 1}</td>
-                                            <td></td>
-                                            <td>{patient.date || "-"}</td>
+                                            {/* <td></td> */}
+                                            {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.patient_name}</td>
-                                            <td></td>
-                                            <td>{patient.date || "-"}</td>
-                                            <td>{patient.father_hasband_MR}</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>{patient.age}</td>
+                                            {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.reffered_by}</td>
-                                            <td>{patient.test}</td>
+                                            {/* <td></td>
+                                            <td></td> */}
+                                            {/* <td>{patient.reffered_by}</td> */}
+                                            {/* <td>{patient.test}</td> */}
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
@@ -246,20 +322,99 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                             </div>
                         </div>
                     )}
-
                     <Form.Group className="mb-3">
                         <Form.Label>Select Test</Form.Label>
-                        <Form.Select value={selectedTest} onChange={(e) => setSelectedTest(e.target.value)}>
+                        <Form.Select
+                            value={selectedTest}
+                            onChange={selectedTestFunc}
+                        >
                             <option value="">-- Select Test --</option>
                             {tests.map((test) => (
-                                <option key={test.id} value={test.test_id}>
-                                    {test.name}
+                                <option key={test.patient_test_id} value={test.patient_test_id}>
+                                    {test.name || test.test_name}
                                 </option>
                             ))}
                         </Form.Select>
                     </Form.Group>
 
-                    {parameters.length > 0 && (
+                    {selectedParameters.length > 0 && (
+                        <>
+                            <h5 className="mb-3">Parameters</h5>
+
+                            {selectedParameters.map((param, index) => (
+                                <Row key={param.parameter_id} className="align-items-center mb-3">
+                                    {/* Parameter Name as Label */}
+                                    <Col md={4}>
+                                        <Form.Label className="fw-semibold">{param.parameter_name}</Form.Label>
+                                    </Col>
+
+                                    {/* Editable Input Field */}
+                                    <Col md={4}>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder={`Enter ${param.parameter_name}`}
+                                            value={param.default_value ?? ""} // make it editable
+                                            onChange={(e) => {
+                                                const updatedParams = [...selectedParameters];
+                                                updatedParams[index].default_value = e.target.value;
+                                                setSelectedParameters(updatedParams);
+                                            }}
+                                        />
+                                    </Col>
+
+                                    {/* Unit Column */}
+                                    <Col md={2}>
+                                        <span className="text-secondary">{param.unit || "--"}</span>
+                                    </Col>
+
+                                    {/* Normal Value Column */}
+                                    <Col md={2} className="text-muted">
+                                        {param.normalvalue ? `Normal: ${param.normalvalue}` : ""}
+                                    </Col>
+                                </Row>
+                            ))}
+                            <div style={{ display: 'flex', justifyContent: 'center' }} >
+
+                                <Button onClick={submitResult} >Add Result</Button>
+                            </div>
+
+
+                        </>
+                    )}
+
+
+                    {/* {selectedParameters.length > 0 && (
+                        <>
+                            <h5>Parameters</h5>
+                            {selectedParameters.map((param, index) => (
+                                <Row key={param.parameter_id} className="align-items-center mb-3">
+                                    <Col md={4}>
+                                        <Form.Label>{param.parameter_name}</Form.Label>
+                                    </Col>
+                                    <Col md={3}>
+                                        <Form.Control
+                                            type="text"
+                                            value={param.default_value}
+                                            onChange={(e) =>
+                                                selectedTestFunc(index, e.target.value)
+                                            }
+                                        />
+                                    </Col>
+                                    <Col md={2}>{param.unit}</Col>
+                                    <Col md={3} className="text-muted">
+                                        Normal: {param.normalvalue}
+                                    </Col>
+                                </Row>
+                            ))}
+                        </>
+                    )} */}
+                    {/* {selectedParameters.length > 0 && (
+                        // <>
+                        //     <h5 className="mb-3">Parameters</h5>
+                            
+                        // </>
+                    )} */}
+                    {/* {selectedParameters.length > 0 && (
                         <Table bordered hover responsive>
                             <thead style={{ backgroundColor: "#f8f9fa" }}>
                                 <tr>
@@ -292,7 +447,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 })}
                             </tbody>
                         </Table>
-                    )}
+                    )} */}
                 </Modal.Body>
 
                 <Modal.Footer>
