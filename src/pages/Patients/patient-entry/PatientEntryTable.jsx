@@ -74,12 +74,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         fetchParams();
     }, [selectedTest]);
 
-    // ✅ Handle Result Input Change
     const handleResultChange = (paramId, value) => {
         setResultData((prev) => ({ ...prev, [paramId]: value }));
     };
 
-    // ✅ Handle Save Results
     const handleSaveAll = async () => {
         if (!selectedTest) return alert("Select a test first");
         setSaving(true);
@@ -90,7 +88,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient.id ||
                     selectedPatient.results_id ||
                     selectedPatient.patient_entry_id,
-                test_id: selectedTest, // ✅ ID jaa rahi hai (Number format me)
+                test_id: selectedTest,
                 results: Object.entries(resultData).map(([paramId, value]) => ({
                     parameter_id: paramId,
                     value,
@@ -130,9 +128,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             if (TestId) {
                 const res = await httpClient.get(`/parameter/by_test/${TestId}`);
                 console.log("API Response:", res.parameters);
-                setSelectedParameters(res.parameters || []); // <-- store parameter array
+                setSelectedParameters(res.parameters || []);
             } else {
-                setSelectedParameters([]); // clear when no test selected
+                setSelectedParameters([]);
             }
         } catch (error) {
             console.error("Error fetching parameters:", error);
@@ -170,12 +168,15 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     result_value: param.default_value || "",
                 })),
             };
+
             console.log("Payload sending:", payload);
             const response = await httpClient.post(`/results/add-parameters`, payload);
 
             console.log("Response:", response.data || response);
             alert("Results saved successfully!");
-            setShowResultModal(false);
+            setSelectedParameters([]);
+            setSelectedTest("");
+
         } catch (err) {
             console.error("Save Parameter Error:", err);
         }
@@ -222,7 +223,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <th scope="col">Doctor</th>
                                     {/* <th scope="col">Fees</th> */}
                                     {/* <th>Consultant</th> */}
-                                    {/* <th>Test</th> */}
+                                    <th>Test</th>
                                     <th>Results</th>
                                     <th>Action</th>
                                 </tr>
@@ -272,8 +273,12 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                             <td>{patient.age}</td>
                                             {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.reffered_by}</td>
-                                            {/* <td></td>
-                                            <td></td> */}
+                                            <td> <Button
+                                                variant="outline-primary"
+                                                size="sm">
+                                                View Test
+                                            </Button></td>
+                                            {/* <td></td>  */}
                                             {/* <td>{patient.reffered_by}</td> */}
                                             {/* <td>{patient.test}</td> */}
                                             <td>
@@ -409,10 +414,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     </Col>
                                 </Row>
                             ))}
-                            <div style={{ display: 'flex', justifyContent: 'center' }} >
-
-                                <Button onClick={submitResult} >Add Result</Button>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Button
+                                    onClick={submitResult}
+                                >
+                                    Add Result
+                                </Button>
                             </div>
+
 
 
                         </>

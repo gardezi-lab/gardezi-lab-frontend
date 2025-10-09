@@ -126,7 +126,7 @@ export default function PatientEntryModal({ onSave }) {
                 const res = await httpClient.get("/users/doctors");
                 if (Array.isArray(res)) {
                     setUsers(res);
-                    console.log("response",res.data  )
+                    console.log("response", res.data)
                 } else if (Array.isArray(res.data)) {
                     setUsers(res.data);
                 }
@@ -231,6 +231,7 @@ export default function PatientEntryModal({ onSave }) {
             name: row.test_name,
             fee: parseFloat(row.fee) || 0
         }));
+
         setErrorMessage("");
         onSave({
             patiententryCell,
@@ -354,7 +355,7 @@ export default function PatientEntryModal({ onSave }) {
                                         .filter((user) => user.role === "Doctor") // ✅ sirf Doctor role
                                         .map((doctor) => (
                                             <option key={doctor.id} value={doctor.name}>
-                
+
                                                 {doctor.name}
                                             </option>
                                         ))}
