@@ -144,6 +144,12 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
         e.preventDefault();
 
         const { test_name, test_code, fee, delivery_time } = formData;
+
+        if (testCodeError) {
+            setError("Check the Test Code — it already exists!");
+            return;
+        }
+
         // Only 4 are truly required
         if (!test_name.trim() || !test_code.trim() || !fee.trim() || !delivery_time) {
             setError("Please fill in Test Name, Test Code, Fee, and Delivery Time.");
