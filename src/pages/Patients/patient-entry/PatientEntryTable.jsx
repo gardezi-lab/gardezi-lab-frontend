@@ -1,10 +1,6 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-// import Modal from "react-bootstrap/Modal";
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-// import Table from "react-bootstrap/Table";
 import httpClient from "../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
@@ -12,6 +8,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [showResultModal, setShowResultModal] = useState(false);
+    const [showPatientModal, setPatientResultModal] = useState(false);
+    const [patientLogs, setPatientLogs] = useState({});
+
+
     //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
@@ -74,12 +74,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         fetchParams();
     }, [selectedTest]);
 
-    // ✅ Handle Result Input Change
     const handleResultChange = (paramId, value) => {
         setResultData((prev) => ({ ...prev, [paramId]: value }));
     };
 
-    // ✅ Handle Save Results
     const handleSaveAll = async () => {
         if (!selectedTest) return alert("Select a test first");
         setSaving(true);
@@ -90,7 +88,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient.id ||
                     selectedPatient.results_id ||
                     selectedPatient.patient_entry_id,
-                test_id: selectedTest, // ✅ ID jaa rahi hai (Number format me)
+                test_id: selectedTest,
                 results: Object.entries(resultData).map(([paramId, value]) => ({
                     parameter_id: paramId,
                     value,
@@ -130,9 +128,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             if (TestId) {
                 const res = await httpClient.get(`/parameter/by_test/${TestId}`);
                 console.log("API Response:", res.parameters);
-                setSelectedParameters(res.parameters || []); // <-- store parameter array
+                setSelectedParameters(res.parameters || []);
             } else {
-                setSelectedParameters([]); // clear when no test selected
+                setSelectedParameters([]);
             }
         } catch (error) {
             console.error("Error fetching parameters:", error);
@@ -152,7 +150,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 alert("Please select a patient and a test first!");
                 return;
             }
-        
+
             const patientId =
                 selectedPatient.patient_id ||
                 selectedPatient.patient_entry_id ||
@@ -170,16 +168,40 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     result_value: param.default_value || "",
                 })),
             };
+
             console.log("Payload sending:", payload);
             const response = await httpClient.post(`/results/add-parameters`, payload);
 
             console.log("Response:", response.data || response);
             alert("Results saved successfully!");
-            setShowResultModal(false);
+            setSelectedParameters([]);
+            setSelectedTest("");
+
         } catch (err) {
             console.error("Save Parameter Error:", err);
         }
     };
+
+    // patient log
+    const handleShowPatientLogs = async (id, patientName) => {
+        setSelectedPatient(id);
+        setPatientResultModal(true);
+
+        try {
+            if (id) {
+                const response = await httpClient.get(`/patient_entry/activity/${id}`);
+                setPatientLogs({
+                    ...response,
+                    patient_name: patientName, // attach name manually
+                });
+            } else {
+                setPatientLogs([]);
+            }
+        } catch (error) {
+            console.error("Error fetching patient logs:", error);
+        }
+    };
+
 
 
     //post ki call results/add-parameters
@@ -191,7 +213,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <table className="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
-                                    <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
+                                    <th scope="col" style={{ textAlign: 'center' }}>Sr.</th>
+                                    <th>Patient Verify</th>
                                     <th>Name</th>
                                     <th>Age</th>
                                     {/* <th scope="col">X</th> */}
@@ -200,7 +223,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <th scope="col">Doctor</th>
                                     {/* <th scope="col">Fees</th> */}
                                     {/* <th>Consultant</th> */}
-                                    {/* <th>Test</th> */}
+                                    <th>Test</th>
                                     <th>Results</th>
                                     <th>Action</th>
                                 </tr>
@@ -233,15 +256,29 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tbody>
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
-                                            <td>{index + 1}</td>
+                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                             {/* <td></td> */}
                                             {/* <td>{patient.date || "-"}</td> */}
+                                            <td>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    size="sm"
+                                                    onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)} // pass id here
+                                                >
+                                                    Patient Log
+                                                </Button>
+
+                                            </td>
                                             <td>{patient.patient_name}</td>
                                             <td>{patient.age}</td>
                                             {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.reffered_by}</td>
-                                            {/* <td></td>
-                                            <td></td> */}
+                                            <td> <Button
+                                                variant="outline-primary"
+                                                size="sm">
+                                                View Test
+                                            </Button></td>
+                                            {/* <td></td>  */}
                                             {/* <td>{patient.reffered_by}</td> */}
                                             {/* <td>{patient.test}</td> */}
                                             <td>
@@ -298,9 +335,13 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </div>
 
             {/* ✅ Add Result Modal */}
-            <Modal show={showResultModal} size="lg" onHide={() => setShowResultModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Test Result</Modal.Title>
+            <Modal show={showResultModal}
+                className="modal-md"
+                backdrop="static"
+                keyboard={false}
+                onHide={() => setShowResultModal(false)}>
+                <Modal.Header closeButton className="primary">
+                    <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -373,10 +414,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     </Col>
                                 </Row>
                             ))}
-                            <div style={{ display: 'flex', justifyContent: 'center' }} >
-
-                                <Button onClick={submitResult} >Add Result</Button>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Button
+                                    onClick={submitResult}
+                                >
+                                    Add Result
+                                </Button>
                             </div>
+
 
 
                         </>
@@ -459,26 +504,53 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            {/* Patient Log Modal */}
+            <Modal
+                show={showPatientModal}
+                size="md"
+                backdrop="static"
+                keyboard={false}
+                onHide={() => setPatientResultModal(false)}
+            >
+                <Modal.Header closeButton className="primary">
+                    <Modal.Title className="color-white fw-bold">
+                        {patientLogs?.patient_name || "Loading..."}
+                    </Modal.Title>
+
+                </Modal.Header>
+
+                <Modal.Body>
+                    {patientLogs?.activities?.length > 0 ? (
+                        <ul className="list-group list-group-flush">
+                            {patientLogs.activities.map((log, index) => (
+                                <li key={index} className="list-group-item">
+                                    <small className="text-blue">{log.created_at}:  </small>
+                                    <strong style={{ marginLeft: '5%' }}>{log.activity}</strong>
+                                    {/* <br /> */}
+                                </li>
+
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No activity found for this patient.</p>
+                    )}
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setPatientResultModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+
+
+
         </>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //-------------------------- pahlay wala jis mein add result wala coioum addnhi hain--------------------
 
