@@ -13,7 +13,7 @@ export default function PatientEntryModal({ onSave }) {
     const [patiententryFatherHasbandMR, setPatientEntryFatherHasbandMR] = useState("");
     const [patiententryAge, setPatientEntryAge] = useState("");
     const [patiententryCompany, setPatientEntryCompany] = useState("Doctor");
-    const [patiententryRefferedBy, setPatientEntryRefferedBy] = useState("Doctor");
+    const [patiententryRefferedBy, setPatientEntryRefferedBy] = useState("");
     const [patiententryGender, setPatientEntryGender] = useState("Male");
     const [patiententryEmail, setPatientEntryEmail] = useState("");
     const [patiententryAddress, setPatientEntryAddress] = useState("");
@@ -76,8 +76,8 @@ export default function PatientEntryModal({ onSave }) {
             setPatientEntryFatherHasbandMR(patiententry.father_hasband_MR || "");
             setPatientEntryAge(patiententry.age || "");
             setPatientEntryCompany(patiententry.company || "Doctor");
-            setPatientEntryRefferedBy(patiententry.reffered_by || "Doctor");
-            setPatientEntryGender(patiententry.gender || "Male");
+            setPatientEntryRefferedBy(patiententry.reffered_by);
+            setPatientEntryGender(patiententry.gender);
             setPatientEntryEmail(patiententry.email || "");
             setPatientEntryAddress(patiententry.address || "");
             setPatientEntryPackage(patiententry.package || "");
@@ -91,8 +91,8 @@ export default function PatientEntryModal({ onSave }) {
             setPatientEntryFatherHasbandMR("");
             setPatientEntryAge("");
             setPatientEntryCompany("Doctor");
-            setPatientEntryRefferedBy("Doctor");
-            setPatientEntryGender("Male");
+            setPatientEntryRefferedBy("");
+            setPatientEntryGender("");
             setPatientEntryEmail("");
             setPatientEntryAddress("");
             setPatientEntryPackage("");
@@ -351,10 +351,9 @@ export default function PatientEntryModal({ onSave }) {
                                 >
                                     <option value="">Select Consultant</option>
                                     {users
-                                        .filter((user) => user.role === "Doctor") // ✅ sirf Doctor role
+                                         // ✅ sirf Doctor role
                                         .map((doctor) => (
                                             <option key={doctor.id} value={doctor.name}>
-                
                                                 {doctor.name}
                                             </option>
                                         ))}
