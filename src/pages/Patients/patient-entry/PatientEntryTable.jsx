@@ -182,6 +182,43 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         }
     };
 
+    const [showModal, setShowModal] = useState(false);
+    const [testDetails, setTestDetails] = useState(null);
+
+    // Handle modal open
+    const handleShow = async (patient) => {
+        setSelectedPatient(patient);
+        setShowModal(true);
+
+        try {
+            const patient_Id =
+                patient?.patient_id ||
+                patient?.patient_entry_id ||
+                patient?.id;
+
+            console.log("Fetching tests for patient_Id:", patient_Id);
+
+            // ✅ Correct API call
+            const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
+            console.log("Fetched tests:", response.data);
+
+            // ✅ Some APIs return { tests: [...] }, others return an array directly
+            const testList = response.data?.tests || response.data || [];
+
+            setTestDetails(testList);
+        } catch (error) {
+            console.error("Error fetching test details:", error);
+            setTestDetails([]);
+        }
+    };
+
+
+    // Handle modal close
+    const handleClose = () => {
+        setShowModal(false);
+        setTestDetails(null);
+    };
+
     // patient log
     const handleShowPatientLogs = async (id, patientName) => {
         setSelectedPatient(id);
@@ -273,11 +310,16 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                             <td>{patient.age}</td>
                                             {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.reffered_by}</td>
-                                            <td> <Button
-                                                variant="outline-primary"
-                                                size="sm">
-                                                View Test
-                                            </Button></td>
+                                            <td>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    size="sm"
+                                                    onClick={() => handleShow(patient)}   // ✅ pass selected patient
+                                                >
+                                                    View Test
+                                                </Button>
+
+                                            </td>
                                             {/* <td></td>  */}
                                             {/* <td>{patient.reffered_by}</td> */}
                                             {/* <td>{patient.test}</td> */}
@@ -504,6 +546,45 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            {/* test show modal */}
+            <Modal show={showModal} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Test Details</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    {testDetails && testDetails.length > 0 ? (
+                        <ul>
+                            {testDetails.map((test, index) => (
+                                <li key={index}>
+                                    <strong>{test.test_name || test.name || `Test ${index + 1}`}</strong>
+                                    {test.fee && <span> — Fee: {test.fee} Rs</span>}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No tests found for this patient.</p>
+                    )}
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+        </>
+    );
+}
+
+
+
+
+
+
+
 
             {/* Patient Log Modal */}
             <Modal
