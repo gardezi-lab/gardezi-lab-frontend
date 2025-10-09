@@ -221,7 +221,7 @@ export default function ParameterModal({ test, onClose }) {
             <Table bordered hover size="sm">
                 <thead style={{ background: "#f8f9fa" }}>
                     <tr>
-                        <th style={{textAlign: 'center'}}>Sr.</th>
+                        <th style={{ textAlign: 'center' }}>Sr.</th>
                         <th>Name</th>
                         <th>Order</th>
                         <th>Dropdowns</th>
@@ -232,7 +232,7 @@ export default function ParameterModal({ test, onClose }) {
                     {parameterList.length > 0 ? (
                         parameterList.map((item, index) => (
                             <tr key={item.parameter_id}>
-                                <td style={{textAlign: 'center'}}>{index + 1}</td>
+                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                 <td>{item.parameter_name}</td>
                                 <td></td>
                                 <td></td>
