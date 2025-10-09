@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Table, Container, Row, Col, Pagination } from "react-bootstrap";
+import { ThreeCircles } from "react-loader-spinner";
+import { Button, Form, Table, Container, Row, Col } from "react-bootstrap";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 import httpClient from "../../../services/httpClient";
 
@@ -25,23 +26,19 @@ export default function ParameterModal({ test, onClose }) {
         setLoading(true);
         try {
             const response = await httpClient.get(`/parameter/by_profile/${test.id}`);
-            console.log("📦 Full Axios Response:", response);
-
-            // ✅ Handle if API returns raw JSON instead of { data: {...} }
+            // console.log("Full Axios Response:", response);
+            // Handle if API returns raw JSON instead of { data: {...} }
             const data = response?.data ? response.data : response;
             const params = Array.isArray(data?.parameters) ? data.parameters : [];
-
-            console.log("✅ Final parameter list to set:", params);
+            // console.log("Final parameter list to set:", params);
             setParameterList(params);
         } catch (err) {
-            console.error("❌ Fetch parameters error:", err);
+            console.error("Fetch parameters error:", err);
             setParameterList([]);
         } finally {
             setLoading(false);
         }
     };
-
-
 
     useEffect(() => {
         console.log(" Test passed to modal:", test);
@@ -83,8 +80,6 @@ export default function ParameterModal({ test, onClose }) {
             setParamError(errorMsg);
         }
     };
-
-
 
     const resetForm = () => {
         setEditItem(null);
@@ -228,38 +223,70 @@ export default function ParameterModal({ test, onClose }) {
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {parameterList.length > 0 ? (
-                        parameterList.map((item, index) => (
-                            <tr key={item.parameter_id}>
-                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                                <td>{item.parameter_name}</td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <div className="d-flex gap-2 align-items-center justify-content-center">
-                                        <FaPenToSquare
-                                            onClick={() => handleEdit(item)}
-                                            style={{ fontSize: "22px", cursor: "pointer" }}
-                                        />
-                                        <FaRegTrashCan
-                                            onClick={() => handleDelete(item.parameter_id)}
-                                            style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
+                {loading ? (
+                    <tbody>
                         <tr>
-                            <td colSpan="5" className="text-center">
-                                {loading ? "Loading..." : "No Parameters Found"}
+                            <td colSpan="5">
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        height: "250px",
+                                    }}
+                                >
+                                    <ThreeCircles
+                                        visible={true}
+                                        height="60"
+                                        width="60"
+                                        color="#fcb040"
+                                        ariaLabel="three-circles-loading"
+                                    />
+                                </div>
                             </td>
                         </tr>
-                    )}
-                </tbody>
+                    </tbody>
+                ) : parameterList.length > 0 ? (
+                    <tbody>
+                        {parameterList.length > 0 ? (
+                            parameterList.map((item, index) => (
+                                <tr key={item.parameter_id}>
+                                    <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                    <td>{item.parameter_name}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div className="d-flex gap-2 align-items-center justify-content-center">
+                                            <FaPenToSquare
+                                                onClick={() => handleEdit(item)}
+                                                style={{ fontSize: "22px", cursor: "pointer" }}
+                                            />
+                                            <FaRegTrashCan
+                                                onClick={() => handleDelete(item.parameter_id)}
+                                                style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="5" className="text-center">
+                                    {loading ? "Loading..." : "No Parameters Found"}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                ) : (
+                    <tbody>
+                        <tr>
+                            <td colSpan="5" className="text-center">
+                                No Parameter Found
+                            </td>
+                        </tr>
+                    </tbody>
+                )}
             </Table>
-
             {/* Close Button */}
             <div className="d-flex justify-content-end mt-2">
                 <Button variant="secondary" onClick={handleCancel}>
