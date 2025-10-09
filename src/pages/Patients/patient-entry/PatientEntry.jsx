@@ -259,8 +259,8 @@ export default function PatientEntry() {
             <Modal
                 show={showPatientEntryModal}
                 onHide={handleClose}
-                backdrop="static"   // ✅ side click se close nahi hoga
-                keyboard={false}    // ✅ ESC press karne se close nahi hoga
+                backdrop="static" 
+                keyboard={false} 
                 className="modal-xl"
             >
                 <Modal.Header className="primary">

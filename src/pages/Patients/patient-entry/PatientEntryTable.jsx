@@ -1,10 +1,6 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-// import Modal from "react-bootstrap/Modal";
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-// import Table from "react-bootstrap/Table";
 import httpClient from "../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
@@ -12,6 +8,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [showResultModal, setShowResultModal] = useState(false);
+    const [showPatientModal, setPatientResultModal] = useState(false);
+    const [patientLogs, setPatientLogs] = useState({});
+
+
     //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
@@ -219,6 +219,29 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         setTestDetails(null);
     };
 
+    // patient log
+    const handleShowPatientLogs = async (id, patientName) => {
+        setSelectedPatient(id);
+        setPatientResultModal(true);
+
+        try {
+            if (id) {
+                const response = await httpClient.get(`/patient_entry/activity/${id}`);
+                setPatientLogs({
+                    ...response,
+                    patient_name: patientName, // attach name manually
+                });
+            } else {
+                setPatientLogs([]);
+            }
+        } catch (error) {
+            console.error("Error fetching patient logs:", error);
+        }
+    };
+
+
+
+    //post ki call results/add-parameters
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -227,7 +250,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <table className="table table-bordered">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
-                                    <th scope="col" style={{ width: '5%', textAlign: 'center' }}>Sr.</th>
+                                    <th scope="col" style={{ textAlign: 'center' }}>Sr.</th>
+                                    <th>Patient Verify</th>
                                     <th>Name</th>
                                     <th>Age</th>
                                     {/* <th scope="col">X</th> */}
@@ -269,9 +293,19 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tbody>
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
-                                            <td className="text-center">{index + 1}</td>
+                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                             {/* <td></td> */}
                                             {/* <td>{patient.date || "-"}</td> */}
+                                            <td>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    size="sm"
+                                                    onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)} // pass id here
+                                                >
+                                                    Patient Log
+                                                </Button>
+
+                                            </td>
                                             <td>{patient.patient_name}</td>
                                             <td>{patient.age}</td>
                                             {/* <td>{patient.date || "-"}</td> */}
@@ -343,9 +377,13 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </div>
 
             {/* ✅ Add Result Modal */}
-            <Modal show={showResultModal} size="lg" onHide={() => setShowResultModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Test Result</Modal.Title>
+            <Modal show={showResultModal}
+                className="modal-md"
+                backdrop="static"
+                keyboard={false}
+                onHide={() => setShowResultModal(false)}>
+                <Modal.Header closeButton className="primary">
+                    <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -548,15 +586,52 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
 
 
+            {/* Patient Log Modal */}
+            <Modal
+                show={showPatientModal}
+                size="md"
+                backdrop="static"
+                keyboard={false}
+                onHide={() => setPatientResultModal(false)}
+            >
+                <Modal.Header closeButton className="primary">
+                    <Modal.Title className="color-white fw-bold">
+                        {patientLogs?.patient_name || "Loading..."}
+                    </Modal.Title>
+
+                </Modal.Header>
+
+                <Modal.Body>
+                    {patientLogs?.activities?.length > 0 ? (
+                        <ul className="list-group list-group-flush">
+                            {patientLogs.activities.map((log, index) => (
+                                <li key={index} className="list-group-item">
+                                    <small className="text-blue">{log.created_at}:  </small>
+                                    <strong style={{ marginLeft: '5%' }}>{log.activity}</strong>
+                                    {/* <br /> */}
+                                </li>
+
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No activity found for this patient.</p>
+                    )}
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setPatientResultModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
 
 
 
 
-
-
-
-
+        </>
+    );
+}
 
 //-------------------------- pahlay wala jis mein add result wala coioum addnhi hain--------------------
 
