@@ -1,6 +1,8 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar } from "react-icons/fa6";
+import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
 import { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
@@ -37,7 +39,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient?.patient_entry_id ||
                     selectedPatient?.id;
 
-                const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
+                const response = await httpClient.get(`/patient_entry/tests/${patient_Id}`);
                 const apiData = response.data ?? response;
                 const dataArray = Array.isArray(apiData.tests) ? apiData.tests : [];
 
@@ -68,7 +70,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         const fetchParams = async () => {
             try {
                 console.log("Selected patient_test_id:", selectedTest);
-                const res = await httpClient.get(`/parameter/by_test/${selectedTest}`); // ✅ patient_test_id jaa raha hai
+                const res = await httpClient.get(`/parameter/by_test/${selectedTest}`); //patient_test_id jaa raha hai
                 const data = res?.data ?? res ?? [];
                 setParameters(Array.isArray(data) ? data : []);
             } catch (err) {
@@ -179,6 +181,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             const response = await httpClient.post(`/results/add-parameters`, payload);
 
             console.log("Response:", response.data || response);
+
+            // After successful result save — remove that test from dropdown
+            setTests((prevTests) =>
+                prevTests.filter(
+                    (test) =>
+                        test.patient_test_id.toString() !== selectedTest.toString()
+                )
+            );
             // alert("Results saved successfully!");
             setSelectedParameters([]);
             setSelectedTest("");
@@ -265,7 +275,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         // navigate("/invoice");
         window.open("/invoice", "_blank");
         // OR if you want to open in new tab:
-        // window.open("/invoice", "_blank");
+    
     };
 
     //post ki call results/add-parameters
@@ -279,12 +289,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                 <tr style={{ backgroundColor: "#1c2765" }}>
                                     <th scope="col" style={{ textAlign: 'center' }}>Sr.</th>
                                     <th scope="col">MR#</th>
-                                    <th>Patient Verify</th>
                                     <th>Name</th>
                                     <th>Age</th>
                                     <th scope="col">Doctor</th>
-                                    <th>Test</th>
-                                    <th>Results</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -317,75 +324,60 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                         <tr key={patient.id}>
                                             <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                             {/* <td></td> */}
-                                            <td>{patient.mr}</td>
-                                            <td>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    size="sm"
-                                                    onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)}
-                                                >
-                                                    Patient Log
-                                                </Button>
-                                            </td>
+                                            <td>{patient.MR_number}</td>
                                             <td>{patient.patient_name}</td>
                                             <td>{patient.age}</td>
                                             <td>{patient.reffered_by}</td>
-                                            <td>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    size="sm"
-                                                    onClick={() => handleShow(patient)}
-                                                >
-                                                    View Test
-                                                </Button>
-
-                                            </td>
-                                            <td>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        setSelectedPatient(patient);
-                                                        setShowResultModal(true);
-                                                        setSelectedTest("");
-                                                        setParameters([]);
-                                                        setResultData({});
-                                                    }}
-                                                >
-                                                    Add Result
-                                                </Button>
-                                            </td>
                                             <td className="text-center">
-                                                <FaPenToSquare
-                                                    onClick={() => onEdit(patient)}
-                                                    style={{ fontSize: "20px", cursor: "pointer" }}
-                                                />
-                                                <FaRegTrashCan
-                                                    onClick={() => {
-                                                        if (window.confirm("Are you sure you want to delete this patient?")) {
-                                                            onDelete(patient.id);
-                                                        }
-                                                    }}
-                                                    style={{ fontSize: "20px", cursor: "pointer", color: "red", marginLeft: 10 }}
-                                                />
-                                                <FaPrint
-                                                    onClick={() => {
-                                                        handleShowInvoice(patient.id);
-                                                    }}
-                                                    style={{ fontSize: "20px", cursor: "pointer", color: "#333", marginLeft: 10 }}
-                                                />
-                                                <FaFileInvoiceDollar
-                                                    onClick={() => handleShowInvoices()}
-                                                    style={{
-                                                        fontSize: "20px",
-                                                        cursor: "pointer",
-                                                        color: "#28a745",
-                                                        marginLeft: 10
-                                                    }}
-                                                    title="View Invoice"
-                                                />
-
+                                                <div className="d-flex justify-content-center align-items-center gap-2">
+                                                    <FaHistory
+                                                        onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#007bff" }}
+                                                        title="View Patient Logs"
+                                                    />
+                                                    <FaEye
+                                                        onClick={() => handleShow(patient)}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#0d6efd" }}
+                                                        title="View Tests"
+                                                    />
+                                                    <FaFileMedical
+                                                        onClick={() => {
+                                                            setSelectedPatient(patient);
+                                                            setShowResultModal(true);
+                                                            setSelectedTest("");
+                                                            setParameters([]);
+                                                            setResultData({});
+                                                        }}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#dc3545" }}
+                                                        title="Add Result"
+                                                    />
+                                                    <FaPrint
+                                                        onClick={() => handleShowInvoice(patient.id)}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#333" }}
+                                                        title="Print"
+                                                    />
+                                                    <FaFileInvoiceDollar
+                                                        onClick={() => handleShowInvoices()}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#28a745" }}
+                                                        title="View Invoice"
+                                                    />
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(patient)}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#6c757d" }}
+                                                        title="Edit"
+                                                    />
+                                                    <FaRegTrashCan
+                                                        onClick={() => {
+                                                            if (window.confirm("Are you sure you want to delete this patient?")) {
+                                                                onDelete(patient.id);
+                                                            }
+                                                        }}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "red" }}
+                                                        title="Delete"
+                                                    />
+                                                </div>
                                             </td>
+
                                         </tr>
                                     ))}
                                 </tbody>
@@ -474,9 +466,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                 ))}
                                             </tbody>
                                         </Table>
-
-
-
 
                                     ) : (
                                         <p className="text-muted">No parameters available</p>
@@ -593,13 +582,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     </Col>
                                 </Row>
                             ))}
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button
-                                    onClick={submitResult}
-                                >
-                                    Add Result
-                                </Button>
-                            </div>
                         </>
                     )}
 
@@ -609,9 +591,13 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     <Button variant="secondary" onClick={() => setShowResultModal(false)}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSaveAll} disabled={parameters.length === 0 || saving}>
-                        {saving ? "Saving..." : "Save All Results"}
-                    </Button>
+                    {selectedParameters.length > 0 && (
+                        <Button
+                            onClick={submitResult}
+                        >
+                            Add Result
+                        </Button>
+                    )}
                 </Modal.Footer>
             </Modal>
 
@@ -623,22 +609,18 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
                 <Modal.Body>
                     {Array.isArray(testDetails) && testDetails.length > 0 ? (
-                        <Table bordered hover responsive size="md">
-                            <thead>
-                                <tr>
-                                    <th>Sr.</th>
-                                    <th>Test Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {testDetails.map((test, index) => (
-                                    <tr key={index}>
-                                        <td className="text-center">{index + 1}</td>
-                                        <td>{test.test_name}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
+                        <ol className="list-group list-group-numbered">
+                            {testDetails.map((test, index) => (
+                                <li
+                                    key={index}
+                                    className="list-group-item d-flex justify-content-between align-items-center"
+                                >
+                                    <span className="me-3">{test.test_name}</span>
+                                </li>
+                            ))}
+                        </ol>
+
+
                     ) : (
                         <p>Loading...</p>
                     )}

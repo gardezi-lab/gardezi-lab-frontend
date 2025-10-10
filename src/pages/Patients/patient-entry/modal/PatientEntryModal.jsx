@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Select from 'react-select';
 import httpClient from "../../../../services/httpClient";
 import Select from "react-select";
 
@@ -373,7 +374,6 @@ debugger
                                     }))}
                                     placeholder="Select Company"
                                 />
-
                             </Form.Group>
                         </Col>
 
