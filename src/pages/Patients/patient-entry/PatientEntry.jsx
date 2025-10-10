@@ -19,6 +19,8 @@ export default function PatientEntry() {
     const [totalPages, setTotalPages] = useState(1);
     const recordPerPage = 15;
     const [search, setSearch] = useState("");
+    const [show, setShow] = useState(false);
+    // const handleShow = () => setShow(true);
 
     const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -38,7 +40,8 @@ export default function PatientEntry() {
         setIsCurrentEditModalOpen(false);
         setSelectedPatientEntry(null);
     };
-    const handleShow = () => setShowPatientEntryModal(true);
+    const handleShow = () =>
+        setShowPatientEntryModal(true);
 
     const getPatientEntryData = async () => {
         setLoading(true);
@@ -77,7 +80,7 @@ export default function PatientEntry() {
                 sample: formData.patiententrySample,
                 priority: formData.patiententryPriority,
                 remarks: formData.patiententryRemarks,
-                test: formData.test   // ✅ already array of {name, fee}
+                test: formData.test
             };
 
 
@@ -104,7 +107,6 @@ export default function PatientEntry() {
         setIsCurrentEditModalOpen(true);
         handleShow();
     };
-
     const handleDelete = async (id) => {
         setLoading(true);
         try {
@@ -116,7 +118,6 @@ export default function PatientEntry() {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         getPatientEntryData();
@@ -137,9 +138,7 @@ export default function PatientEntry() {
                     1
                 </Pagination.Item>
             );
-
             if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
-
             if (page > 2 && page < totalPages - 1) {
                 items.push(
                     <Pagination.Item key={page} active onClick={() => setPage(page)}>
@@ -147,10 +146,9 @@ export default function PatientEntry() {
                     </Pagination.Item>
                 );
             }
-
             if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
-
             items.push(
+
                 <Pagination.Item
                     key={totalPages}
                     active={page === totalPages}
@@ -163,6 +161,16 @@ export default function PatientEntry() {
         return items;
     };
 
+    const labOptions = [
+        { value: 'doctor', label: 'Doctor' },
+        { value: 'admin', label: 'Admin' },
+        { value: 'user', label: 'User' }
+    ];
+    const RecepOptions = [
+        { value: 'doctor', label: 'Doctor' },
+        { value: 'admin', label: 'Admin' },
+        { value: 'user', label: 'User' }
+    ]
 
 
     return (
@@ -205,14 +213,8 @@ export default function PatientEntry() {
                 <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
-
-                <div className="d-flex gap-3">
-                    {/* <span className="fw-semibold">Records Per Page:</span> */}
-                    {/* <select className="form-select form-select-sm" >
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                    </select> */}
+                {/* Right side pagination */}
+             
 
                     <Pagination>
                         <Pagination.Prev
@@ -230,7 +232,6 @@ export default function PatientEntry() {
                             Next
                         </Pagination.Next>
                     </Pagination>
-                </div>
             </div>
 
             <Modal
@@ -242,12 +243,6 @@ export default function PatientEntry() {
             >
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">New Patient</Modal.Title>
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={handleClose} // ✅ sirf is button pe close hoga
-                        aria-label="Close"
-                    ></button>
                 </Modal.Header>
                 <Modal.Body>
                     <PatientEntryModal
@@ -257,7 +252,6 @@ export default function PatientEntry() {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-
                     <Button
                         variant="secondary"
                         onClick={() => {
@@ -279,9 +273,6 @@ export default function PatientEntry() {
                     <Button variant="secondary" className="secondary text-start" onClick={handleClose}>
                         Close
                     </Button>
-                    {/* <Button variant="primary" className="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button> */}
                 </Modal.Footer>
             </Modal >
 
