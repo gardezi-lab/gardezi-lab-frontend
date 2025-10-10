@@ -197,8 +197,8 @@ export default function AddResultTable({ AddResultList, onDelete, onEdit, loadin
         </div>
 
         <Modal show={showModal} size="lg">
-          <Modal.Header >
-            <Modal.Title>Add Test Result</Modal.Title>
+          <Modal.Header  className="primary">
+            <Modal.Title className="fw-bold text-white">Add Test Result</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -270,7 +270,6 @@ export default function AddResultTable({ AddResultList, onDelete, onEdit, loadin
               </Table>
             )}
           </Modal.Body>
-
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Close

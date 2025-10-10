@@ -256,6 +256,23 @@ export default function PatientEntryModal({ onSave }) {
 
     const totalDr = rows.reduce((sum, row) => sum + row.dr, 0);
     const totalCr = rows.reduce((sum, row) => sum + row.cr, 0);
+
+    const gender = [
+
+        { value: 'Male', label: 'Male' },
+        { value: 'Female', label: 'Female' },
+        { value: 'Other', label: 'Other' }
+    ]
+    const lab = [
+        { value: 'Take In Lab', label: 'Take In Lab' },
+        { value: 'Taken Outside Lab', label: 'Taken Outside Lab' },
+    ]
+
+    const Priority = [
+        { value: 'Normal', label: 'Normal' },
+        { value: 'Urgent', label: 'Urgent' },
+
+    ]
     return (
         <>
             <Container>
@@ -308,51 +325,41 @@ export default function PatientEntryModal({ onSave }) {
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Company</Form.Label>
-                                <Form.Select
+                                <Select
                                     value={patiententryCompany}
-                                    onChange={(e) => setPatientEntryCompany(e.target.value)}
-                                >
-                                    <option value="">Select Company</option>
-                                    {companies.map((company) => (
-                                        <option key={company.id} value={company.company_name}>
-                                            {company.company_name}
-                                        </option>
-                                    ))}
-                                </Form.Select>
+                                    onChange={(selectedOption) => setPatientEntryCompany(selectedOption)}
+                                    options={companies.map((company) => ({
+                                        value: company.id,
+                                        label: company.company_name
+                                    }))}
+                                    placeholder="Select Company"
+                                />
+
                             </Form.Group>
                         </Col>
 
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Referred By:</Form.Label>
-                                <Form.Select
+                                <Select
                                     value={patiententryRefferedBy}
-                                    onChange={(e) => setPatientEntryRefferedBy(e.target.value)}
-                                >
-                                    <option value="">Select Consultant</option>
-                                    {users
-                                         // ✅ sirf Doctor role
-                                        .map((doctor) => (
-                                            <option key={doctor.id} value={doctor.name}>
-                                                {doctor.name}
-                                            </option>
-                                        ))}
-                                </Form.Select>
+                                    onChange={(selectedOption) => setPatientEntryRefferedBy(selectedOption)}
+                                    options={users.map((doctor) => ({
+                                        value: doctor.id,
+                                        label: doctor.name
+                                    }))}
+                                    placeholder="select doctor"
+                                />
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Gender :</Form.Label>
-                                <Form.Select
-                                    value={patiententryGender}
-                                    onChange={(e) => setPatientEntryGender(e.target.value)}
-                                >
-                                    <option value="">Select gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </Form.Select>
-
+                                <Select
+                                    // onChange={(e) => setPatientEntryGender(e.target.value)}
+                                    placeholder="select gender"
+                                    options={gender}
+                                />
                             </Form.Group>
                         </Col>
                         <Col>
@@ -382,43 +389,34 @@ export default function PatientEntryModal({ onSave }) {
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Packages</Form.Label>
-                                <Form.Select
+                                <Select
                                     value={patiententryPackage}
-                                    onChange={(e) => setPatientEntryPackage(e.target.value)}
-                                >
-                                    <option value=""> Select Package </option>
-                                    {packages.map((pkg) => (
-                                        <option key={pkg.id} value={pkg.name}>
-                                            {pkg.name}
-                                        </option>
-                                    ))}
-                                </Form.Select>
+                                    onChange={(selectedOption) => setPatientEntryPackage(selectedOption)}
+                                    options={packages.map((pkg) => ({
+                                        value: pkg.id,
+                                        label: pkg.name
+                                    }))}
+                                    placeholder="select packages"
+                                />
                             </Form.Group>
                         </Col>
 
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Sample</Form.Label>
-                                <Form.Select
-                                    value={patiententrySample}
-                                    onChange={(e) => setPatientEntrySample(e.target.value)}
-                                >
-                                    <option value="">Select Lab</option>
-                                    <option value="Take In Lab">Take In Lab</option>
-                                    <option value="Received From Outside">Taken Outside Lab</option>
-                                </Form.Select>
+                                <Select
+                                    options={lab}
+                                    placeholder="select lab"
+                                />
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Priority</Form.Label>
-                                <Form.Select
-                                    value={patiententryPriority}
-                                    onChange={(e) => setPatientEntryPriority(e.target.value)}
-                                >
-                                    <option value="Normal">Normal</option>
-                                    <option value="Urgent">Urgent</option>
-                                </Form.Select>
+                                <Select
+                                    options={Priority}
+                                    placeholder="select Priority"
+                                />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -431,20 +429,17 @@ export default function PatientEntryModal({ onSave }) {
                                     onChange={(e) => setPatientEntryRemarks(e.target.value)} />
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group className="mb-3">
+                        <Col style={{zIndex:"8"}}>
+                            <Form.Group className="mb-3" >
                                 <Form.Label>Test</Form.Label>
-                                <Form.Select
+                                <Select
                                     value={patiententryTest}
-                                    onChange={(e) => setPatientEntryTest(e.target.value)}
-                                >
-                                    <option value=""> Select Test </option>
-                                    {testProfiles.map((test) => (
-                                        <option key={test.id} value={test.test_name}>
-                                            {test.test_name}
-                                        </option>
-                                    ))}
-                                </Form.Select>
+                                    onChange={(selectedOption) => setPatientEntryTest(selectedOption)}
+                                    options={testProfiles.map((test) => ({
+                                        value: test.id,
+                                        label: test.test_name
+                                    }))}
+                                />
 
                             </Form.Group>
                         </Col>

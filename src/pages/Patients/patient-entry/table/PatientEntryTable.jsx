@@ -12,7 +12,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [showInvoiceModal, setShowInvoiceModal] = useState(false);
     const [showPatientModal, setPatientResultModal] = useState(false);
     const [patientLogs, setPatientLogs] = useState({});
-    //  const [invoice, setInvoice] = useState({});
+    const [loadingLogs, setLoadingLogs] = useState(false);
+
     //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
@@ -217,6 +218,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const handleShowPatientLogs = async (id, patientName) => {
         setSelectedPatient(id);
         setPatientResultModal(true);
+        setLoadingLogs(true);
 
         try {
             if (id) {
@@ -230,6 +232,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             }
         } catch (error) {
             console.error("Error fetching patient logs:", error);
+        } finally {
+            setLoadingLogs(false)
         }
     };
 
@@ -267,18 +271,12 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <th>Patient Verify</th>
                                     <th>Name</th>
                                     <th>Age</th>
-                                    {/* <th scope="col">X</th> */}
-                                    {/* <th>Date</th> */}
-                                    {/* <th>MR#</th> */}
                                     <th scope="col">Doctor</th>
-                                    {/* <th scope="col">Fees</th> */}
-                                    {/* <th>Consultant</th> */}
                                     <th>Test</th>
                                     <th>Results</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
                             {loading ? (
                                 <tbody>
                                     <tr>
@@ -307,35 +305,28 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
                                             <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                                            {/* <td></td> */}
-                                            {/* <td>{patient.date || "-"}</td> */}
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
                                                     size="sm"
-                                                    onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)} // pass id here
+                                                    onClick={() => handleShowPatientLogs(patient.id, patient.patient_name)}
                                                 >
                                                     Patient Log
                                                 </Button>
-
                                             </td>
                                             <td>{patient.patient_name}</td>
                                             <td>{patient.age}</td>
-                                            {/* <td>{patient.date || "-"}</td> */}
                                             <td>{patient.reffered_by}</td>
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
                                                     size="sm"
-                                                    onClick={() => handleShow(patient)}   // ✅ pass selected patient
+                                                    onClick={() => handleShow(patient)}
                                                 >
                                                     View Test
                                                 </Button>
 
                                             </td>
-                                            {/* <td></td>  */}
-                                            {/* <td>{patient.reffered_by}</td> */}
-                                            {/* <td>{patient.test}</td> */}
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
@@ -502,7 +493,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </Modal>
 
             {/* ✅ Add Result Modal */}
-            <Modal show={showResultModal} size="lg" onHide={() => setShowResultModal(false)}>
+            <Modal show={showResultModal} size="lg">
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
@@ -598,7 +589,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </Modal>
 
             {/* test show modal */}
-            <Modal show={showModal}  centered>
+            <Modal show={showModal} centered>
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">Test Details</Modal.Title>
                 </Modal.Header>
@@ -615,7 +606,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                             <tbody>
                                 {testDetails.map((test, index) => (
                                     <tr key={index}>
-                                        <td>{index + 1}</td>
+                                        <td className="text-center">{index + 1}</td>
                                         <td>{test.test_name}</td>
                                     </tr>
                                 ))}
@@ -625,10 +616,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <p>Loading...</p>
                     )}
                 </Modal.Body>
-
-
-
-
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
@@ -644,30 +631,44 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 keyboard={false}
                 onHide={() => setPatientResultModal(false)}
             >
-                <Modal.Header closeButton className="primary">
+                <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">
                         {patientLogs?.patient_name || "Loading..."}
                     </Modal.Title>
 
                 </Modal.Header>
-
                 <Modal.Body>
-                    {patientLogs?.activities?.length > 0 ? (
+                    {loadingLogs ? (
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "250px",
+                            }}
+                        >
+                            <ThreeCircles
+                                visible={true}
+                                height="60"
+                                width="60"
+                                color="#fcb040"
+                                ariaLabel="three-circles-loading"
+                            />
+                        </div>
+                    ) : patientLogs?.activities?.length > 0 ? (
+                        // ✅ Jab data mil gaya
                         <ul className="list-group list-group-flush">
                             {patientLogs.activities.map((log, index) => (
                                 <li key={index} className="list-group-item">
-                                    <small className="text-blue">{log.created_at}:  </small>
+                                    <small className="text-blue">{log.created_at}: </small>
                                     <strong style={{ marginLeft: '5%' }}>{log.activity}</strong>
-                                    {/* <br /> */}
                                 </li>
-
                             ))}
                         </ul>
                     ) : (
-                        <p>No activity found for this patient.</p>
+                        <div className="text-center text-muted py-5">No activity found</div>
                     )}
                 </Modal.Body>
-
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setPatientResultModal(false)}>
                         Close

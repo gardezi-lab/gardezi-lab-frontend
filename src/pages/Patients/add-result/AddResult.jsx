@@ -200,10 +200,8 @@ export default function AddResult() {
                     </Pagination.Next>
                 </Pagination>
             </div>
-
-
             <Modal show={showFilterModal} >
-                <Modal.Header >
+                <Modal.Header className="primary">
                 </Modal.Header>
                 <Modal.Body>
                     <div className="mb-3">
