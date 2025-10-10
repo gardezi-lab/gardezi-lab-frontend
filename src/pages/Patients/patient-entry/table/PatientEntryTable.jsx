@@ -1,11 +1,12 @@
 import { ThreeCircles } from "react-loader-spinner";
-import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
+import { FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
+
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
-    const [show, setShow] = useState(false);
+    // const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [showResultModal, setShowResultModal] = useState(false);
@@ -13,6 +14,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [showPatientModal, setPatientResultModal] = useState(false);
     const [patientLogs, setPatientLogs] = useState({});
     const [loadingLogs, setLoadingLogs] = useState(false);
+
 
     //  States for result modal
     const [tests, setTests] = useState([]);
@@ -258,6 +260,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         }
     };
 
+    const handleShowInvoices = () => {
+        // if you want to open it in same tab
+        // navigate("/invoice");
+        window.open("/invoice", "_blank");
+        // OR if you want to open in new tab:
+        // window.open("/invoice", "_blank");
+    };
+
     //post ki call results/add-parameters
     return (
         <>
@@ -268,6 +278,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
                                     <th scope="col" style={{ textAlign: 'center' }}>Sr.</th>
+                                    <th scope="col">MR#</th>
                                     <th>Patient Verify</th>
                                     <th>Name</th>
                                     <th>Age</th>
@@ -305,6 +316,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     {patiententryList.map((patient, index) => (
                                         <tr key={patient.id}>
                                             <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                            {/* <td></td> */}
+                                            <td>{patient.mr}</td>
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
@@ -361,6 +374,17 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                     }}
                                                     style={{ fontSize: "20px", cursor: "pointer", color: "#333", marginLeft: 10 }}
                                                 />
+                                                <FaFileInvoiceDollar
+                                                    onClick={() => handleShowInvoices()}
+                                                    style={{
+                                                        fontSize: "20px",
+                                                        cursor: "pointer",
+                                                        color: "#28a745",
+                                                        marginLeft: 10
+                                                    }}
+                                                    title="View Invoice"
+                                                />
+
                                             </td>
                                         </tr>
                                     ))}
@@ -386,7 +410,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 keyboard={false}
                 onHide={() => setShowInvoiceModal(false)}>
                 <Modal.Header closeButton className="primary">
-                    <Modal.Title className="color-white fw-bold">{selectedInvoice?.patient_name || "Loading..."}</Modal.Title>
+                    <Modal.Title className="text-white fw-bold">
+                        {selectedInvoice?.data?.patient?.patient_name || "Loading..."}
+                    </Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -443,6 +469,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                         <td>{param.result_value || "-"}</td>
                                                         <td>{param.unit}</td>
                                                         <td>{param.normalvalue}</td>
+                                                        {/* <td>{param.qr_code}</td> */}
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -454,7 +481,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     ) : (
                                         <p className="text-muted">No parameters available</p>
                                     )}
-                                    
+
                                 </div>
 
                             ))}
@@ -481,7 +508,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <p>Loading invoice...</p>
                     )}
 
-                 
+
                 </Modal.Body>
 
 

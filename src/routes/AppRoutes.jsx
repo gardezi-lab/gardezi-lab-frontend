@@ -84,6 +84,7 @@ import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
 import Parameter from "../pages/Dashboard/parameter/Parameter";
 import RequireAuth from "./RequireAuth";
 import AddResult from "../pages/Patients/add-result/AddResult";
+import InvoicePrint from "../components/invoice/InvoicePrint";
 
 function AppRoutes() {
   return (
@@ -142,6 +143,7 @@ function AppRoutes() {
           <Route path="/parameter" element={<Parameter />} />
           <Route path="/interpertation" element={<Interpertation />} />
           <Route path="/add-result" element={<AddResult />} />
+          <Route path="/invoice" element={<InvoicePrint />} />
 
         {/* </Route> */}
       </Route >
