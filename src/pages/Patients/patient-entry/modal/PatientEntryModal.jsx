@@ -177,7 +177,7 @@ export default function PatientEntryModal({ onSave }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // ✅ Manual Validation
+        // Manual Validation
         if (!patiententryCell.trim()) {
             setErrorMessage(" Please enter Cell#");
             return;
@@ -280,24 +280,46 @@ export default function PatientEntryModal({ onSave }) {
                     {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
                     <Row>
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Cell#. :</Form.Label>
-                                <Form.Control type="text" placeholder=""
+                            <Form.Group className="mb-3">
+                                <Form.Label>Cell Number</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    id="phone_no"
+                                    name="phone_no"
+                                    pattern="^\+92[3][0-9]{9}$"
+                                    title="Enter a valid Pakistani mobile number. Example: +923001234567"
+                                    placeholder="+923001234567"
                                     value={patiententryCell}
                                     onChange={(e) => setPatientEntryCell(e.target.value)}
                                     required
                                 />
                             </Form.Group>
+
                         </Col>
                         <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3" controlId="patientName">
                                 <Form.Label>Name</Form.Label>
-                                <Form.Control type="text" placeholder="Name"
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter full name"
                                     value={patiententryPatientName}
-                                    onChange={(e) => setPatientEntryPatientName(e.target.value)}
-                                    required />
+                                    onChange={(e) => {
+                                        const input = e.target.value;
+                                        // Allow only alphabets and spaces, and limit to 30 characters
+                                        if (/^[A-Za-z\s]{0,30}$/.test(input)) {
+                                            setPatientEntryPatientName(input);
+                                        }
+                                    }}
+                                    required
+                                />
+                                {patiententryPatientName.length === 30 && (
+                                    <div className="text-danger small">
+                                        Maximum character limit reached.
+                                    </div>
+                                )}
                             </Form.Group>
                         </Col>
+
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label> Father/ Husband / MR#:</Form.Label>
@@ -310,16 +332,29 @@ export default function PatientEntryModal({ onSave }) {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Age : </Form.Label>
+                            <Form.Group className="mb-3" controlId="patientAge">
+                                <Form.Label>Age:</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    placeholder=""
+                                    type="number"
+                                    placeholder="Enter age"
+                                    min="0"
+                                    max="120"
                                     value={patiententryAge}
-                                    onChange={(e) => setPatientEntryAge(e.target.value)}
+                                    onChange={(e) => {
+                                        const input = e.target.value;
+                                        // Allow only numbers and restrict to 0–120
+                                        if (input === "" || (/^\d{0,3}$/.test(input) && Number(input) <= 120)) {
+                                            setPatientEntryAge(input);
+                                        }
+                                    }}
+                                    required
                                 />
+                                {patiententryAge > 120 && (
+                                    <div className="text-danger small">Maximum age allowed is 120.</div>
+                                )}
                             </Form.Group>
                         </Col>
+
                     </Row>
                     <Row>
                         <Col>
