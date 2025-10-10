@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import httpClient from "../../../../services/httpClient";
-import Select from 'react-select';
+import Select from "react-select";
 
 export default function PatientEntryModal({ onSave }) {
 
@@ -144,6 +144,7 @@ export default function PatientEntryModal({ onSave }) {
         const fetchTestProfiles = async () => {
             try {
                 const res = await httpClient.get("/test_profile");
+                console.log("profie ressponse data", res.data)
                 if (Array.isArray(res)) {
                     setTestProfiles(res);
                 } else if (Array.isArray(res.data)) {
@@ -360,7 +361,7 @@ debugger
 
                     </Row>
                     <Row>
-                        <Col>
+                        <Col style={{ zIndex: "12" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Company</Form.Label>
                                 <Select
@@ -376,7 +377,7 @@ debugger
                             </Form.Group>
                         </Col>
 
-                        <Col>
+                        <Col style={{ zIndex: "11" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Referred By:</Form.Label>
                                 <Select
@@ -390,11 +391,10 @@ debugger
                                 />
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col style={{ zIndex: "10" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Gender :</Form.Label>
                                 <Select
-                                    // onChange={(e) => setPatientEntryGender(e.target.value)}
                                     placeholder="select gender"
                                     options={gender}
                                 />
@@ -424,7 +424,7 @@ debugger
                                 />
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col style={{ zIndex: "10" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Packages</Form.Label>
                                 <Select
@@ -439,7 +439,7 @@ debugger
                             </Form.Group>
                         </Col>
 
-                        <Col>
+                        <Col style={{ zIndex: "9" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Sample</Form.Label>
                                 <Select
@@ -448,7 +448,7 @@ debugger
                                 />
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col style={{ zIndex: "8" }}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Priority</Form.Label>
                                 <Select
@@ -467,7 +467,7 @@ debugger
                                     onChange={(e) => setPatientEntryRemarks(e.target.value)} />
                             </Form.Group>
                         </Col>
-                        <Col style={{zIndex:"8"}}>
+                        <Col style={{ zIndex: "8" }}>
                             <Form.Group className="mb-3" >
                                 <Form.Label>Test</Form.Label>
                                 <Select
