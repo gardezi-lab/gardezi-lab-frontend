@@ -15,6 +15,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     //  States for result modal
     const [tests, setTests] = useState([]);
     const [parameters, setParameters] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [testDetails, setTestDetails] = useState([]);
     const [selectedTest, setSelectedTest] = useState("");
     const [selectedParameters, setSelectedParameters] = useState([]);
     const [resultData, setResultData] = useState({});
@@ -182,9 +184,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         }
     };
 
-    const [showModal, setShowModal] = useState(false);
-    const [testDetails, setTestDetails] = useState(null);
-
     // Handle modal open
     const handleShow = async (patient) => {
         setSelectedPatient(patient);
@@ -196,22 +195,16 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 patient?.patient_entry_id ||
                 patient?.id;
 
-            console.log("Fetching tests for patient_Id:", patient_Id);
-
-            // ✅ Correct API call
             const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
             console.log("Fetched tests:", response.data);
 
-            // ✅ Some APIs return { tests: [...] }, others return an array directly
-            const testList = response.data?.tests || response.data || [];
+            setTestDetails(response.tests || response.data?.tests || []);
 
-            setTestDetails(testList);
         } catch (error) {
             console.error("Error fetching test details:", error);
             setTestDetails([]);
         }
     };
-
 
     // Handle modal close
     const handleClose = () => {
@@ -344,8 +337,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
             {/* ✅ Add Result Modal */}
             <Modal show={showResultModal} size="lg" onHide={() => setShowResultModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Test Result</Modal.Title>
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -392,8 +385,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <Col md={4}>
                                         <Form.Label className="fw-semibold">{param.parameter_name}</Form.Label>
                                     </Col>
-
-                                    {/* Editable Input Field */}
                                     <Col md={4}>
                                         <Form.Control
                                             type="text"
@@ -425,78 +416,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     Add Result
                                 </Button>
                             </div>
-
-
-
                         </>
                     )}
 
-
-                    {/* {selectedParameters.length > 0 && (
-                        <>
-                            <h5>Parameters</h5>
-                            {selectedParameters.map((param, index) => (
-                                <Row key={param.parameter_id} className="align-items-center mb-3">
-                                    <Col md={4}>
-                                        <Form.Label>{param.parameter_name}</Form.Label>
-                                    </Col>
-                                    <Col md={3}>
-                                        <Form.Control
-                                            type="text"
-                                            value={param.default_value}
-                                            onChange={(e) =>
-                                                selectedTestFunc(index, e.target.value)
-                                            }
-                                        />
-                                    </Col>
-                                    <Col md={2}>{param.unit}</Col>
-                                    <Col md={3} className="text-muted">
-                                        Normal: {param.normalvalue}
-                                    </Col>
-                                </Row>
-                            ))}
-                        </>
-                    )} */}
-                    {/* {selectedParameters.length > 0 && (
-                        // <>
-                        //     <h5 className="mb-3">Parameters</h5>
-                            
-                        // </>
-                    )} */}
-                    {/* {selectedParameters.length > 0 && (
-                        <Table bordered hover responsive>
-                            <thead style={{ backgroundColor: "#f8f9fa" }}>
-                                <tr>
-                                    <th>Sr.</th>
-                                    {dynamicColumns.map((col) => (
-                                        <th key={col}>{col}</th>
-                                    ))}
-                                    <th>Result</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {parameters.map((p, idx) => {
-                                    const pid = p.id ?? p.parameter_id ?? idx;
-                                    return (
-                                        <tr key={pid}>
-                                            <td>{idx + 1}</td>
-                                            {dynamicColumns.map((col) => (
-                                                <td key={col}>{p[col]}</td>
-                                            ))}
-                                            <td>
-                                                <Form.Control
-                                                    type="text"
-                                                    placeholder="Enter result"
-                                                    value={resultData[pid] ?? ""}
-                                                    onChange={(e) => handleResultChange(pid, e.target.value)}
-                                                />
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                    )} */}
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -510,25 +432,36 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             </Modal>
 
             {/* test show modal */}
-            <Modal show={showModal} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Test Details</Modal.Title>
+            <Modal show={showModal}  centered>
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">Test Details</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                    {testDetails && testDetails.length > 0 ? (
-                        <ul>
-                            {testDetails.map((test, index) => (
-                                <li key={index}>
-                                    <strong>{test.test_name || test.name || `Test ${index + 1}`}</strong>
-                                    {test.fee && <span> — Fee: {test.fee} Rs</span>}
-                                </li>
-                            ))}
-                        </ul>
+                    {Array.isArray(testDetails) && testDetails.length > 0 ? (
+                        <Table bordered hover responsive size="md">
+                            <thead>
+                                <tr>
+                                    <th>Sr.</th>
+                                    <th>Test Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {testDetails.map((test, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{test.test_name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     ) : (
-                        <p>No tests found for this patient.</p>
+                        <p>Loading...</p>
                     )}
                 </Modal.Body>
+
+
+
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -543,176 +476,3 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//-------------------------- pahlay wala jis mein add result wala coioum addnhi hain--------------------
-
-// import { ThreeCircles } from "react-loader-spinner";
-// import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
-// import { useState } from "react";
-// import Modal from "react-bootstrap/Modal";
-// import Button from "react-bootstrap/Button";
-// // import { QRCodeCanvas } from "qrcode.react";
-
-// export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
-//     const [show, setShow] = useState(false);
-//     const [selectedPatient, setSelectedPatient] = useState(null); // ✅ hold clicked patient
-
-//     const handleOpen = (patient) => {
-//         setSelectedPatient(patient); // ✅ store clicked patient
-//         setShow(true);
-//     };
-
-//     const handleClose = () => {
-//         setSelectedPatient(null); // clear data when closing
-//         setShow(false);
-//     };
-
-//     return (
-//         <>
-//             <div className="card shadow-sm border-0">
-//                 <div className="card-body p-0">
-//                     <div className="table-responsive" style={{ maxHeight: "62vh", overflowY: 'scroll' }}>
-//                         <table className="table table-bordered">
-//                             <thead>
-//                                 <tr style={{ backgroundColor: "#1c2765" }}>
-//                                     <th scope="col">Sr.</th>
-//                                     <th scope="col">X</th>
-//                                     <th scope="col">Date</th>
-//                                     <th scope="col">Name</th>
-//                                     <th scope="col">MR#</th>
-//                                     <th scope="col">Reception</th>
-//                                     <th scope="col">Fees</th>
-//                                     <th scope="col">Ref Consultant</th>
-//                                     <th scope="col">Test</th>
-//                                     <th scope="col">Action</th>
-//                                 </tr>
-//                             </thead>
-//                             {loading ? (
-//                                 <tbody>
-//                                     <tr>
-// <td colSpan="10">
-//     <div
-//         style={{
-//             display: "flex",
-//             justifyContent: "center",
-//             alignItems: "center",
-//             height: "250px",
-//         }}
-//     >
-//         <ThreeCircles
-//             visible={true}
-//             height="60"
-//             width="60"
-//             color="#fcb040"
-//             ariaLabel="three-circles-loading"
-//         />
-//     </div>
-// </td>
-//                                     </tr>
-//                                 </tbody>
-//                             ) : patiententryList?.length > 0 ? (
-//                                 <tbody>
-//                                     {patiententryList.map((patient, index) => (
-//                                         <tr key={patient.id}>
-//                                             <td>{index + 1}</td>
-//                                             <td></td>
-//                                             <td></td>
-//                                             <td>{patient.patient_name}</td>
-//                                             <td>{patient.father_hasband_MR}</td>
-//                                             <td></td>
-//                                             <td></td>
-//                                             <td>{patient.reffered_by}</td>
-//                                             <td>{patient.test}</td>
-//                                             <td>
-//                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
-//                                                     <FaPenToSquare
-//                                                         onClick={() => onEdit(patient)}
-//                                                         style={{ fontSize: "22px", cursor: "pointer" }}
-//                                                     />
-//                                                     <FaRegTrashCan
-//                                                         onClick={() => {
-//                                                             if (window.confirm("Are you sure you want to delete this department?")) {
-//                                                                 onDelete(patient.id);
-//                                                             }
-//                                                         }}
-//                                                         style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-//                                                     />
-//                                                     <FaPrint
-//                                                         onClick={() => handleOpen(patient)} // ✅ pass patient
-//                                                         style={{ fontSize: "22px", cursor: "pointer", color: "#333" }}
-//                                                     />
-//                                                 </div>
-//                                             </td>
-//                                         </tr>
-//                                     ))}
-//                                 </tbody>
-//                             ) : (
-//                                 <tbody>
-//                                     <tr>
-//                                         <td colSpan="10" className="text-center">
-//                                             No Patients Found
-//                                         </td>
-//                                     </tr>
-//                                 </tbody>
-//                             )}
-//                         </table>
-//                     </div>
-
-//                     {/* ✅ Modal with selected patient */}
-//                     <Modal show={show} onHide={handleClose} centered>
-//                         <Modal.Header closeButton>
-//                             <Modal.Title>Print Preview</Modal.Title>
-//                         </Modal.Header>
-//                         <Modal.Body>
-//                             {selectedPatient ? (
-//                                 <>
-//                                     <p><strong>Patient Name:</strong> {selectedPatient.patient_name}</p>
-//                                     <p><strong>MR#:</strong> {selectedPatient.father_hasband_MR}</p>
-//                                     <p><strong>Referred By:</strong> {selectedPatient.reffered_by}</p>
-//                                     <p><strong>Test:</strong> {selectedPatient.test}</p>
-//                                     <p><strong>Code:</strong> {selectedPatient.qr_code}</p>
-//                                     <div className="d-flex justify-content-center mt-3">
-//                                         <QRCodeCanvas
-//                                             value={`https://gardezi-lab-backend-1-zlp6.onrender.com/api/invoice/${selectedPatient.id}`}
-//                                             size={128}    // QR size
-//                                             bgColor="#ffffff"
-//                                             fgColor="#000000"
-//                                             level="H"     // error correction
-//                                         />
-//                                     </div>
-//                                 </>
-//                             ) : (
-//                                 <p>No patient selected</p>
-//                             )}
-//                         </Modal.Body>
-//                         <Modal.Footer>
-//                             <Button variant="secondary" onClick={handleClose}>
-//                                 Close
-//                             </Button>
-//                             <Button
-//                                 variant="primary"
-//                                 onClick={() => window.print()}
-//                             >
-//                                 Print
-//                             </Button>
-//                         </Modal.Footer>
-//                     </Modal>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// }
