@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import httpClient from "../../../../services/httpClient";
+import Select from 'react-select';
 
 export default function PatientEntryModal({ onSave }) {
 
@@ -190,10 +191,10 @@ export default function PatientEntryModal({ onSave }) {
             setErrorMessage(" Please enter Age");
             return;
         }
-        if (!patiententryRefferedBy.trim()) {
-            setErrorMessage(" Please select Referred By");
-            return;
-        }
+        // if (!patiententryRefferedBy.trim()) {
+        //     setErrorMessage(" Please select Referred By");
+        //     return;
+        // }
         if (!patiententryGender.trim()) {
             setErrorMessage(" Please select Gender");
             return;
@@ -234,11 +235,12 @@ export default function PatientEntryModal({ onSave }) {
     const [cr, setCr] = useState("");
 
     const handleClick = () => {
+debugger
         if (!patiententryTest) {
             return;
         }
         const selectedTest = testProfiles.find(
-            (test) => test.test_name === patiententryTest
+            (test) => test.test_name === patiententryTest.label
         )
         const newRow = {
             id: selectedTest?.id || rows.length + 1,
@@ -250,6 +252,7 @@ export default function PatientEntryModal({ onSave }) {
 
         setRows([...rows, newRow]);
     };
+
     const handleDelete = (index) => {
         setRows(rows.filter((_, i) => i !== index));
     };

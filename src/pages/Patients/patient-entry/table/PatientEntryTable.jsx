@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
+
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
-    const navigate = useNavigate();
     // const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -14,6 +14,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [showPatientModal, setPatientResultModal] = useState(false);
     const [patientLogs, setPatientLogs] = useState({});
     const [loadingLogs, setLoadingLogs] = useState(false);
+
 
     //  States for result modal
     const [tests, setTests] = useState([]);
@@ -261,8 +262,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
     const handleShowInvoices = () => {
         // if you want to open it in same tab
-        navigate("/invoice");
-
+        // navigate("/invoice");
+        window.open("/invoice", "_blank");
         // OR if you want to open in new tab:
         // window.open("/invoice", "_blank");
     };
@@ -480,7 +481,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     ) : (
                                         <p className="text-muted">No parameters available</p>
                                     )}
-                                    
+
                                 </div>
 
                             ))}
@@ -507,7 +508,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                         <p>Loading invoice...</p>
                     )}
 
-                 
+
                 </Modal.Body>
 
 
