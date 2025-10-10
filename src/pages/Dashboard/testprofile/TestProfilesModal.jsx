@@ -121,6 +121,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
         // Jab user test_code likh raha ho → error clear
         if (name === "test_code") {
             setTestCodeError(""); // clear while typing
+            setError("");
         }
 
         if (name === "department_id") {
@@ -257,7 +258,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             <Form.Control
                                 name="delivery_time"
                                 value={formData.delivery_time}
-                                type= "number"
+                                type="number"
                                 onChange={handleChange}
                             >
                             </Form.Control>
