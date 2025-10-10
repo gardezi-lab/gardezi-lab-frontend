@@ -1,7 +1,7 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-import httpClient from "../../../services/httpClient";
+import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
@@ -82,7 +82,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     };
 
     const handleSaveAll = async () => {
-        if (!selectedTest) return alert("Select a test first");
+        // if (!selectedTest) return alert("Select a test first");
         setSaving(true);
 
         try {
@@ -99,11 +99,11 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             };
 
             await httpClient.post("/save_results", payload);
-            alert("Results saved successfully!");
+            // alert("Results saved successfully!");
             setShowResultModal(false);
         } catch (err) {
             console.error("Save error:", err);
-            alert("Save failed. Check console for details.");
+            // alert("Save failed. Check console for details.");
         } finally {
             setSaving(false);
         }
@@ -150,7 +150,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const submitResult = async () => {
         try {
             if (!selectedPatient || !selectedTest) {
-                alert("Please select a patient and a test first!");
+                // alert("Please select a patient and a test first!");
                 return;
             }
 
@@ -176,7 +176,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             const response = await httpClient.post(`/results/add-parameters`, payload);
 
             console.log("Response:", response.data || response);
-            alert("Results saved successfully!");
+            // alert("Results saved successfully!");
             setSelectedParameters([]);
             setSelectedTest("");
 
@@ -259,8 +259,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         <>
             <div className="card shadow-sm border-0">
                 <div className="card-body p-0">
-                    <div className="table-responsive" style={{ maxHeight: "62vh", overflowY: "scroll" }}>
-                        <table className="table table-bordered">
+                    <div className="table-responsive table-sm" style={{ maxHeight: "70vh", overflowY: "scroll" }}>
+                        <table className="table table-bordered table-sm">
                             <thead>
                                 <tr style={{ backgroundColor: "#1c2765" }}>
                                     <th scope="col" style={{ textAlign: 'center' }}>Sr.</th>
@@ -418,10 +418,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                         <Form.Label className="fw-bold">Gender</Form.Label>
                                         <Form.Control value={selectedInvoice.data.patient.gender || ""} readOnly />
                                     </div>
-                                    <div className="col-md-6">
-                                        <Form.Label className="fw-bold">Company</Form.Label>
+                                    {/* <div className="col-md-6">
+                                        <Form.Label className="fw-bold">C</Form.Label>
                                         <Form.Control value={selectedInvoice.data.patient.company || ""} readOnly />
-                                    </div>
+                                    </div> */}
                                     <div className="col-md-6">
                                         <Form.Label className="fw-bold">Invoice Date</Form.Label>
                                         <Form.Control value={selectedInvoice.data.patient.invoice_date || ""} readOnly />
@@ -456,15 +456,41 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                 ))}
                                             </tbody>
                                         </Table>
+
+
+
+
                                     ) : (
                                         <p className="text-muted">No parameters available</p>
                                     )}
+                                    
                                 </div>
+
                             ))}
+                            {selectedInvoice?.data?.qr_code && (
+                                <div className="text-center mt-4">
+                                    <h6 className="fw-bold mb-2">QR Code</h6>
+                                    <img
+                                        src={selectedInvoice.data.qr_code}
+                                        alt="QR Code"
+                                        style={{
+                                            width: "150px",
+                                            height: "150px",
+                                            objectFit: "contain",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "8px",
+                                            padding: "5px",
+                                            background: "#fff",
+                                        }}
+                                    />
+                                </div>
+                            )}
                         </>
                     ) : (
                         <p>Loading invoice...</p>
                     )}
+
+                 
                 </Modal.Body>
 
 

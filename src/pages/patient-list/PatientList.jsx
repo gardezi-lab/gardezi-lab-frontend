@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PatientEntryModal from "../Patients/patient-entry/PatientEntryModal";
+// import PatientEntryModal from "../Patients/patient-entry/PatientEntryModal";
 export default function PatientList() {
     const [search, setSearch] = useState("2025-GL-");
     const [showModal, setShowModal] = useState(false);

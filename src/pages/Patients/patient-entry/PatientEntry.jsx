@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
-import PatientEntryModal from "./PatientEntryModal";
+import PatientEntryModal from "./modal/PatientEntryModal";
 import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
-import PatientEntryTable from "./PatientEntryTable";
+import PatientEntryTable from "./table/PatientEntryTable";
 import Form from 'react-bootstrap/Form';
 import Pagination from "react-bootstrap/Pagination";
-
+import FilterModal from "./modal/FilterModal";
+import { Dropdown } from "react-bootstrap";
 
 export default function PatientEntry() {
     const [showPatientEntryModal, setShowPatientEntryModal] = useState(false);
@@ -16,8 +17,13 @@ export default function PatientEntry() {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const recordPerPage = 5;
+    const recordPerPage = 15;
     const [search, setSearch] = useState("");
+
+    const [showFilterModal, setShowFilterModal] = useState(false);
+
+    const handleCloseFilterModal = () => setShowFilterModal(false);
+    const handleShowFilterModal = () => setShowFilterModal(true);
 
     const handleSubmit = () => {
         console.log("Submit / Update clicked");
@@ -81,7 +87,7 @@ export default function PatientEntry() {
                     obj
                 );
             } else {
-                
+
                 await httpClient.post("/patient_entry/", obj);
             }
 
@@ -162,56 +168,11 @@ export default function PatientEntry() {
     return (
         <>
 
-            <h5 className="fw-bold page-header">New Patient</h5>
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+            {/* Page name and filter */}
 
-                <div className="d-flex flex-wrap align-items-center gap-2">
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Lab </Form.Label>
-                        <Form.Select>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Receptionist </Form.Label>
-                        <Form.Select>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </Form.Select>
-                    </Form.Group>
-                    {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Company </Form.Label>
-                        <Form.Select>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </Form.Select>
-                    </Form.Group> */}
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>From :</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label> To :</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search profiles..."
-                        style={{ width: "220px" }}
-                        value={search}
-                        onChange={(e) => {
-                            setPage(1);
-                            setSearch(e.target.value);
-                        }}
-                    />
-                    <Form.Group className="mb-3 mt-3">
-                        <button className="btn btn-success primary">Show</button>
-                    </Form.Group>
+            <div className="d-flex justify-content-between mb-2">
+                <h5 className="fw-bold page-header">Patient Management</h5>
+                <div className="d-flex gap-2">
                     <button
                         className="btn btn-success primary"
                         type="button"
@@ -222,45 +183,61 @@ export default function PatientEntry() {
                     >
                         <i className="fas fa-plus me-2"></i> Add Patient
                     </button>
+                    <button
+                        className="btn  filter-btn"
+                        type="button"
+                        onClick={() => { handleShowFilterModal(true) }}
+                    >
+                        <i className="fas fa-filter"></i>
+                    </button>
                 </div>
             </div>
-
+            {/* Patient Listing Table */}
             <PatientEntryTable
                 patiententryList={patiententryList}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 loading={loading} />
 
-            <div className="d-flex justify-content-between align-items-center mt-3">
+            {/* Pagination and Export to excel  */}
 
+            <div className="d-flex justify-content-between align-items-center mt-3">
                 <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-                {/* Right side pagination */}
-                <Pagination>
-                    <Pagination.Prev
-                        onClick={() => page > 1 && setPage(page - 1)}
-                        disabled={page === 1}
-                    >
-                        Previous
-                    </Pagination.Prev>
-                    {renderPaginationItems()}
-                    <Pagination.Next
+                <div className="d-flex gap-3">
+                    {/* <span className="fw-semibold">Records Per Page:</span> */}
+                    {/* <select className="form-select form-select-sm" >
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select> */}
 
-                        onClick={() => page < totalPages && setPage(page + 1)}
-                        disabled={page === totalPages}
-                    >
-                        Next
-                    </Pagination.Next>
-                </Pagination>
+                    <Pagination>
+                        <Pagination.Prev
+                            onClick={() => page > 1 && setPage(page - 1)}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </Pagination.Prev>
+                        {renderPaginationItems()}
+                        <Pagination.Next
+
+                            onClick={() => page < totalPages && setPage(page + 1)}
+                            disabled={page === totalPages}
+                        >
+                            Next
+                        </Pagination.Next>
+                    </Pagination>
+                </div>
             </div>
 
             <Modal
                 show={showPatientEntryModal}
                 onHide={handleClose}
-                backdrop="static" 
-                keyboard={false} 
+                backdrop="static"
+                keyboard={false}
                 className="modal-xl"
             >
                 <Modal.Header className="primary">
@@ -307,6 +284,9 @@ export default function PatientEntry() {
                     </Button> */}
                 </Modal.Footer>
             </Modal >
+
+            <FilterModal showFilterModal={showFilterModal} handleCloseFilterModal={handleCloseFilterModal} />
+
         </>
     )
 }

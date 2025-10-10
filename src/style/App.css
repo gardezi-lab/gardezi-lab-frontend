@@ -52,3 +52,7 @@
     text-align: left;
     vertical-align: middle;
 }
+
+.filter-btn {
+    border-color: #1c3665 !important;
+}
