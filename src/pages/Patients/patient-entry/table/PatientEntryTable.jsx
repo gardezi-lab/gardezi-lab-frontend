@@ -260,7 +260,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     data: response.data || response,
                     patient_name: patientName,
                 });
-                  window.open("/invoice", "_blank");
 
             } else {
                 setSelectedInvoice([]);
