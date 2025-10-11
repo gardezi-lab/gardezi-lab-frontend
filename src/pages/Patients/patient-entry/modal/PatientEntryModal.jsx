@@ -309,12 +309,12 @@ export default function PatientEntryModal({ onSave }) {
                                     type="text"
                                     id="phone_no"
                                     name="phone_no"
-                                    pattern="^\+92[3][0-9]{9}$"
+                                    // pattern="^\+92[3][0-9]{9}$"
                                     title="Enter a valid Pakistani mobile number. Example: +923001234567"
                                     placeholder="+923001234567"
                                     value={patiententryCell}
                                     onChange={(e) => setPatientEntryCell(e.target.value)}
-                                    required
+                                // required
                                 />
                             </Form.Group>
 
@@ -501,7 +501,8 @@ export default function PatientEntryModal({ onSave }) {
                                 <Select
                                     value={patiententryTest}
                                     onChange={(selectedOption) => {
-                                        setPatientEntryTest(selectedOption)}}
+                                        setPatientEntryTest(selectedOption)
+                                    }}
                                     options={testProfiles.map((test) => ({
                                         value: test.id,
                                         label: test.test_name
@@ -525,13 +526,13 @@ export default function PatientEntryModal({ onSave }) {
                             </Form.Group>
                         </Col>
                         {/* Table Section */}
-                        <div className="row">
-                            <div className="col-md-12">
+                        <div className="row card shadow-sm border-0">
+                            <div className="col-md-12 card-body p-0">
                                 <div className="table-responsive mt-3">
-                                    <table className="table table-bordered">
+                                    <table className="table table-bordered table-sm">
                                         <thead style={{ backgroundColor: "deepskyblue" }}>
                                             <tr>
-                                                <th>Sr</th>
+                                                <th className='text-center'>Sr</th>
                                                 <th>Test Description</th>
                                                 <th>Sample Required</th>
                                                 <th>Delivery time</th>
@@ -543,7 +544,7 @@ export default function PatientEntryModal({ onSave }) {
                                             <tbody>
                                                 {rows.map((row, index) => (
                                                     <tr key={index}>
-                                                        <td>{index + 1}</td>
+                                                        <td className='text-center'>{index + 1}</td>
                                                         <td>{row.test_name}</td>
                                                         <td>{row.sample_required}</td>
                                                         <td>{row.delivery_time}</td>
@@ -567,7 +568,6 @@ export default function PatientEntryModal({ onSave }) {
                             </div>
                         </div>
                     </Row>
-                    <hr />
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">

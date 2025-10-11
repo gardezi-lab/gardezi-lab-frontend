@@ -632,8 +632,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             >
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">
-                        {patientLogs?.patient_name || "Loading..."}
+                        {loadingLogs ? "Loading..." : patientLogs?.patient_name || "No Name"}
                     </Modal.Title>
+
 
                 </Modal.Header>
                 <Modal.Body>
