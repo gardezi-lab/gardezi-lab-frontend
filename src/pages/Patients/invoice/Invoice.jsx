@@ -1,225 +1,303 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import httpClient from "../../../services/httpClient";
+import gheader2 from "../../../../public/assets/img/gheader2.png";
+import { useLocation } from "react-router-dom";
+
 export default function Invoice() {
-    const [search, setSearch] = useState("2025-GL-");
+    const [invoiceResult, setInvoiceResult] = useState(null);
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const id = query.get("id");
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+
+    const getInvoiceData = async () => {
+        try {
+            const response = await httpClient.get(`/invoice/${id}`);
+            if (response) setInvoiceResult(response);
+        } catch (err) {
+            console.error("Invoice Fetch Error:", err);
+        }
+    };
+
+    useEffect(() => {
+        getInvoiceData();
+    }, []);
+
+    if (!invoiceResult) return <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>;
+
     return (
-        <div className="container-fluid mt-0 p-0" style={{ paddingRight: "1%" }}>
-            <div
-                className="card shadow-lg border-0 rounded-3"
-                style={{ width: "100%" }}
-            >
+        <div
+            style={{
+                fontFamily: "Arial, sans-serif",
+                color: "#000",
+                padding: "20px",
+                fontSize: "14px",
+            }}
+        >
+            {[1, 2].map((copy, index) => (
                 <div
-                    className="card-header text-white d-flex justify-content-between align-items-center"
-                    style={{ backgroundColor: "rgba(243,156,18,255)" }}
+                    key={index}
+                    style={{
+                        border: "1px solid #000",
+                        padding: "20px",
+                        marginBottom: "40px",
+                        position: "relative",
+                        pageBreakAfter: index === 0 ? "always" : "auto",
+                        backgroundColor: "#fff",
+                    }}
                 >
-                    <h5 className="mb-1 text-white">Invoice Slips</h5>
-                    {/* <button
-                        type="button"
-                        className="btn btn-success"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addModal"
-                    >
-                        Add Header
-                    </button> */}
-                </div>
-
-                <div className="card-body">
-                    <input
-                        className="form-control mb-2 w-25"
-                        type="text"
-                        placeholder="Search"
-                        aria-label="Search"
-                        style={{ width: "200px" }}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)} // editable
-                    />
-
-                    <form
-                        className="d-flex align-items-center w-100 mb-4"
-                        role="search"
-                    >
-                        <button type="button" className="btn btn-secondary me-1 ">
-                            Excel
-                        </button>
-                        <div className="d-flex ms-auto">
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="Search"
-                                aria-label="Search"
-                            />
-                            <button
-                                className="btn btn-outline-success"
-                                type="submit"
-                            >
-                                Search
-                            </button>
+                    {/* Watermark */}
+                    {copy === 2 && (
+                        <div
+                            style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%) rotate(-30deg)",
+                                fontSize: "90px",
+                                color: "rgba(0,0,0,0.08)",
+                                fontWeight: "bold",
+                                zIndex: 0,
+                                pointerEvents: "none",
+                            }}
+                        >
+                            DUPLICATE
                         </div>
-                    </form>
+                    )}
 
-                    {/* Table */}
-                    <div className="table-responsive">
-                        <table className="table table-sm">
-                            <thead>
+                    {/* Header */}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                            borderBottom: "2px solid #000",
+                            paddingBottom: "10px",
+                            marginBottom: "15px",
+                        }}
+                    >
+                        {/* Left - Logo */}
+                        <div style={{ flex: "1" }}>
+                            <img
+                                src={gheader2}
+                                alt="Gardezi Lab"
+                                style={{ maxWidth: "100%", height: "auto" }}
+                            />
+                        </div>
+
+                        {/* Right - QR */}
+                        <div
+                            style={{
+                                width: "120px",
+                                height: "120px",
+                                border: "2px solid #000",
+                                textAlign: "center",
+                                lineHeight: "120px",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            {invoiceResult?.qr_code ? (
+                                <img
+                                    src={invoiceResult.qr_code}
+                                    alt="QR Code"
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                    }}
+                                />
+                            ) : (
+                                "QR CODE"
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Patient Info */}
+                    <table
+                        style={{
+                            width: "100%",
+                            borderCollapse: "collapse",
+                            marginBottom: "15px",
+                            zIndex: 1,
+                            position: "relative",
+                        }}
+                    >
+                        <tbody>
+                            <tr>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Name:</td>
+                                <td>{invoiceResult?.patient?.patient_name || "-"}</td>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Age:</td>
+                                <td>{invoiceResult?.patient?.age ? `${invoiceResult.patient.age} years` : "-"}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Gender:</td>
+                                <td>{invoiceResult?.patient?.gender || "-"}</td>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Ref#:</td>
+                                <td>{invoiceResult?.patient?.refferd_by || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>MR No:</td>
+                                <td>{invoiceResult?.patient?.MR_number || "-"}</td>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Date:</td>
+                                <td>{formattedDate}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Cell:</td>
+                                <td>{invoiceResult?.patient?.cell || "-"}</td>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>
+                                    Sample Taken In Lab:
+                                </td>
+                                <td>{invoiceResult?.patient?.sample || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Remarks:</td>
+                                <td colSpan="3">{invoiceResult?.patient?.remarks || "-"}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {/* Tests Table */}
+                    <table
+                        style={{
+                            width: "100%",
+                            borderCollapse: "collapse",
+                            border: "1px solid #000",
+                            fontSize: "14px",
+                            marginBottom: "15px",
+                        }}
+                    >
+                        <thead>
+                            <tr style={{ backgroundColor: "#f2f2f2" }}>
+                                <th
+                                    style={{
+                                        border: "1px solid #000",
+                                        padding: "6px",
+                                        textAlign: "left",
+                                    }}
+                                >
+                                    Description
+                                </th>
+                                <th
+                                    style={{
+                                        border: "1px solid #000",
+                                        padding: "6px",
+                                        textAlign: "left",
+                                    }}
+                                >
+                                    Reporting Time
+                                </th>
+                                <th
+                                    style={{
+                                        border: "1px solid #000",
+                                        padding: "6px",
+                                        textAlign: "left",
+                                    }}
+                                >
+                                    Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {invoiceResult?.tests?.length > 0 ? (
+                                invoiceResult.tests.map((test, i) => (
+                                    <tr key={i}>
+                                        <td
+                                            style={{
+                                                border: "1px solid #000",
+                                                padding: "6px",
+                                            }}
+                                        >
+                                            {test?.test_name}
+                                        </td>
+                                        <td
+                                            style={{
+                                                border: "1px solid #000",
+                                                padding: "6px",
+                                            }}
+                                        >
+                                            {test?.reporting_time || "N/A"}
+                                        </td>
+                                        <td
+                                            style={{
+                                                border: "1px solid #000",
+                                                padding: "6px",
+                                            }}
+                                        >
+                                            {test?.fee ? `${test.fee}/-Rs` : "-"}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
                                 <tr>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Name
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        MR
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Reff
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Contact No.
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Date
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Ref Lab
-                                    </th>
-                                    <th
-                                        className="bg-black text-white"
-                                        scope="col"
-                                    >
-                                        Test
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">Microbiology</td>
-                                    <td className="py-1">
-                                        Routine
+                                    <td colSpan="3" style={{ textAlign: "center", padding: "8px" }}>
+                                        No tests found
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">Routine</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">Special Chemistry</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">Serology</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">Molecular</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">Serology Elisa</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">Hematology</td>
-                                    <td className="py-1">
-                                        Routine
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            )}
+                        </tbody>
+                    </table>
+
+                    {/* Totals */}
+                    <table style={{ maxWidth: "83%", fontSize: "14px" }}>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Amount</strong></td>
+                                <td>{invoiceResult?.total_fee || 0}/-Rs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discount</strong></td>
+                                <td>{invoiceResult?.discount || 0}/-Rs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Advance Received</strong></td>
+                                <td>{invoiceResult?.paid || 0}/-Rs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Balance Due</strong></td>
+                                <td>{invoiceResult?.unpaid || 0}/-Rs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {/* Urdu Instruction */}
+                    <p
+                        style={{
+                            textAlign: "center",
+                            fontSize: "15px",
+                            marginTop: "20px",
+                            fontFamily: "'Noto Nastaliq Urdu', serif",
+                            lineHeight: "1.8",
+                        }}
+                    >
+                        اپنی رپورٹ دینے میں دیر ہو سکتی ہے۔ تاخیر کی وجہ سے رپورٹ میں دیر ہو سکتی ہے۔ اپنی رپورٹ آن لائن دیکھنے اور ڈاؤنلوڈ کرنے کے لیے کیو آر کوڈ کو سکین کریں یا پھر ہماری ویب سائٹ وزٹ کریں۔
+                    </p>
+
+                    {/* Footer */}
+                    <div
+                        style={{
+                            textAlign: "center",
+                            marginTop: "15px",
+                            fontSize: "13px",
+                            borderTop: "1px solid #000",
+                            paddingTop: "10px",
+                        }}
+                    >
+                        Username: <strong>{invoiceResult?.patient?.MR_number || "-"}</strong> | Password:{" "}
+                        <strong>{invoiceResult?.password || "******"}</strong>
+                        <br />
+                        <span style={{ fontStyle: "italic" }}>* Receipt Made By *</span>
                     </div>
                 </div>
-
-                {/* Card Footer */}
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                    <div>Showing 1 to 7 of 7 entries</div>
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination mb-0">
-                            <li className="page-item disabled">
-                                <a className="page-link">Previous</a>
-                            </li>
-                            <li className="page-item active" aria-current="page">
-                                <a className="page-link" href="#">
-                                    1
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    2
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    3
-                                </a>
-                            </li>
-                            <li className="page-item">
-                                <a className="page-link" href="#">
-                                    Next
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+            ))}
         </div>
     );
 }

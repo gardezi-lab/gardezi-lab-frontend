@@ -1,6 +1,7 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar } from "react-icons/fa6";
 import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
@@ -10,9 +11,7 @@ import { Link } from "react-router-dom";
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
     // const [show, setShow] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
-    const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [showResultModal, setShowResultModal] = useState(false);
-    const [showInvoiceModal, setShowInvoiceModal] = useState(false);
     const [showPatientModal, setPatientResultModal] = useState(false);
     const [patientLogs, setPatientLogs] = useState({});
     const [loadingLogs, setLoadingLogs] = useState(false);
@@ -126,17 +125,25 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         setSelectedTest(TestId);
         try {
             if (TestId) {
-                const res = await httpClient.get(`/parameter/by_test/${TestId}`);
-                console.log("API Response:", res.parameters);
-                setSelectedParameters(res.parameters || []);
+                const res = await httpClient.get(`/patient_entry/test_parameters/${TestId}`);
+                console.log("API Response:", res.data ?? res);
+
+                const paramsArray = Array.isArray(res.data)
+                    ? res.data
+                    : Array.isArray(res)
+                        ? res
+                        : [];
+
+                setSelectedParameters(paramsArray);
             } else {
                 setSelectedParameters([]);
             }
         } catch (error) {
             console.error("Error fetching parameters:", error);
+            setSelectedParameters([]);
         }
-
     };
+
 
     const handleParameterValueChange = (index, value) => {
         const updatedParams = [...selectedParameters];
@@ -173,7 +180,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             const response = await httpClient.post(`/results/add-parameters`, payload);
 
             console.log("Response:", response.data || response);
-
             // After successful result save — remove that test from dropdown
             setTests((prevTests) =>
                 prevTests.filter(
@@ -244,7 +250,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     // invoice generate
     const handleShowInvoice = async (id, patientName) => {
         setSelectedPatient(id);
-        setShowInvoiceModal(true);
+        // setShowInvoiceModal(true);
 
         try {
             if (id) {
@@ -260,6 +266,14 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         } catch (error) {
             console.error("Error fetching patient logs:", error);
         }
+    };
+
+    const handleShowInvoices = () => {
+        // if you want to open it in same tab
+        // navigate("/invoice");
+        window.open("/print-report", "_blank");
+        // OR if you want to open in new tab:
+
     };
 
     //post ki call results/add-parameters
@@ -335,8 +349,21 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                         style={{ fontSize: "20px", cursor: "pointer", color: "#dc3545" }}
                                                         title="Add Result"
                                                     />
+                                                    {/* <Link to={`/invoice?id=${patient.id}`} target="_blank" rel="noopener noreferrer">
+                                                        <FaPrint
+                                                            onClick={() => handleShowInvoice(patient.id)}
+                                                            style={{ fontSize: "20px", cursor: "pointer", color: "#333" }}
+                                                            title="Print"
+                                                        />
+                                                    </Link> */}
+                                                    {/* <Link to={`/invoice?id=${patient.id}`} target="_blank" rel="noopener noreferrer">
+                                                        <FaFileInvoiceDollar
+                                                            style={{ fontSize: "20px", cursor: "pointer", color: "#28a745" }}
+                                                            title="View Invoice"
+                                                        />
+                                                    </Link> */}
                                                     <FaPrint
-                                                        onClick={() => handleShowInvoice(patient.id)}
+                                                        onClick={() => handleShowInvoices(patient.id)}
                                                         style={{ fontSize: "20px", cursor: "pointer", color: "#333" }}
                                                         title="Print"
                                                     />
@@ -380,16 +407,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 </div>
             </div>
 
-
-            <Modal show={showInvoiceModal}
-                className="modal-xl"
-                backdrop="static"
-                keyboard={false}
-                onHide={() => setShowInvoiceModal(false)}>
-                <Modal.Header closeButton className="primary">
-                    <Modal.Title className="text-white fw-bold">
-                        {selectedInvoice?.data?.patient?.patient_name || "Loading..."}
-                    </Modal.Title>
+       <Modal show={showResultModal} size="lg">
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">Add Test Result</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
