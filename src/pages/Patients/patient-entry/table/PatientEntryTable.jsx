@@ -126,7 +126,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         setSelectedTest(TestId);
         try {
             if (TestId) {
-                const res = await httpClient.get(`/parameter/by_test/${TestId}`);
+                const res = await httpClient.get(`/patient_entry/test_parameters/${TestId}`);
                 console.log("API Response:", res.parameters);
                 setSelectedParameters(res.parameters || []);
             } else {
@@ -169,8 +169,8 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 })),
             };
 
-            console.log("Payload sending:", payload);
-            const response = await httpClient.post(`/results/add-parameters`, payload);
+
+            const response = await httpClient.post(`/patient_entry/test_results/${payload.patient_test_id}`, payload);
 
             console.log("Response:", response.data || response);
 
