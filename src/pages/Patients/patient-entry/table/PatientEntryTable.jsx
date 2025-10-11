@@ -2,7 +2,6 @@ import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar } from "react-icons/fa6";
 import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 
@@ -16,7 +15,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [showPatientModal, setPatientResultModal] = useState(false);
     const [patientLogs, setPatientLogs] = useState({});
     const [loadingLogs, setLoadingLogs] = useState(false);
-
 
     //  States for result modal
     const [tests, setTests] = useState([]);
@@ -275,7 +273,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         // navigate("/invoice");
         window.open("/invoice", "_blank");
         // OR if you want to open in new tab:
-    
+
     };
 
     //post ki call results/add-parameters
@@ -292,7 +290,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                     <th>Name</th>
                                     <th>Age</th>
                                     <th scope="col">Doctor</th>
-                                    <th>Action</th>
+                                    <th style={{ textAlign: 'center' }}>Action</th>
                                 </tr>
                             </thead>
                             {loading ? (
@@ -411,32 +409,23 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     {selectedInvoice?.data?.patient ? (
                         <>
                             {/* Patient Info Section */}
-                            <div className="border rounded p-3 mb-3 bg-light">
-                                <h5 className="mb-3 text-center text-uppercase fw-bold">Invoice</h5>
-
-                                <div className="row g-3">
-                                    <div className="col-md-6">
-                                        <Form.Label className="fw-bold">Patient Name</Form.Label>
-                                        <Form.Control value={selectedInvoice.data.patient.patient_name || ""} readOnly />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <Form.Label className="fw-bold">Age</Form.Label>
-                                        <Form.Control value={selectedInvoice.data.patient.age || ""} readOnly />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <Form.Label className="fw-bold">Gender</Form.Label>
-                                        <Form.Control value={selectedInvoice.data.patient.gender || ""} readOnly />
-                                    </div>
-                                    {/* <div className="col-md-6">
-                                        <Form.Label className="fw-bold">C</Form.Label>
-                                        <Form.Control value={selectedInvoice.data.patient.company || ""} readOnly />
-                                    </div> */}
-                                    <div className="col-md-6">
-                                        <Form.Label className="fw-bold">Invoice Date</Form.Label>
-                                        <Form.Control value={selectedInvoice.data.patient.invoice_date || ""} readOnly />
-                                    </div>
-                                </div>
-                            </div>
+                            <Table responsive className="mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <td>{selectedInvoice?.data?.patient?.patient_name || ""}</td>
+                                        <th>Age</th>
+                                        <td>{selectedInvoice?.data?.patient?.age || ""}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gender</th>
+                                        <td>{selectedInvoice?.data?.patient?.gender || ""}</td>
+                                        {/* <th>Invoice Date</th>
+                                        <td>{selectedInvoice?.data?.patient?.invoice_date || ""}</td> */}
+                                    </tr>
+                                  
+                                </tbody>
+                            </Table>
 
                             {/* Tests & Parameters */}
                             {selectedInvoice.data.tests?.map((test, index) => (

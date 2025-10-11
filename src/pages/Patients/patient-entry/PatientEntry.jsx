@@ -102,11 +102,13 @@ export default function PatientEntry() {
             handleClose();
         }
     };
+    
     const handleEdit = (dep) => {
         setSelectedPatientEntry(dep);
         setIsCurrentEditModalOpen(true);
         handleShow();
     };
+
     const handleDelete = async (id) => {
         setLoading(true);
         try {
