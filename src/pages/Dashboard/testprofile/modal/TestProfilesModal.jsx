@@ -4,14 +4,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
-import httpClient from "../../../services/httpClient";
+import httpClient from "../../../../services/httpClient";
 
 export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
     const [departments, setDepartments] = useState([]);
     const [interpretations, setInterpretations] = useState([]);
     const [error, setError] = useState("");
     const [testCodeError, setTestCodeError] = useState("");
-
 
     // Fetch departments
     useEffect(() => {
@@ -80,7 +79,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
     // Add this below handleChange
     const handleBlur = async (e) => {
         const { name, value } = e.target;
-
         if (name === "test_code" && value.trim() !== "") {
             try {
                 const response = await httpClient.post("/test_profile/check_test_code", {
@@ -192,7 +190,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             />
                         </Form.Group>
                     </Col>
-
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Test Code</Form.Label>
@@ -209,8 +206,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             )}
                         </Form.Group>
                     </Col>
-
-
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Sample Required</Form.Label>
@@ -223,7 +218,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             />
                         </Form.Group>
                     </Col>
-
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Department</Form.Label>
@@ -244,7 +238,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                         </Form.Group>
                     </Col>
                 </Row>
-
                 <Row>
                     <Col>
                         <Form.Group className="mb-3">
@@ -303,7 +296,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                         </Form.Group>
                     </Col>
                 </Row>
-
                 {/* Checkbox Row 1 */}
                 <Row>
                     <Col>
@@ -317,7 +309,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                         />
                     </Col>
                 </Row>
-
                 {/* Checkbox Row 2 */}
                 <Row>
                     <Col>
@@ -331,9 +322,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                         />
                     </Col>
                 </Row>
-
                 {error && <p className="text-danger">{error}</p>}
-
                 <div className="d-flex justify-content-end gap-2">
                     <Button variant="secondary" onClick={onCancel}>
                         Cancel & Close
