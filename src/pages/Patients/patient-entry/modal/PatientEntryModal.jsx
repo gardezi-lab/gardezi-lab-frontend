@@ -8,6 +8,22 @@ import Select from 'react-select';
 import httpClient from "../../../../services/httpClient";
 import Select from "react-select";
 
+const gender = [
+    { value: 'Male', label: 'Male' },
+    { value: 'Female', label: 'Female' },
+    { value: 'Other', label: 'Other' }
+]
+const lab = [
+    { value: 'Take In Lab', label: 'Take In Lab' },
+    { value: 'Taken Outside Lab', label: 'Taken Outside Lab' },
+]
+
+const Priority = [
+    { value: 'Normal', label: 'Normal' },
+    { value: 'Urgent', label: 'Urgent' },
+
+]
+
 export default function PatientEntryModal({ onSave }) {
 
     const [patiententryCell, setPatientEntryCell] = useState("");
@@ -16,7 +32,7 @@ export default function PatientEntryModal({ onSave }) {
     const [patiententryAge, setPatientEntryAge] = useState("");
     const [patiententryCompany, setPatientEntryCompany] = useState("");
     const [patiententryRefferedBy, setPatientEntryRefferedBy] = useState("");
-    const [patiententryGender, setPatientEntryGender] = useState("");
+    const [patiententryGender, setPatientEntryGender] = useState([]);
     const [patiententryEmail, setPatientEntryEmail] = useState("");
     const [patiententryAddress, setPatientEntryAddress] = useState("");
     const [patiententryPackage, setPatientEntryPackage] = useState("");
@@ -38,6 +54,8 @@ export default function PatientEntryModal({ onSave }) {
     const [paid, setPaid] = useState(0);
     const [balance, setBalance] = useState(0);
     const [rows, setRows] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
+
     useEffect(() => {
         console.log("Rows updated:", rows);
         const totalPrice = rows.reduce((sum, row) => sum + (parseFloat(row.fee) || 0), 0);
@@ -52,7 +70,6 @@ export default function PatientEntryModal({ onSave }) {
             discountAmount = (total * dscPercent) / 100;
             setDscPkr(discountAmount.toFixed(0));
         }
-
         const newNet = total - discountAmount;
         setNet(newNet >= 0 ? newNet : 0);
         setBalance(newNet - paid);
@@ -185,11 +202,11 @@ export default function PatientEntryModal({ onSave }) {
             setErrorMessage(" Please enter Cell#");
             return;
         }
-        if (!patiententryPatientName.trim()) {
+        if (!patiententryPatientName.trim) {
             setErrorMessage(" Please enter Patient Name");
             return;
         }
-        if (!patiententryAge.trim()) {
+        if (!patiententryAge.trim) {
             setErrorMessage(" Please enter Age");
             return;
         }
@@ -201,14 +218,14 @@ export default function PatientEntryModal({ onSave }) {
             setErrorMessage(" Please select Gender");
             return;
         }
-        if (!patiententrySample.trim()) {
+        if (!patiententrySample.trim) {
             setErrorMessage(" Please select Sample Type");
             return;
         }
-        if (!patiententryTest.trim()) {
-            setErrorMessage(" Please select Test");
-            return;
-        }
+        // if (!patiententryTest.trim) {
+        //     setErrorMessage(" Please select Test");
+        //     return;
+        // }
         const formattedTests = rows.map(row => ({
             name: row.test_name,
             fee: parseFloat(row.fee) || 0
@@ -231,11 +248,29 @@ export default function PatientEntryModal({ onSave }) {
             patiententryRemarks,
             test: formattedTests
         });
+
     };
 
     const [dr, setDr] = useState("");
     const [cr, setCr] = useState("");
 
+    // const handleClick = () => {
+    //     if (!patiententryTest) {
+    //         return;
+    //     }
+    //     const selectedTest = testProfiles.find(
+    //         (test) => test.test_name === patiententryTest.value
+    //     )
+    //     const newRow = {
+    //         id: selectedTest?.id || rows.length + 1,
+    //         test_name: selectedTest?.test_name || patiententryTest,
+    //         sample_required: selectedTest?.sample_required || "N/A",
+    //         delivery_time: selectedTest?.delivery_time || "N/A",
+    //         fee: selectedTest?.fee || "N/A",
+    //     };
+
+    //     setRows([...rows, newRow]);
+    // };
     const handleClick = () => {
 debugger
         if (!patiententryTest) {
@@ -245,11 +280,11 @@ debugger
             (test) => test.test_name === patiententryTest.label
         )
         const newRow = {
-            id: selectedTest?.id || rows.length + 1,
-            test_name: selectedTest?.test_name || patiententryTest,
-            sample_required: selectedTest?.sample_required || "N/A",
-            delivery_time: selectedTest?.delivery_time || "N/A",
-            fee: selectedTest?.fee || "N/A",
+            id: selectedTest.id,
+            test_name: selectedTest.test_name,
+            sample_required: selectedTest.sample_required || "N/A",
+            delivery_time: selectedTest.delivery_time || "N/A",
+            fee: selectedTest.fee || "N/A",
         };
 
         setRows([...rows, newRow]);
@@ -262,22 +297,7 @@ debugger
     const totalDr = rows.reduce((sum, row) => sum + row.dr, 0);
     const totalCr = rows.reduce((sum, row) => sum + row.cr, 0);
 
-    const gender = [
 
-        { value: 'Male', label: 'Male' },
-        { value: 'Female', label: 'Female' },
-        { value: 'Other', label: 'Other' }
-    ]
-    const lab = [
-        { value: 'Take In Lab', label: 'Take In Lab' },
-        { value: 'Taken Outside Lab', label: 'Taken Outside Lab' },
-    ]
-
-    const Priority = [
-        { value: 'Normal', label: 'Normal' },
-        { value: 'Urgent', label: 'Urgent' },
-
-    ]
     return (
         <>
             <Container>
@@ -384,7 +404,7 @@ debugger
                                     value={patiententryRefferedBy}
                                     onChange={(selectedOption) => setPatientEntryRefferedBy(selectedOption)}
                                     options={users.map((doctor) => ({
-                                        value: doctor.id,
+                                        value: doctor.name,
                                         label: doctor.name
                                     }))}
                                     placeholder="select doctor"
@@ -396,7 +416,12 @@ debugger
                                 <Form.Label>Gender :</Form.Label>
                                 <Select
                                     placeholder="select gender"
-                                    options={gender}
+                                    defaultValue={patiententryGender}
+                                    onChange={(selectedValue) => setPatientEntryGender(selectedValue.value)}
+                                    options={gender.map((gender) => ({
+                                        value: gender.value,
+                                        label: gender.label
+                                    }))}
                                 />
                             </Form.Group>
                         </Col>
@@ -443,7 +468,12 @@ debugger
                             <Form.Group className="mb-3">
                                 <Form.Label>Sample</Form.Label>
                                 <Select
-                                    options={lab}
+                                    defaultValue={patiententrySample}
+                                    onChange={(selectedValue) => setPatientEntrySample(selectedValue.value)}
+                                    options={lab.map((lab) => ({
+                                        value: lab.value,
+                                        label: lab.label
+                                    }))}
                                     placeholder="select lab"
                                 />
                             </Form.Group>
@@ -472,12 +502,15 @@ debugger
                                 <Form.Label>Test</Form.Label>
                                 <Select
                                     value={patiententryTest}
-                                    onChange={(selectedOption) => setPatientEntryTest(selectedOption)}
+                                    onChange={(selectedOption) => {
+                                        setPatientEntryTest(selectedOption)}}
                                     options={testProfiles.map((test) => ({
                                         value: test.id,
                                         label: test.test_name
                                     }))}
                                 />
+
+
 
                             </Form.Group>
                         </Col>

@@ -499,8 +499,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
 
                 </Modal.Body>
-
-
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowInvoiceModal(false)}>
                         Close

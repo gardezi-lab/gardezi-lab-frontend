@@ -72,7 +72,7 @@ export default function PatientEntry() {
                 father_hasband_MR: formData.patiententryFatherHasbandMR,
                 age: formData.patiententryAge,
                 company: formData.patiententryCompany,
-                reffered_by: formData.patiententryRefferedBy,
+                reffered_by: formData.patiententryRefferedBy.value,
                 gender: formData.patiententryGender,
                 email: formData.patiententryEmail,
                 address: formData.patiententryAddress,
@@ -214,24 +214,24 @@ export default function PatientEntry() {
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
                 {/* Right side pagination */}
-             
 
-                    <Pagination>
-                        <Pagination.Prev
-                            onClick={() => page > 1 && setPage(page - 1)}
-                            disabled={page === 1}
-                        >
-                            Previous
-                        </Pagination.Prev>
-                        {renderPaginationItems()}
-                        <Pagination.Next
 
-                            onClick={() => page < totalPages && setPage(page + 1)}
-                            disabled={page === totalPages}
-                        >
-                            Next
-                        </Pagination.Next>
-                    </Pagination>
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
             </div>
 
             <Modal
@@ -259,6 +259,7 @@ export default function PatientEntry() {
                         }} >
                         Verify
                     </Button>
+                    
                     <Button
                         variant="primary"
                         onClick={() => {
