@@ -4,6 +4,7 @@ import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
@@ -259,6 +260,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     data: response.data || response,
                     patient_name: patientName,
                 });
+                  window.open("/invoice", "_blank");
 
             } else {
                 setSelectedInvoice([]);
@@ -269,6 +271,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     };
 
     const handleShowInvoices = () => {
+        console.log("hello invoice")
         // if you want to open it in same tab
         // navigate("/invoice");
         window.open("/invoice", "_blank");
@@ -354,11 +357,12 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                         style={{ fontSize: "20px", cursor: "pointer", color: "#333" }}
                                                         title="Print"
                                                     />
+                                                    <Link to={`/invoice?id=${patient.id}`} target="_blank" rel="noopener noreferrer">
                                                     <FaFileInvoiceDollar
-                                                        onClick={() => handleShowInvoices()}
                                                         style={{ fontSize: "20px", cursor: "pointer", color: "#28a745" }}
                                                         title="View Invoice"
                                                     />
+                                                    </Link>
                                                     <FaPenToSquare
                                                         onClick={() => onEdit(patient)}
                                                         style={{ fontSize: "20px", cursor: "pointer", color: "#6c757d" }}

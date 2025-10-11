@@ -4,10 +4,8 @@ import PatientEntryModal from "./modal/PatientEntryModal";
 import Button from 'react-bootstrap/Button';
 import httpClient from "../../../services/httpClient";
 import PatientEntryTable from "./table/PatientEntryTable";
-import Form from 'react-bootstrap/Form';
 import Pagination from "react-bootstrap/Pagination";
 import FilterModal from "./modal/FilterModal";
-import { Dropdown } from "react-bootstrap";
 
 export default function PatientEntry() {
     const [showPatientEntryModal, setShowPatientEntryModal] = useState(false);
@@ -19,17 +17,11 @@ export default function PatientEntry() {
     const [totalPages, setTotalPages] = useState(1);
     const recordPerPage = 15;
     const [search, setSearch] = useState("");
-    const [show, setShow] = useState(false);
-    // const handleShow = () => setShow(true);
 
     const [showFilterModal, setShowFilterModal] = useState(false);
 
     const handleCloseFilterModal = () => setShowFilterModal(false);
     const handleShowFilterModal = () => setShowFilterModal(true);
-
-    const handleSubmit = () => {
-        console.log("Submit / Update clicked");
-    };
 
     const handleVerify = () => {
         console.log("Verify clicked");
@@ -83,14 +75,12 @@ export default function PatientEntry() {
                 test: formData.test
             };
 
-
             if (isCurrentEditModalOpen && selectedPatientEntry) {
                 await httpClient.put(
                     `/patient_entry/${selectedPatientEntry.id}`,
                     obj
                 );
             } else {
-
                 await httpClient.post("/patient_entry/", obj);
             }
 
@@ -162,18 +152,6 @@ export default function PatientEntry() {
         }
         return items;
     };
-
-    const labOptions = [
-        { value: 'doctor', label: 'Doctor' },
-        { value: 'admin', label: 'Admin' },
-        { value: 'user', label: 'User' }
-    ];
-    const RecepOptions = [
-        { value: 'doctor', label: 'Doctor' },
-        { value: 'admin', label: 'Admin' },
-        { value: 'user', label: 'User' }
-    ]
-
 
     return (
         <>
@@ -264,12 +242,7 @@ export default function PatientEntry() {
                     
                     <Button
                         variant="primary"
-                        onClick={() => {
-                            const form = document.querySelector("form");
-                            if (form) {
-                                form.requestSubmit();
-                            }
-                        }}  >
+                        onClick={() => {handleSave}}>
                         {selectedPatientEntry ? "Update" : "Submit"}
                     </Button>
 
@@ -278,9 +251,7 @@ export default function PatientEntry() {
                     </Button>
                 </Modal.Footer>
             </Modal >
-
             <FilterModal showFilterModal={showFilterModal} handleCloseFilterModal={handleCloseFilterModal} />
-
         </>
     )
 }

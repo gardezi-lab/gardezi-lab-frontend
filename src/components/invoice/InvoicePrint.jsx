@@ -1,6 +1,42 @@
+import { useEffect, useState } from "react";
+import httpClient from "../../services/httpClient";
 import gheader2 from "../../../public/assets/img/gheader2.png";
+import { useLocation } from "react-router-dom";
 
 export default function InvoicePrint() {
+    const [invoiceResult, setInvoiceResult] = useState(null);
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const id = query.get("id");
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+
+    const getPatientEntryData = async () => {
+
+        try {
+            const url = `/invoice/${id}`;
+            const response = await httpClient.get(url);
+            console.log("invoce response", response)
+            if (response) {
+                setInvoiceResult(response);
+
+            }
+        } catch (err) {
+            console.error("Fetch PatientEntry Error:", err);
+        } finally {
+
+        }
+    };
+
+    useEffect(() => {
+        getPatientEntryData();
+    }, [])
+
     return (
         <div className="container mt-3" style={{ fontFamily: "Arial, sans-serif", color: "#000" }}>
             {[1, 2].map((copy, index) => (
@@ -46,17 +82,18 @@ export default function InvoicePrint() {
                         {/* QR Code Section */}
                         <div className="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
                             <div
-                                style={{
-                                    width: "120px",
-                                    height: "120px",
-                                    background: "#f1f1f1",
-                                    border: "2px solid #000",
-                                    textAlign: "center",
-                                    lineHeight: "120px",
-                                    fontSize: "12px",
-                                }}
+                            // style={{
+                            //     width: "10px",
+                            //     height: "10px",
+                            //     background: "#f1f1f1",
+                            //     border: "2px solid #000",
+                            //     textAlign: "center",
+                            //     lineHeight: "120px",
+                            //     fontSize: "12px",
+                            // }}
                             >
-                                QR CODE
+
+                                <img style={{ height: '100px' }} src={invoiceResult?.qr_code} alt="" srcset="" />
                             </div>
                         </div>
                     </div>
@@ -67,35 +104,35 @@ export default function InvoicePrint() {
                             <tbody style={{ fontSize: "14px" }}>
                                 <tr>
                                     <td><strong>Name :</strong></td>
-                                    <td>SHOAIB TURN AROUNFK</td>
+                                    <td>{invoiceResult?.patient?.patient_name}</td>
                                     <td><strong>Age :</strong></td>
-                                    <td>99years/s</td>
+                                    <td> {invoiceResult?.patient?.age} years/s</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Gender :</strong></td>
-                                    <td>Male</td>
-                                    <td><strong>Ref# :</strong></td>
-                                    <td>MURTAZA QASIM</td>
+                                    <td>{invoiceResult?.patient?.gender}</td>
+                                    <td><strong>Refferd by :</strong></td>
+                                    <td>{invoiceResult?.patient?.refferd_by}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>MR No :</strong></td>
-                                    <td>2025-GL-5914</td>
-                                    <td><strong>Date :</strong></td>
-                                    <td>10:29am/09-10-2025</td>
+                                    <td>{invoiceResult?.patient?.MR_number}</td>
+                                    <td><strong>Invoice Issue Date :</strong></td>
+                                    <td>{formattedDate}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Cell :</strong></td>
-                                    <td>03344558899</td>
-                                    <td><strong>Sample Taken in Lab</strong></td>
-                                    <td></td>
+                                    <td>{invoiceResult?.patient?.cell}</td>
+                                    <td><strong>Sample</strong></td>
+                                    <td>{invoiceResult?.patient?.sample}</td>
                                 </tr>
-                                 {/* <tr>
+                                {/* <tr>
                                     <td><strong>Father/Husband/MR# :</strong></td>
                                     <td></td>
                                 </tr> */}
                                 <tr>
                                     <td><strong>Remarks :</strong></td>
-                                    <td colSpan="3"></td>
+                                    <td colSpan="3">{invoiceResult?.patient?.remarks}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -111,42 +148,41 @@ export default function InvoicePrint() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Endocrinology Report (T3, T4, TSH)</td>
-                                <td>09-10-2025 02:29 PM</td>
-                                <td>3300.00/-Rs</td>
-                            </tr>
-                            <tr>
-                                <td>Blood Group</td>
-                                <td>09-10-2025 09:29 AM</td>
-                                <td>400.00/-Rs</td>
-                            </tr>
-                            <tr>
-                                <td>ESR</td>
-                                <td>09-10-2025 12:29 PM</td>
-                                <td>200.00/-Rs</td>
-                            </tr>
+                            {
+                                invoiceResult?.tests?.map((test) => {
+                                    return (
+                                        <tr>
+                                            <td>{test?.test_name}</td>
+                                            <td>09-10-2025 02:29 PM</td>
+                                            <td>{test?.fee}/-Rs</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+
+
+
                         </tbody>
                     </table>
 
                     {/* Totals */}
-                    <table className="table table-borderless" style={{maxWidth: '83%', fontSize: "14px" }}>
+                    <table className="table table-borderless" style={{ maxWidth: '83%', fontSize: "14px" }}>
                         <tbody>
                             <tr>
                                 <td><strong>Total Amount</strong></td>
-                                <td>3,900.00/-Rs</td>
+                                <td>{invoiceResult?.total_fee}/-Rs</td>
                             </tr>
                             <tr>
                                 <td><strong>Discount</strong></td>
-                                <td>0.00/-Rs</td>
+                                <td>{invoiceResult?.discount}/-Rs</td>
                             </tr>
                             <tr>
                                 <td><strong>Advance Received</strong></td>
-                                <td>200.00/-Rs</td>
+                                <td>{invoiceResult?.paid}/-Rs</td>
                             </tr>
                             <tr>
                                 <td><strong>Balance Due</strong></td>
-                                <td>3,700.00/-Rs</td>
+                                <td>{invoiceResult?.unpaid}/-Rs</td>
                             </tr>
                         </tbody>
                     </table>
