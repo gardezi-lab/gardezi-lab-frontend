@@ -39,17 +39,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient?.id;
 
                 const response = await httpClient.get(`/patient_entry/tests/${patient_Id}`);
-                const apiData = response.data ?? response;
-                const dataArray = Array.isArray(apiData.tests) ? apiData.tests : [];
+             
 
-                const formatted = dataArray.map((t, i) => ({
-                    id: i + 1,
-                    name: t.name || t.test_name || t || `Test ${i + 1}`,
-                    test_id: t.test_id || i + 1,
-                    patient_test_id: t.patient_test_id,
-                }));
 
-                setTests(formatted);
+                setTests(response);
             } catch (err) {
                 console.error("Error fetching tests:", err);
                 setTests([]);
@@ -69,7 +62,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         const fetchParams = async () => {
             try {
                 console.log("Selected patient_test_id:", selectedTest);
-                const res = await httpClient.get(`/parameter/by_test/${selectedTest}`); //patient_test_id jaa raha hai
+                const res = await httpClient.get(`/patient_entry/test_parameters/${selectedTest}`); //patient_test_id jaa raha hai
                 const data = res?.data ?? res ?? [];
                 setParameters(Array.isArray(data) ? data : []);
             } catch (err) {
@@ -208,10 +201,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                 patient?.patient_entry_id ||
                 patient?.id;
 
-            const response = await httpClient.get(`/patient_entry/patient_tests/${patient_Id}`);
+            const response = await httpClient.get(`/patient_entry/tests/${patient_Id}`);
             console.log("Fetched tests:", response.data);
 
-            setTestDetails(response.tests || response.data?.tests || []);
+            setTestDetails(response);
 
         } catch (error) {
             console.error("Error fetching test details:", error);
@@ -267,15 +260,6 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         } catch (error) {
             console.error("Error fetching patient logs:", error);
         }
-    };
-
-    const handleShowInvoices = () => {
-        console.log("hello invoice")
-        // if you want to open it in same tab
-        // navigate("/invoice");
-        window.open("/invoice", "_blank");
-        // OR if you want to open in new tab:
-
     };
 
     //post ki call results/add-parameters
@@ -357,10 +341,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                                         title="Print"
                                                     />
                                                     <Link to={`/invoice?id=${patient.id}`} target="_blank" rel="noopener noreferrer">
-                                                    <FaFileInvoiceDollar
-                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#28a745" }}
-                                                        title="View Invoice"
-                                                    />
+                                                        <FaFileInvoiceDollar
+                                                            style={{ fontSize: "20px", cursor: "pointer", color: "#28a745" }}
+                                                            title="View Invoice"
+                                                        />
                                                     </Link>
                                                     <FaPenToSquare
                                                         onClick={() => onEdit(patient)}
@@ -426,7 +410,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                                         {/* <th>Invoice Date</th>
                                         <td>{selectedInvoice?.data?.patient?.invoice_date || ""}</td> */}
                                     </tr>
-                                  
+
                                 </tbody>
                             </Table>
 
@@ -506,23 +490,22 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
 
                 <Modal.Body>
                     {selectedPatient && (
-                        <div className="mb-3 border rounded p-3 bg-light">
-                            <div className="row g-3">
-                                <div className="col-md-4">
-                                    <Form.Label className="fw-bold">Name</Form.Label>
-                                    <Form.Control value={selectedPatient.patient_name || ""} readOnly />
-                                </div>
-                                <div className="col-md-4">
-                                    <Form.Label className="fw-bold">Date</Form.Label>
-                                    <Form.Control value={selectedPatient.date || ""} readOnly />
-                                </div>
-                                <div className="col-md-4">
-                                    <Form.Label className="fw-bold">Sample</Form.Label>
-                                    <Form.Control value={selectedPatient.sample || ""} readOnly />
-                                </div>
+                        <div className="mb-2">
+                            <div className="col-md-6 d-flex justify-content-between">
+                                <p className="fw-bold">Name</p>
+                                <p>{selectedPatient.patient_name}</p>
+                            </div>
+                            <div className="col-md-6 d-flex justify-content-between">
+                                <p className="fw-bold">Date</p>
+                                <p>{selectedPatient.date || Date.now()}</p>
+                            </div>
+                            <div className="col-md-6 d-flex justify-content-between">
+                                <p className="fw-bold">Sample</p>
+                                <p>{selectedPatient.sample}</p>
                             </div>
                         </div>
                     )}
+                  
                     <Form.Group className="mb-3">
                         <Form.Label>Select Test</Form.Label>
                         <Form.Select
@@ -601,12 +584,16 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     {Array.isArray(testDetails) && testDetails.length > 0 ? (
                         <ol className="list-group list-group-numbered">
                             {testDetails.map((test, index) => (
-                                <li
-                                    key={index}
-                                    className="list-group-item d-flex justify-content-between align-items-center"
-                                >
-                                    <span className="me-3">{test.test_name}</span>
-                                </li>
+
+                                <>
+                                    <li
+                                        key={index}
+                                        className="list-group-item d-flex justify-content-between align-items-center"
+                                    >
+                                        <span className="me-1">{test.test_name}</span>
+                                    </li>
+                                </>
+
                             ))}
                         </ol>
 
