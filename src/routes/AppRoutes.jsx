@@ -85,6 +85,7 @@ import Parameter from "../pages/Dashboard/parameter/Parameter";
 import RequireAuth from "./RequireAuth";
 import AddResult from "../pages/Patients/add-result/AddResult";
 import InvoicePrint from "../components/invoice/InvoicePrint";
+import PrintReport from "../pages/Patients/print-report/PrintReport";
 
 function AppRoutes() {
   return (
@@ -93,6 +94,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
       </Route>
       <Route path="/invoice" element={<InvoicePrint />} />
+      <Route path="/print-report" element={<PrintReport />} />
       {/* <Route element={<RequireAuth />}> */}
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<Dashboard />} />

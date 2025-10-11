@@ -309,7 +309,7 @@ export default function PatientEntryModal({ onSave }) {
                                     type="text"
                                     id="phone_no"
                                     name="phone_no"
-                                    // pattern="^\+92[3][0-9]{9}$"
+                                    pattern="^\[3][0-9]{9}$"
                                     title="Enter a valid Pakistani mobile number. Example: +923001234567"
                                     placeholder="+923001234567"
                                     value={patiententryCell}
