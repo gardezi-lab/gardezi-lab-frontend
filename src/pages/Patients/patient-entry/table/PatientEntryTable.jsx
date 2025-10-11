@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 
 export default function PatientEntryTable({ patiententryList, onEdit, onDelete, loading }) {
@@ -25,6 +24,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
     const [selectedParameters, setSelectedParameters] = useState([]);
     const [resultData, setResultData] = useState({});
     const [saving, setSaving] = useState(false);
+    const [selectedInvoice,setSelectedInvoice] = useState([])
 
     //  Fetch test list when modal opens
     useEffect(() => {
@@ -38,10 +38,10 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
                     selectedPatient?.id;
 
                 const response = await httpClient.get(`/patient_entry/tests/${patient_Id}`);
-             
+if(response){
 
-
-                setTests(response);
+    setTests(response);
+}
             } catch (err) {
                 console.error("Error fetching tests:", err);
                 setTests([]);
