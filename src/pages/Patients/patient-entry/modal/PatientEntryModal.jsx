@@ -271,7 +271,6 @@ export default function PatientEntryModal({ onSave }) {
     //     setRows([...rows, newRow]);
     // };
     const handleClick = () => {
-        debugger
         if (!patiententryTest) {
             return;
         }
@@ -634,20 +633,7 @@ export default function PatientEntryModal({ onSave }) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        {/* <Col>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Button className="btn btn-primary fw-bold mt-4"> Verify </Button>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group className="mb-3 mt-4">
-                                <Button variant="primary" type="submit">
-                                    {patiententry ? "Update" : "Submit"}
-                                </Button>
-                            </Form.Group>
-                        </Col> */}
                     </Row>
-
                 </Form>
             </Container >
 

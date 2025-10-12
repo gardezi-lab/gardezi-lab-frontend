@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import feather from "feather-icons";
 import Modal from 'react-bootstrap/Modal';
-import TestProfilesModal from "./TestProfilesModal";
+import TestProfilesModal from "./modal/TestProfilesModal";
 // import Button from 'react-bootstrap/Button';
-import TestProfileTable from "./TestProfileTable";
+import TestProfileTable from "./table/TestProfileTable"
 import httpClient from "../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
