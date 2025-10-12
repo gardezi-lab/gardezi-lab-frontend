@@ -275,7 +275,7 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
         // navigate("/invoice");
         window.open("/invoice", "_blank");
         // OR if you want to open in new tab:
-    
+
     };
 
     //post ki call results/add-parameters
@@ -640,8 +640,9 @@ export default function PatientEntryTable({ patiententryList, onEdit, onDelete, 
             >
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">
-                        {patientLogs?.patient_name || "Loading..."}
+                        {loadingLogs ? "Loading..." : patientLogs?.patient_name || "No Name"}
                     </Modal.Title>
+
 
                 </Modal.Header>
                 <Modal.Body>
