@@ -1,7 +1,6 @@
 import { Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
 
 export default function FilterModal({ showFilterModal, handleCloseFilterModal, search = "" }) {
-
     return (
         <Modal show={showFilterModal} onHide={handleCloseFilterModal}>
             <Modal.Header>

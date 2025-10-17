@@ -115,7 +115,6 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                         <Modal.Title className="color-white fw-bold"
                         >Manage Parameters for Test Profile: {selectedTest?.test_name}</Modal.Title>
 
-                        <button type="button" className="btn-close" onClick={handleClose}></button>
                     </Modal.Header>
                     <Modal.Body>
                         {selectedTest && (

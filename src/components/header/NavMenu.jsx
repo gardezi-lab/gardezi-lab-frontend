@@ -8,9 +8,9 @@ const menuItems = [
         iconClass: "uil-user",
         dropdown: [
             {
-                label: "Patients Entry",
+                label: "Patients Management",
                 icon: "users",
-                href: "/patient-entry",
+                href: "/patient-management",
             },
             {
                 label: "Invoices",

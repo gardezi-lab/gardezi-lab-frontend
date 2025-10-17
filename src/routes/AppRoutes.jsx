@@ -50,12 +50,6 @@ import BPV from "../pages/Account-create/b-p-v/BPV";
 import Voucher from "../pages/Account-create/voucher/Voucher";
 import Ledger from "../pages/Account-create/ledger/Ledger";
 
-import Invoice from "../pages/Patients/invoice/Invoice";
-import DiscountApproval from "../pages/Patients/discount-approval/DiscountApproval";
-import RejectedDiscount from "../pages/Patients/rejected-discount/RejectedDiscount";
-import DiscountManager from "../pages/Patients/discount-manager/DiscountManager";
-import DelayedTest from "../pages/Patients/delayed-test/DelayedTest";
-import DeleteRecord from "../pages/Patients/delete-record/DeleteRecord";
 import Verification from "../pages/verification/Verification";
 import Business from "../pages/business/Business";
 import PatientList from "../pages/patient-list/PatientList";
@@ -80,12 +74,16 @@ import ProfitLoss from "../pages/Accounts/ProfitLoss";
 import IncomeExpenses from "../pages/Accounts/IncomeExpenses";
 import CPVCashSUM from "../pages/Accounts/CPVCashSUM";
 import Setting from "../pages/Accounts/Setting";
-import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
+// import PatientEntry from "../pages/Patients/patient-entry/PatientEntry";
+// import PatientEntry from "../pages/Patient-management/patient-entry/PatientEntry";
+import PatientManagement from "../pages/Patient-management/PatientManagement";
 import Parameter from "../pages/Dashboard/parameter/Parameter";
 import RequireAuth from "./RequireAuth";
-import AddResult from "../pages/Patients/add-result/AddResult";
+// import AddResult from "../pages/Patient-management/add-result/AddResult";
 import InvoicePrint from "../components/invoice/InvoicePrint";
-import PrintReport from "../pages/Patients/print-report/PrintReport";
+import PatientReport from "../pages/Patient-management/report/PatientReport";
+import PatientInvoice from "../pages/Patient-management/invoice/PatientInvoice";
+
 
 function AppRoutes() {
   return (
@@ -93,8 +91,8 @@ function AppRoutes() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
       </Route>
-      <Route path="/invoice" element={<InvoicePrint />} />
-      <Route path="/print-report" element={<PrintReport />} />
+      <Route path="/patient-invoice" element={<PatientInvoice />} />
+      <Route path="/patient-report" element={<PatientReport />} />
       {/* <Route element={<RequireAuth />}> */}
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<Dashboard />} />
@@ -114,7 +112,7 @@ function AppRoutes() {
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/test-package" element={<TestPackage />} />
         <Route path="/rate-list" element={<RateList />} />
-        <Route path="/patient-entry" element={<PatientEntry />} />
+        <Route path="/patient-management" element={<PatientManagement />} />
         <Route path="/cash-audit" element={<CashAudit />} />
         <Route path="/due-patient-list" element={<PatientList />} />
         <Route path="/cash-receive" element={<CashReceiving />} />
@@ -145,7 +143,7 @@ function AppRoutes() {
         <Route path="/ledger" element={<Ledger />} />
         <Route path="/parameter" element={<Parameter />} />
         <Route path="/interpertation" element={<Interpertation />} />
-        <Route path="/add-result" element={<AddResult />} />
+        {/* <Route path="/add-result" element={<AddResult />} /> */}
         {/* </Route> */}
       </Route >
       <Route path="*" element={<h1>404 - Not Found</h1>} />

@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
 import gheader2 from "../../../../public/assets/img/gheader2.png";
 import { Table } from "react-bootstrap";
+import httpClient from "../../../services/httpClient";
+import { useLocation } from "react-router-dom";
 
-export default function InvoiceReport() {
-    const [selectedInvoice, setSelectedInvoice] = useState(null);
+export default function PatientReport() {
+    const [invoiceResult, setInvoiceResult] = useState(null);
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const id = query.get("id");
+
+    const getPatientEntryData = async () => {
+        try {
+            const url = `/report/${id}`;
+            const response = await httpClient.get(url);
+            console.log("Invoice response:", response);
+            if (response) setInvoiceResult(response);
+        } catch (err) {
+            console.error("Fetch PatientEntry Error:", err);
+        }
+    };
 
     useEffect(() => {
-        const storedData = localStorage.getItem("selectedInvoice");
-        if (storedData) {
-            setSelectedInvoice({ data: JSON.parse(storedData) });
-
-            setTimeout(() => {
-                window.print();
-            }, 800);
-        }
-    }, []);
-
-    if (!selectedInvoice) {
-        return <div className="text-center mt-5">Loading report...</div>;
-    }
-
-    const patient = selectedInvoice?.data?.patient;
+        if (id) getPatientEntryData();
+    }, [id]);
 
     return (
         <div
@@ -34,18 +37,17 @@ export default function InvoiceReport() {
                 padding: "25px",
             }}
         >
-            {/* ================= HEADER ================= */}
+            {/* Header */}
             <div
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    borderBottom: '2px solid rgb(0, 0, 0)',
+                    borderBottom: "2px solid #000",
                     paddingBottom: "10px",
                     marginBottom: "15px",
                 }}
             >
-                {/* Left Side - Logo */}
                 <div style={{ flex: "1" }}>
                     <img
                         src={gheader2}
@@ -58,8 +60,7 @@ export default function InvoiceReport() {
                     />
                 </div>
 
-                {/* Right Side - QR Code */}
-                {selectedInvoice?.data?.qr_code && (
+                {invoiceResult?.qr_code && (
                     <div
                         style={{
                             flex: "0 0 auto",
@@ -68,7 +69,7 @@ export default function InvoiceReport() {
                         }}
                     >
                         <img
-                            src={selectedInvoice.data.qr_code}
+                            src={invoiceResult.qr_code}
                             alt="QR Code"
                             style={{
                                 width: "120px",
@@ -84,7 +85,7 @@ export default function InvoiceReport() {
                 )}
             </div>
 
-            {/* ================= BODY ================= */}
+            {/* Patient Info */}
             <div style={{ marginBottom: "20px" }}>
                 <h5
                     style={{
@@ -97,35 +98,35 @@ export default function InvoiceReport() {
                     Patient Report
                 </h5>
 
-                {/* Patient Info */}
-                <Table
-                    borderless
-                    style={{
-                        width: "100%",
-                        borderCollapse: "collapse",
-                        marginBottom: "15px",
-                        zIndex: 1,
-                        position: "relative",
-                    }}
-                >
+                <Table borderless style={{ width: "100%", marginBottom: "15px" }}>
                     <tbody>
                         <tr>
-                            <td style={{ width: "20%", fontWeight: "bold" }}>
-                                Patient Name:
-                            </td>
+                            <td style={{ width: "20%", fontWeight: "bold" }}>Patient Name:</td>
                             <td style={{ width: "30%" }}>
-                                {patient?.patient_name || "-"}
+                                {invoiceResult?.patient?.patient_name || "-"}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ fontWeight: "bold" }}>Age:</td>
-                            <td>{patient?.age || "-"}</td>
+                            <td>{invoiceResult?.patient?.age || "-"}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ fontWeight: "bold" }}>Gender:</td>
+                            <td>{invoiceResult?.patient?.gender || "-"}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ fontWeight: "bold" }}>Cell:</td>
+                            <td>{invoiceResult?.patient?.cell || "-"}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ fontWeight: "bold" }}>Invoice Date:</td>
+                            <td>{invoiceResult?.patient?.invoice_date || "-"}</td>
                         </tr>
                     </tbody>
                 </Table>
 
                 {/* Tests Section */}
-                {selectedInvoice?.data?.tests?.map((test, index) => (
+                {invoiceResult?.tests?.map((test, index) => (
                     <div key={index} style={{ marginTop: "25px" }}>
                         <h6
                             style={{
@@ -138,8 +139,12 @@ export default function InvoiceReport() {
                             {test.test_name}
                         </h6>
 
-                        {test.parameters?.length ? (
-                            <Table bordered hover responsive size="sm"
+                        {test?.parameters?.length > 0 ? (
+                            <Table
+                                bordered
+                                hover
+                                responsive
+                                size="sm"
                                 style={{
                                     width: "100%",
                                     fontSize: "13px",
@@ -149,20 +154,15 @@ export default function InvoiceReport() {
                                 <thead>
                                     <tr
                                         style={{
-                                            // background: "#f8f9fa",
                                             fontWeight: "bold",
                                             borderBottom: "2px solid #000",
                                         }}
                                     >
                                         <th style={{ width: "5%" }}>#</th>
-                                        <th style={{ width: "35%" }}>
-                                            Parameter
-                                        </th>
+                                        <th style={{ width: "35%" }}>Parameter</th>
                                         <th style={{ width: "20%" }}>Result</th>
                                         <th style={{ width: "20%" }}>Unit</th>
-                                        <th style={{ width: "20%" }}>
-                                            Normal Range
-                                        </th>
+                                        <th style={{ width: "20%" }}>Normal Range</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -171,8 +171,8 @@ export default function InvoiceReport() {
                                             <td>{idx + 1}</td>
                                             <td>{param.parameter_name}</td>
                                             <td>{param.result_value || "-"}</td>
-                                            <td>{param.unit}</td>
-                                            <td>{param.normalvalue}</td>
+                                            <td>{param.unit || "-"}</td>
+                                            <td>{param.normalvalue || "N/A"}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -192,7 +192,7 @@ export default function InvoiceReport() {
                 ))}
             </div>
 
-            {/* ================= FOOTER ================= */}
+            {/* Footer */}
             <div
                 style={{
                     borderTop: "1px solid #000",
@@ -206,10 +206,8 @@ export default function InvoiceReport() {
                 <p style={{ margin: "0" }}>
                     Thank you for choosing <strong>Gardezi Lab</strong>.
                 </p>
-                <p style={{ margin: "0" }}>
-                    Printed on: {new Date().toLocaleString()}
-                </p>
+                <p style={{ margin: "0" }}>Printed on: {new Date().toLocaleString()}</p>
             </div>
-        </div >
+        </div>
     );
 }

@@ -1,37 +1,39 @@
 import { useEffect, useState } from "react";
 import httpClient from "../../../services/httpClient";
-import gheader2 from "../../../../public/assets/img/gheader2.png";
 import { useLocation } from "react-router-dom";
 
-export default function Invoice() {
+export default function InvoicePrint() {
     const [invoiceResult, setInvoiceResult] = useState(null);
     const { search } = useLocation();
     const query = new URLSearchParams(search);
     const id = query.get("id");
 
     const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
+    const formattedDate = currentDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
     });
 
-    const getInvoiceData = async () => {
+    const getPatientEntryData = async () => {
+
         try {
-            const response = await httpClient.get(`/invoice/${id}`);
-            if (response) setInvoiceResult(response);
+            const url = `/invoice/${id}`;
+            const response = await httpClient.get(url);
+            if (response) {
+                setInvoiceResult(response);
+
+            }
         } catch (err) {
-            console.error("Invoice Fetch Error:", err);
+            console.error("Fetch PatientEntry Error:", err);
+        } finally {
+
         }
     };
 
     useEffect(() => {
-        getInvoiceData();
-    }, []);
-
-    if (!invoiceResult) return <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>;
+        getPatientEntryData();
+    }, [id])
 
     return (
         <div
@@ -87,7 +89,7 @@ export default function Invoice() {
                         {/* Left - Logo */}
                         <div style={{ flex: "1" }}>
                             <img
-                                src={gheader2}
+                                src="/assets/img/gheader2.png"
                                 alt="Gardezi Lab"
                                 style={{ maxWidth: "100%", height: "auto" }}
                             />
@@ -224,7 +226,7 @@ export default function Invoice() {
                                                 padding: "6px",
                                             }}
                                         >
-                                            {test?.reporting_time || "N/A"}
+                                            {test?.delivery_time}
                                         </td>
                                         <td
                                             style={{

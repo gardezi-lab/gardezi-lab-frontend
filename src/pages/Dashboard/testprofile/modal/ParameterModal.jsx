@@ -192,7 +192,7 @@ export default function ParameterModal({ test, onClose }) {
                             <Form.Label>Normal Value</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                rows={3}
+                                rows={1}
                                 name="normalvalue"
                                 placeholder="Technique details of test"
                                 value={formData.normalvalue}

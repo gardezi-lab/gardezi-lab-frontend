@@ -21,7 +21,6 @@ export default function InvoicePrint() {
         try {
             const url = `/invoice/${id}`;
             const response = await httpClient.get(url);
-            console.log("invoce response", response)
             if (response) {
                 setInvoiceResult(response);
 
@@ -35,7 +34,7 @@ export default function InvoicePrint() {
 
     useEffect(() => {
         getPatientEntryData();
-    }, [])
+    }, [id])
 
     return (
         <div
@@ -228,7 +227,7 @@ export default function InvoicePrint() {
                                                 padding: "6px",
                                             }}
                                         >
-                                            {test?.reporting_time || "N/A"}
+                                            {test?.delivery_time}
                                         </td>
                                         <td
                                             style={{
