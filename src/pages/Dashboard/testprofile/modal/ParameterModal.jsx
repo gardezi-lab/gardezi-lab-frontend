@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Form, Container, Row, Col, Spinner } from "react-bootstrap";
 import ParameterTable from "../table/ParameterTable";
 import httpClient from "../../../../services/httpClient";
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function ParameterModal({ test, onClose }) {
     const [parameterList, setParameterList] = useState([]);
@@ -9,11 +10,12 @@ export default function ParameterModal({ test, onClose }) {
     const [paramError, setParamError] = useState("");
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [inputType, setInputType] = useState("");
 
     const [formData, setFormData] = useState({
         parameter_name: "",
         sub_heading: "",
-        input_type: "2",
+        input_type: "",
         unit: "",
         normalvalue: "",
         default_value: "",
@@ -46,6 +48,9 @@ export default function ParameterModal({ test, onClose }) {
     // -----------------------------
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === "input_type") {
+            setInputType(value);
+        }
         if (name === "parameter_name") setParamError("");
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
@@ -82,7 +87,7 @@ export default function ParameterModal({ test, onClose }) {
         setFormData({
             parameter_name: "",
             sub_heading: "",
-            input_type: "2",
+            input_type: "",
             unit: "",
             normalvalue: "",
             default_value: "",
@@ -110,6 +115,8 @@ export default function ParameterModal({ test, onClose }) {
             console.error("Delete parameter error:", err);
         }
     };
+
+
 
     return (
         <Container>
@@ -153,8 +160,9 @@ export default function ParameterModal({ test, onClose }) {
                                 value={formData.input_type}
                                 onChange={handleChange}
                             >
-                                <option value="2">Input</option>
-                                <option value="3">Textarea</option>
+                                <option value="input">Input</option>
+                                <option value="textarea">Textarea</option>
+                                <option value="editor">Editor</option>
                             </Form.Select>
                         </Form.Group>
                     </Col>
@@ -174,24 +182,76 @@ export default function ParameterModal({ test, onClose }) {
                         </Form.Group>
                     </Col>
 
-                    <Col>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Default Value</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="default_value"
-                                placeholder="Write here"
-                                value={formData.default_value}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                    </Col>
 
+                    {
+
+                        inputType == "textarea" ? (
+                            <>
+                                <Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label> Default Value</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            rows={1}
+                                            name="default_value"
+                                            placeholder="Technique details of test"
+                                            value={formData.default_value}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </>
+                        ) : inputType == "editor" ? (
+                            <Col md={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Default Value</Form.Label>
+                                    <Editor
+                                        apiKey="l36hqr3x3exo3ohxmszz3lit1q94beevttx3t5w3q0qplcqr"
+                                        value={formData.default_value}
+                                        init={{
+                                            height: 300,
+                                            menubar: false,
+                                            plugins: "link image code lists",
+                                            toolbar:
+                                                "undo redo | formatselect | bold italic underline | " +
+                                                "alignleft aligncenter alignright | bullist numlist | " +
+                                                "link image | code",
+                                            forced_root_block: "",
+                                        }}
+                                        onEditorChange={(content) =>
+                                            setFormData((prev) => ({ ...prev, default_value: content }))
+                                        }
+                                    />
+
+                                </Form.Group>
+                            </Col>
+                        )
+                            //else block
+                            : (
+                                <>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Default Value</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                name="default_value"
+                                                placeholder="Write here"
+                                                value={formData.default_value}
+                                                onChange={handleChange}
+                                            />
+                                        </Form.Group>
+                                    </Col>
+
+
+                                </>
+                            )
+                    }
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Normal Value</Form.Label>
                             <Form.Control
-                                as="textarea"
+
+                                type="textarea"
                                 rows={1}
                                 name="normalvalue"
                                 placeholder="Technique details of test"

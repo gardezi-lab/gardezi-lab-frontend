@@ -14,7 +14,6 @@ export default function PatientReport() {
         try {
             const url = `/report/${id}`;
             const response = await httpClient.get(url);
-            console.log("Invoice response:", response);
             if (response) setInvoiceResult(response);
         } catch (err) {
             console.error("Fetch PatientEntry Error:", err);
@@ -119,7 +118,7 @@ export default function PatientReport() {
                             <td>{invoiceResult?.patient?.cell || "-"}</td>
                         </tr>
                         <tr>
-                            <td style={{ fontWeight: "bold" }}>Invoice Date:</td>
+                            <td style={{ fontWeight: "bold" }}>Report Date:</td>
                             <td>{invoiceResult?.patient?.invoice_date || "-"}</td>
                         </tr>
                     </tbody>
@@ -158,21 +157,61 @@ export default function PatientReport() {
                                             borderBottom: "2px solid #000",
                                         }}
                                     >
-                                        <th style={{ width: "5%" }}>#</th>
-                                        <th style={{ width: "35%" }}>Parameter</th>
-                                        <th style={{ width: "20%" }}>Result</th>
-                                        <th style={{ width: "20%" }}>Unit</th>
-                                        <th style={{ width: "20%" }}>Normal Range</th>
+                                        {
+                                            (test.test_type === "four columns" || test.test_type === "three columns" || test.test_type === "two columns") &&
+                                            <th>Parameter</th>
+                                        }
+
+                                        {
+                                            (test.test_type === "four columns" || test.test_type === "three columns" || test.test_type === "two columns") &&
+                                            <th>Result</th>
+                                        }
+                                        {
+                                            (test.test_type === "three columns") &&
+                                            <th>Cutt Off</th>
+                                        }
+                                        {
+                                            (test.test_type === "four columns") &&
+                                            <th>Unit</th>
+                                        }
+                                        {
+                                            (test.test_type === "four columns") &&
+                                            <th>Normal Range</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {test.parameters.map((param, idx) => (
                                         <tr key={idx}>
-                                            <td>{idx + 1}</td>
-                                            <td>{param.parameter_name}</td>
-                                            <td>{param.result_value || "-"}</td>
-                                            <td>{param.unit || "-"}</td>
-                                            <td>{param.normalvalue || "N/A"}</td>
+                                            {(test.test_type === "four columns" || test.test_type === "three columns" || test.test_type === "two columns") &&
+                                                <td>{param.parameter_name}</td>
+                                            }
+
+                                            {
+                                                (test.test_type === "four columns" || test.test_type === "three columns" || test.test_type === "two columns" || test.test_type === "editor") &&
+                                                <td>
+                                                    {test.test_type === "editor" ? (
+                                                        <div
+                                                            dangerouslySetInnerHTML={{ __html: param.result_value || "" }}
+                                                        />
+                                                    ) : (
+                                                        param.result_value
+                                                    )}
+                                                </td>
+                                            }
+                                            {
+                                                (test.test_type === "three columns" || test.test_type === "two columns") &&
+                                                <td>{param.cutoff_value}</td>
+                                            }
+                                            {
+                                                (test.test_type === "four columns") &&
+                                                <td>{param.unit}</td>
+                                            }
+
+                                            {
+                                                (test.test_type === "four columns") &&
+                                                <td>{param.normalvalue}</td>
+                                            }
                                         </tr>
                                     ))}
                                 </tbody>

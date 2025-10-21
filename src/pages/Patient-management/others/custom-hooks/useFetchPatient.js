@@ -14,7 +14,7 @@ export function useFetchPatient() {
             console.log("response",response)
             if (response) {
 
-                setPatientList(response.data);
+                setPatientList(response.patients);
             }
         } catch (err) {
             console.error("Fetch PatientEntry Error:", err);

@@ -70,7 +70,7 @@ export default function PatientListingTable({
         const getPatientById = async () => {
             try {
                 setLoading(true);
-                const url = `/patient_entry/${dedicatedPatientObj.id}`;
+                const url = `/patient_entry/${dedicatedPatientObj?.id}`;
                 const response = await httpClient.get(url);
                 setLoading(false);
                 if (response) {
@@ -102,7 +102,7 @@ export default function PatientListingTable({
                 </thead>
                 <tbody>
                     {
-                        updatedPatientsArray.map((patientObj, index) => {
+                        updatedPatientsArray?.map((patientObj, index) => {
                             return (
                                 <tr key={patientObj.id}>
                                     <td style={{ width: '2.5rem' }} >{index + 1}</td>

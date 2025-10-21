@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../../services/httpClient";
 import { Form, Button, Modal, Row, Col } from 'react-bootstrap';
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function AddParameterResult({ showParameterResult, setShowParameterResult, patientParameterRes }) {
     const [selectedPatientObj, setSelectedPatientObj] = useState();
@@ -8,6 +9,8 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
     const [selectedTest, setSelectedTest] = useState(null);
     const [testParameters, setTestParameters] = useState([]);
     const [testProfileId, setTestProfileId] = useState(null);
+    const [testType, setTestType] = useState("");
+
 
     const handleParameterClose = () => {
         setShowParameterResult(false);
@@ -32,11 +35,13 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
     // test select handler
     const handleSlectedTest = async (selectedTestId) => {
         setTestProfileId(selectedTestId);
+        const selectedTest = allTestOfPatient.find(t => t.test_profile_id == selectedTestId);
 
         try {
-            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.id}`;
+            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.id}/${selectedTest.test_type}`;
             const response = await httpClient.get(url);
             if (response) {
+                setTestType(response.test_type);
                 setTestParameters(response.parameters);
             }
         } catch (error) {
@@ -46,12 +51,15 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
 
     // parameters input handler 
     const Parameterhandler = (parameterId, event) => {
+        const { name, value } = event.target;
+
+
         setTestParameters((prev) =>
             prev.map((param) => {
                 if (param.id === parameterId) {
                     return {
                         ...param,
-                        default_value: event.value,
+                        [name]: value
                     };
                 }
                 return param;
@@ -66,15 +74,13 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
         const newarray = testParameters.map((parameter) => {
             const obj = {
                 parameter_id: parameter.id,
-                result_value: parameter.default_value
+                result_value: parameter.default_value,
+                cutoff_value: parameter.cutoff_value
             }
             parameters.push(obj)
         })
-        console.log("testProfileId", testProfileId)
-        debugger
+
         const patientTestId = allTestOfPatient.find(it => it.test_profile_id == testProfileId);
-        debugger
-        console.log("patientTestId", patientTestId)
         const parameterObj = {
             patient_id: selectedPatientObj.id,
             test_profile_id: testProfileId,
@@ -100,13 +106,13 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
     }, [showParameterResult])
 
     return (
-        <Modal show={showParameterResult} >
+        <Modal show={showParameterResult} size="xl">
             <Modal.Header className="primary">
                 <Modal.Title className="color-white fw-bold">{patientParameterRes?.patient_name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-3">
-                    <p>Patient Name:   {selectedPatientObj?.patient_name || "--"}</p>
+                    <p>Patient Name:  {selectedPatientObj?.patient_name || "--"}</p>
                 </div>
 
                 <Form.Group className="mb-4">
@@ -123,44 +129,123 @@ export default function AddParameterResult({ showParameterResult, setShowParamet
                         ))}
                     </Form.Select>
                 </Form.Group>
+                <div>
+                    {testType &&
+                        <>
+                            <Row className="text-secondary mb-2 pb-1 border-bottom">
+                                {
+                                    (testType === "four columns" || testType === "three columns" || testType === "two columns") &&
+                                    <Col md={3}>Parameter Name</Col>
+                                }
 
-                {
-                    testParameters?.map((parameter) => {
-                        return (
-                            <>
-                                <Row key={parameter.id} className="align-items-center mb-3">
-                                    <Col md={4}>
-                                        <Form.Label className="mb-0 fw-semibold">{parameter.parameter_name}</Form.Label>
-                                    </Col>
+                                {
+                                    (testType === "four columns" || testType === "three columns" || testType === "two columns" || testType === "editor") &&
+                                    <Col md={3}>Result Value</Col>
+                                }
 
-                                    <Col md={4}>
-                                        <Form.Control
-                                            type="text"
-                                            name="parametersValue"
-                                            placeholder={`Enter ${parameter.parameter_name}`}
-                                            value={parameter.default_value}
-                                            onChange={(e) => Parameterhandler(parameter.id, e.target)}
-                                        />
-                                    </Col>
+                                {
+                                    (testType === "three columns") &&
+                                    <Col md={3}>Cutoff Value</Col>
+                                }
 
-                                    <Col md={4}>
-                                        <Form.Control
-                                            type="text"
-                                            name="parametersValue"
-                                            placeholder={`Enter ${parameter.parameter_name}`}
-                                            value={parameter.default_value}
-                                            onChange={(e) => Parameterhandler(parameter.id, e.target)}
-                                        />
-                                    </Col>
+                                {
+                                    (testType?.serology_elisa == "four columns") &&
+                                    <Col md={3}>Normal Range</Col>
+                                }
+                                {
+                                    (testType === "four columns") &&
+                                    <Col md={3}>Unit</Col>
+                                }
+                            </Row>
 
-                                    <Col md={2}>
-                                        <span className="text-secondary">{parameter.unit || "--"}</span>
-                                    </Col>
-                                </Row>
-                            </>
-                        )
-                    })
-                }
+                            {testParameters?.map((parameter) => (
+                                <div key={parameter.id} className="mb-3">
+                                    {parameter.input_type === "editor" ? (
+                                        <>
+                                            <Row className="align-items-center mb-2">
+                                                {
+                                                    (testType === "four columns" || testType === "three columns" || testType === "two columns") &&
+                                                    <Col md={3}>
+                                                        <Form.Label className="fw-bold">{parameter.parameter_name}</Form.Label>
+                                                    </Col>
+                                                }
+
+                                            </Row>
+                                            {
+                                                testType === "editor" &&
+                                                <Editor
+                                                    apiKey="l36hqr3x3exo3ohxmszz3lit1q94beevttx3t5w3q0qplcqr"
+                                                    value={parameter.default_value}
+                                                    init={{
+                                                        height: 250,
+                                                        menubar: false,
+                                                        plugins: "link image code lists",
+                                                        toolbar:
+                                                            "undo redo | formatselect | bold italic underline | " +
+                                                            "alignleft aligncenter alignright | bullist numlist | " +
+                                                            "link image | code",
+                                                        forced_root_block: "",
+                                                    }}
+                                                    onEditorChange={(content) =>
+                                                        setTestParameters((prev) =>
+                                                            prev.map((param) =>
+                                                                param.id === parameter.id
+                                                                    ? { ...param, default_value: content }
+                                                                    : param
+                                                            )
+                                                        )
+                                                    }
+                                                />
+                                            }
+                                        </>
+                                    ) : (
+                                        <Row className="align-items-center mb-2">
+                                            {
+                                                (testType === "four columns" || testType === "three columns" || testType === "two columns") &&
+                                                <Col md={3}>
+                                                    <Form.Label className="fw-bold">{parameter.parameter_name}</Form.Label>
+                                                </Col>
+                                            }
+
+                                            {
+                                                (testType === "four columns" || testType === "three columns" || testType === "two columns" || testType === "editor") &&
+                                                <Col md={3}>
+
+                                                    <Form.Control
+                                                        as={parameter.input_type === "textarea" ? "textarea" : "input"}
+                                                        rows={parameter.input_type === "textarea" ? 3 : undefined}
+                                                        name="default_value"
+                                                        placeholder={`Enter ${parameter.parameter_name}`}
+                                                        value={parameter.default_value}
+                                                        onChange={(e) => Parameterhandler(parameter.id, e)}
+                                                    />
+                                                </Col>
+                                            }
+                                            {
+                                                (testType === "three columns") &&
+                                                <Col md={3}>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="cutoff_value"
+                                                        placeholder={`Enter ${parameter.parameter_name} cutoff value`}
+                                                        value={parameter.cutoff_value}
+                                                        onChange={(e) => Parameterhandler(parameter.id, e)}
+                                                    />
+                                                </Col>
+                                            }
+                                            {
+                                                (testType === "four columns") &&
+                                                <Col md={3}>
+                                                    <span className="text-secondary">{parameter.unit || "--"}</span>
+                                                </Col>
+                                            }
+                                        </Row>
+                                    )}
+                                </div>
+                            ))}
+                        </>
+                    }
+                </div>
 
             </Modal.Body >
             <Modal.Footer>

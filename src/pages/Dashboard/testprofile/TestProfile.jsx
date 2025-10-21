@@ -96,6 +96,7 @@ export default function TestProfile() {
     };
 
     const handleEdit = (TestProfile) => {
+        console.log("TestProfile",TestProfile)
         setSelectedTestProfile(TestProfile);
         setIsCurrentEditModalOpen(true);
         handleShow();

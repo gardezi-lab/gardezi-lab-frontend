@@ -38,3 +38,6 @@ export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, comp
 
     return updatedPatientArr;
 }
+
+
+

@@ -266,15 +266,17 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                     </Col>
                     <Col>
                         <Form.Group className="mb-3">
-                            <Form.Label>Serology Elisa</Form.Label>
+                            <Form.Label>Test Type</Form.Label>
                             <Form.Select
                                 name="serology_elisa"
                                 value={formData.serology_elisa}
                                 onChange={handleChange}
                             >
                                 <option>Select One</option>
-                                <option value="1">Yes</option>
-                                <option value="2">No</option>
+                                <option value="four columns">Four Columns</option>
+                                <option value="three columns">Three Columns</option>
+                                <option value="two columns">Two Columns</option>
+                                <option value="editor">Editor</option>
                             </Form.Select>
                         </Form.Group>
                     </Col>
@@ -297,31 +299,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                     </Col>
                 </Row>
                 {/* Checkbox Row 1 */}
-                <Row>
-                    <Col>
-                        <Form.Check
-                            type="checkbox"
-                            id="checkbox1"
-                            name="unit_ref_range"
-                            label="Check It For No Unit No Refference Range"
-                            checked={formData.unit_ref_range}
-                            onChange={handleChange}
-                        />
-                    </Col>
-                </Row>
-                {/* Checkbox Row 2 */}
-                <Row>
-                    <Col>
-                        <Form.Check
-                            type="checkbox"
-                            id="checkbox2"
-                            name="test_formate"
-                            label="Check box for test like WIDAL and Other test types whose formate change"
-                            checked={formData.test_formate}
-                            onChange={handleChange}
-                        />
-                    </Col>
-                </Row>
+               
                 {error && <p className="text-danger">{error}</p>}
                 <div className="d-flex justify-content-end gap-2">
                     <Button variant="secondary" onClick={onCancel}>
