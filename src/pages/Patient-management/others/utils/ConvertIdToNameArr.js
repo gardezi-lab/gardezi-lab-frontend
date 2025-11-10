@@ -1,8 +1,8 @@
 
 export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, companyList, testPackageList) {
-    debugger
+    
     const updatedPatientArr = patientsArray?.map((pt) => {
-        const patientId = pt.users_id;
+        const patientId = pt.reff_by;
         const findDoctorObj = doctorList?.find(doctor => doctor.id == patientId);
         const testPackageId = pt.package_id;
         const findPackageObj = testPackageList?.find(testpackage => testpackage.id == testPackageId);
@@ -11,6 +11,7 @@ export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, comp
         const findCompanyObj = companyList?.find(company => company.id == companyid);
 
         const ptObject = {
+            "cid":pt?.cid,
             "address": pt?.address,
             "age": pt?.age,
             "cell": pt?.cell,
@@ -30,7 +31,10 @@ export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, comp
             "sample": pt?.sample,
             "tests": pt?.tests,
             "total_fee": pt?.total_fee,
-            "users_id": findDoctorObj
+            "status": pt?.status,
+            "reff_by": findDoctorObj,
+            "date_created":pt?.date_created,
+            "pending_discount":pt?.pending_discount
 
         }
         return ptObject;

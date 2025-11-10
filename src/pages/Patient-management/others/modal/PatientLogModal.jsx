@@ -15,10 +15,11 @@ export default function PatientLogModal({
   };
 
   const getLogData = async () => {
+    console.log("dedicatedPatientObj",dedicatedPatientObj)
     if (!dedicatedPatientObj?.id) return;
     try {
       setLoadingLogs(true);
-      const url = `/patient_entry/activity/${dedicatedPatientObj.id}`;
+      const url = `/patient_entry/activity/${dedicatedPatientObj.cid}`;
       const response = await httpClient.get(url);
       setPatientLog(response.activities || []);
     } catch (error) {

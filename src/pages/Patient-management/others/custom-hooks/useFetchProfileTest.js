@@ -10,10 +10,10 @@ export function useFetchProfileTest() {
 
     const getProfileTest = async () => {
         try {
-            const url = `/test_profile`;
+            const url = `/test_profile/get_test`;
             setLoading(true);
             const response = await httpClient.get(url);
-            console.log("response", response)
+
             if (response) {
                 setTestProfiles(response.data);
             }

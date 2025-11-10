@@ -1,11 +1,9 @@
-import './style/App.css'
+import './style/App.scss'
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from './routes/AppRoutes';
 
 
 function App() {
-
-
   return (
     <>
       <BrowserRouter>

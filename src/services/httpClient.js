@@ -12,7 +12,7 @@ const httpClient = {
       return response.data;
     } catch (error) {
       console.error("GET Error:", error);
-      throw error;  
+      throw error;
     }
   },
 
@@ -35,6 +35,19 @@ const httpClient = {
   put: async (url, data = {}) => {
     try {
       const response = await axios.put(`${baseURL}${url}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("PUT Error:", error);
+      throw error;
+    }
+  },
+  patch: async (url, data = {}) => {
+    try {
+      const response = await axios.patch(`${baseURL}${url}`, data, {
         headers: {
           "Content-Type": "application/json",
         }

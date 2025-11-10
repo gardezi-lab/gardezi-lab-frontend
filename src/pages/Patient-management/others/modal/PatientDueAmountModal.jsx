@@ -13,13 +13,13 @@ export default function PatientDueAmountModal({ showPatientAmountLog, setShowPat
 
     const saveAmount = async () => {
         try {
-            if(newamount==""){
+            if (newamount == "") {
                 return;
             }
             const obj = {
                 paid: newamount
             };
-            const url = `/patient_entry/update_fee/${patientObj.id}`
+            const url = `/patient_entry/update_fee/${patientObj.cid}`
             const response = await httpClient.put(url, obj);
             if (response) {
                 getUpdatedPatientList();

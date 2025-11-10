@@ -4,13 +4,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.config = factory());
 })(this, (function () { 'use strict';
 
-  /* eslint-disable no-var */
-  /* eslint-disable no-unused-vars */
-  /* eslint-disable no-extra-boolean-cast */
-  /* -------------------------------------------------------------------------- */
-  /*                              Config                                        */
-  /* -------------------------------------------------------------------------- */
-
   const configQueryMap = {
     'navbar-vertical-collapsed': 'phoenixIsNavbarVerticalCollapsed',
     'color-scheme': 'phoenixTheme',

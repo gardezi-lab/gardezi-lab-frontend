@@ -4,18 +4,22 @@ import { Link } from "react-router-dom";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
 import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
-import { FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar, FaDollarSign } from "react-icons/fa6";
+import {
+    FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar, FaDollarSign,
+
+    FaCheck, FaCheckDouble
+} from "react-icons/fa6";
 import { ConvertIdToNameArr } from "../utils/ConvertIdToNameArr";
 import PatientLogModal from "../modal/PatientLogModal";
 import PatientTestShow from "../modal/PatientTestShow";
 import PatientDueAmountModal from "../modal/PatientDueAmountModal";
-import AddParameterResult from "../modal/AddParameterResult";
+import ParameterResult from "../modal/ParameterResult";
 
 
 
 export default function PatientListingTable({
     patientList, modalMode, confirmDelete, testProfiles, companyList, doctorList, testPackageList, getUpdatedPatientList,
-    handleEditRecord, singlePatientList, setSelectedPatient, setLoading,isShowPatientModal
+    handleEditRecord, singlePatientList, setSelectedPatient, setLoading, isShowPatientModal
 }) {
     const [updatedPatientsArray, setUpdatedPatientsArray] = useState([]);
     const [patientActivityShow, setPatientActivityShow] = useState(false);
@@ -30,6 +34,7 @@ export default function PatientListingTable({
 
     //for edit any patient
     const handleEditPatient = (patientObject) => {
+        debugger
         handleEditRecord(patientObject);
         setDedicatedPatientObj(patientObject)
     }
@@ -62,6 +67,7 @@ export default function PatientListingTable({
 
     useEffect(() => {
         const convertedArray = ConvertIdToNameArr(patientList, testProfiles, doctorList, companyList, testPackageList);
+        console.log("pt convertedArray", convertedArray);
         setUpdatedPatientsArray(convertedArray);
     }, [patientList])
 
@@ -69,12 +75,15 @@ export default function PatientListingTable({
     useEffect(() => {
         const getPatientById = async () => {
             try {
+
                 setLoading(true);
-                const url = `/patient_entry/${dedicatedPatientObj?.id}`;
+                const url = `/patient_entry/${dedicatedPatientObj?.cid}`;
                 const response = await httpClient.get(url);
+                console.log("edit call", response)
                 setLoading(false);
                 if (response) {
-                    const convertedArray = ConvertIdToNameArr(response.data, testProfiles, doctorList, companyList, testPackageList);
+                    const convertedArray = ConvertIdToNameArr(response, testProfiles, doctorList, companyList, testPackageList);
+                    console.log("vonvertarray", convertedArray)
                     setSelectedPatient(convertedArray[0]);
                 }
             } catch (error) {
@@ -82,7 +91,7 @@ export default function PatientListingTable({
             }
         }
         getPatientById();
-    }, [modalMode == "edit",isShowPatientModal==true])
+    }, [modalMode == "edit", isShowPatientModal == true])
 
 
     return (
@@ -90,28 +99,47 @@ export default function PatientListingTable({
             <Table striped bordered hover responsive size="sm">
                 <thead>
                     <tr>
-                        <th style={{ width: '2.5rem' }} scope="col">Sr.</th>
-                        <th style={{ width: '10rem' }} scope="col">MR#</th>
-                        <th style={{ width: '10rem' }} scope="col">Phone</th>
-                        <th style={{ width: '12rem' }} scope="col">Name</th>
-                        <th style={{ width: '8rem' }} scope="col">Age</th>
-                        <th style={{ width: '10rem' }} scope="col">Doctor</th>
-                        <th style={{ width: '7rem' }} scope="col">Received/Total</th>
+                        <th scope="col">Sr.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">MR#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Doctor</th>
+                        <th scope="col">Amount</th>
                         <th style={{ textAlign: 'center' }}>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         updatedPatientsArray?.map((patientObj, index) => {
+                            const formattedName = patientObj.patient_name
+                                .split(" ")
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                .join(" ");
                             return (
-                                <tr key={patientObj.id}>
-                                    <td style={{ width: '2.5rem' }} >{index + 1}</td>
-                                    <td style={{ width: '10rem' }}>{patientObj.mr_number}</td>
-                                    <td style={{ width: '10rem' }}>{patientObj.cell}</td>
-                                    <td style={{ width: '12rem' }}>{patientObj.patient_name}</td>
-                                    <td style={{ width: '8rem' }}>{patientObj.age}</td>
-                                    <td style={{ width: '10rem' }}>{patientObj.users_id?.name}</td>
-                                    <td style={{ width: '8rem' }}>{patientObj.paid + " " + "/" + " " + patientObj.total_fee}</td>
+                                <tr key={index + 1}>
+                                    <td  >{index + 1}</td>
+                                    <td >
+                                        {patientObj.date_created}
+                                    </td>
+                                    <td >{patientObj.mr_number}</td>
+
+                                    <td style={{ display: 'flex', justifyContent: "space-between" }}>
+                                        {formattedName}
+                                        {patientObj?.status == 0 ? (
+                                            <FaCheck />
+                                        ) : patientObj?.status == 1 ? (
+                                            <FaCheckDouble />
+                                        ) : (
+                                            <FaCheckDouble color="green" />
+                                        )
+                                        }
+                                    </td>
+                                    <td >{patientObj.cell}</td>
+                                    <td >{patientObj.age}</td>
+                                    <td >{patientObj.reff_by?.name}</td>
+                                    <td >{patientObj.paid + " " + "/" + " " + patientObj.total_fee}</td>
                                     <td>
                                         <div className="d-flex justify-content-center align-item-center gap-2"  >
                                             <FaHistory
@@ -119,11 +147,11 @@ export default function PatientListingTable({
                                                 title="View Patient Logs"
                                                 onClick={() => handlePatientActivtyLog(patientObj)}
                                             />
-                                            <FaDollarSign
+                                            {/* <FaDollarSign
                                                 className="FaHistory"
                                                 title="View payment Logs"
                                                 onClick={() => handlePatientPaymentLog(patientObj)}
-                                            />
+                                            /> */}
                                             <FaEye
                                                 className="FaEye"
                                                 title="View Tests"
@@ -134,13 +162,13 @@ export default function PatientListingTable({
                                                 title="Add Result"
                                                 onClick={() => handleParameterResult(patientObj)}
                                             />
-                                            <Link to={`/patient-report?id=${patientObj.id}`} target="_blank" rel="noopener noreferrer">
+                                            {/* <Link to={`/patient-report?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
                                                 <FaPrint
                                                     className="FaPrint"
                                                     title="Print"
                                                 />
-                                            </Link>
-                                            <Link to={`/patient-invoice?id=${patientObj.id}`} target="_blank" rel="noopener noreferrer">
+                                            </Link> */}
+                                            <Link to={`/patient-management/invoice?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
                                                 <FaFileInvoiceDollar
                                                     className="FaFileInvoiceDollar"
                                                     title="View Invoice"
@@ -175,16 +203,17 @@ export default function PatientListingTable({
                 setIsPatientTest={setIsPatientTest}
                 isPatientTest={isPatientTest}
                 patientTest={patientTest}
+                getUpdatedPatientList={getUpdatedPatientList}
             />
 
-            <PatientDueAmountModal
+            {/* <PatientDueAmountModal
                 showPatientAmountLog={showPatientAmountLog}
                 setShowPatientAmountLog={setShowPatientAmountLog}
                 patientPaymentLog={patientPaymentLog}
                 getUpdatedPatientList={getUpdatedPatientList}
-            />
+            /> */}
 
-            <AddParameterResult
+            <ParameterResult
                 setShowParameterResult={setShowParameterResult}
                 showParameterResult={showParameterResult}
                 patientParameterRes={patientParameterRes}
