@@ -36,9 +36,9 @@ export default function Header() {
                     </span>
                 </button>
                 <Link className="navbar-brand me-1 me-sm-3" to="/">
-                    <div className="d-flex align-items-center"  style={{ marginLeft: "-17%",color:'#283890'}}>
+                    <div className="d-flex align-items-center" style={{ marginLeft: "-17%", color: '#283890' }}>
                         <h1 className="logo-text fw-bold ms-2 d-none d-sm-block color-white"
-                            >Gardezi Lab</h1>
+                        >Gardezi Lab</h1>
                     </div>
                 </Link>
 
@@ -51,16 +51,19 @@ export default function Header() {
                 <NavMenu />
             </div>
 
-            <ul className="navbar-nav navbar-nav-icons flex-row">
+            <ul className="navbar-nav navbar-nav-icons flex-row"  >
                 <li className="nav-item">
                     <ThemeToggle />
                 </li>
                 <li className="nav-item">
                     <SearchIcon />
                 </li>
-                <NotificationDropdown />
-                <NineDotsDropdown />
-                <UserDropdown />
+                <li className="nav-item">
+                    <NotificationDropdown />
+                </li>
+                <li className="nav-item">
+                    <UserDropdown />
+                </li>
             </ul>
         </nav>
     );

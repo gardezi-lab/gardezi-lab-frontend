@@ -37,8 +37,9 @@ export default function ThreeColumnFormate({ test }) {
                                 <td style={{ backgroundColor: "#ffffff", color: 'black' }} >{param.cutoff_value[0]}</td>
                                 <td style={{ backgroundColor: "#ffffff", color: 'black' }} >{param.result_value[0]}</td>
                                 <ParameterGraph
-                                    label={"Parameter Graph"}
-                                    dataPoints={[12, 18, 10, 25, 20]}
+                                    label={param.parameter_name}
+                                    dataPoints={param.result_value.filter((_, i) => i <= testHistory)}
+                                    dates={test.dates.filter((_, i) => i <= testHistory)}
                                 />
 
                             </tr>

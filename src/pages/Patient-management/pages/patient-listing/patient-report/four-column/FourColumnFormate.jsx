@@ -39,11 +39,19 @@ export default function FourColumnFormate({ test, testHistory }) {
                                             <td style={{ backgroundColor: "#ffffff", color: 'black' }} key={i}>{t}</td>
                                         ))
                                 }
+                                {
+                                    <td style={{ backgroundColor: "#ffffff", color: 'black' }}>
+                                        <ParameterGraph
+                                            label={param.parameter_name}
+                                            dataPoints={param.result_value.filter((_, i) => i <= testHistory)}
+                                            dates={test.dates.filter((_, i) => i <= testHistory)} 
+                                        />
+                                      
+
+                                    </td>
+                                }
                                 <td>
-                                    <ParameterGraph
-                                        label={"Parameter Graph"}
-                                        dataPoints={[12, 18, 10, 25, 20]}
-                                    />
+
                                 </td>
                             </tr>
                         </>

@@ -1,13 +1,22 @@
+import { useState } from "react";
+import { useEffect } from "react";
+
 export default function UserDropdown() {
+    const [profile, setProfile] = useState();
 
     const handleSignOut = () => {
         localStorage.removeItem("LoggedInUser");
     }
 
+    useEffect(() => {
+        const obj = JSON.parse(localStorage.getItem("LoggedInUser"));
+        setProfile(obj);
+    }, [])
+
     return (
         <li className="nav-item dropdown">
-            <a style={{ color: "#ffffff" }}
-                className="nav-link lh-1 pe-0 white-space-nowrap"
+            <a style={{ color: "#ffffff", }}
+                className="nav-link white-space-nowrap"
                 id="navbarDropdownUser "
                 href="#!"
                 role="button"
@@ -16,8 +25,8 @@ export default function UserDropdown() {
                 data-bs-auto-close="outside"
                 aria-expanded="false"
             >
-                Olivia{" "}
-                <span className="d-inline-block" style={{ height: "10.2px", width: "10.2px", color: "#ffffff" }}>
+                {profile && profile.user.name}{" "}
+                <span className="d-inline-block" >
                     <span className="fa-solid fa-chevron-down fs-10" />
                 </span>
             </a>
@@ -31,7 +40,9 @@ export default function UserDropdown() {
                             <div className="avatar avatar-xl ">
                                 <img className="rounded-circle " src="../assets/img/team/57.webp" alt="" />
                             </div>
-                            <h6 className="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                            <h6 className="mt-2 text-body-emphasis">
+                                {profile && profile.user.name}{" "}
+                            </h6>
                         </div>
                         {/* <div className="mb-3 mx-3">
                             <input
@@ -62,7 +73,7 @@ export default function UserDropdown() {
                             ))}
                         </ul>
                     </div> */}
-                    <div className="card-footer p-0 ">
+                    <div className="card-footer  p-0">
                         {/* <ul className="nav d-flex flex-column my-3">
                             <li className="nav-item">
                                 <a className="nav-link px-3 d-block" href="#!">
@@ -71,28 +82,40 @@ export default function UserDropdown() {
                                     Add another account
                                 </a>
                             </li>
+
                         </ul> */}
-                        <hr />
-                        <div className="px-3">
-                            <a className="btn btn-phoenix-secondary d-flex flex-center w-100" href="/auth/login" 
-                            onClick={handleSignOut}
+                        <div className="px-1 mt-1 mb-1">
+                            <a className="btn btn-phoenix-secondary d-flex flex-center w-100" href="/update-profile"
+                                
+                            >
+                                <span className="me-2" data-feather="log-out"
+                                    style={{ width: 16, height: 16,  }} />
+                                Update Profile
+                            </a>
+                        </div>
+                        {/* <hr /> */}
+                        <div className="px-1">
+                            <a className="btn btn-phoenix-secondary d-flex flex-center w-100" 
+                           
+                            href="/auth/login"
+                                onClick={handleSignOut}
                             >
                                 <span className="me-2" data-feather="log-out" 
-                                    style={{ width: 16, height: 16 }} />
+                                    style={{ width: 16, height: 16, }} />
                                 Sign out
                             </a>
                         </div>
                         <div className="my-2 text-center fw-bold fs-10 text-body-quaternary">
                             <a className="text-body-quaternary me-1" href="#!">
-                                Privacy policy
+                                {/* Privacy policy */}
                             </a>
-                            •
+                            {/* • */}
                             <a className="text-body-quaternary mx-1" href="#!">
-                                Terms
+                                {/* Terms */}
                             </a>
-                            •
+                            {/* • */}
                             <a className="text-body-quaternary ms-1" href="#!">
-                                Cookies
+                                {/* Cookies */}
                             </a>
                         </div>
                     </div>

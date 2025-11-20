@@ -41,7 +41,7 @@ export default function InterpertationModal({ onSave, interpertation, onCancel }
         <Container>
             <Form onSubmit={handleSubmit}>
                 <Row>
-                    <Col>
+                    {/* <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Type</Form.Label>
                             <Form.Select
@@ -53,7 +53,7 @@ export default function InterpertationModal({ onSave, interpertation, onCancel }
                                 <option value="User">User</option>
                             </Form.Select>
                         </Form.Group>
-                    </Col>
+                    </Col> */}
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label> Code </Form.Label>

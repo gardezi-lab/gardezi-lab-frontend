@@ -27,9 +27,7 @@ export default function AddPanel() {
     const getCompanyData = async () => {
         setLoading(true);
         try {
-            const url = `/companies_panel?search=${encodeURIComponent(
-                search || ""
-            )}&currentpage=${page}&recordperpage=${recordPerPage}`;
+            const url = `/companies_panel`;
 
             const response = await httpClient.get(url);
             if (response) {
@@ -93,47 +91,7 @@ export default function AddPanel() {
         getCompanyData();
     }, [page, search]);
 
-    const renderPaginationItems = () => {
-        let items = [];
-        if (totalPages <= 5) {
-            for (let i = 1; i <= totalPages; i++) {
-                items.push(
-                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
-                        {i}
-                    </Pagination.Item>
-                );
-            }
-        } else {
-            items.push(
-                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
-                    1
-                </Pagination.Item>
-            );
-
-            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
-
-            if (page > 2 && page < totalPages - 1) {
-                items.push(
-                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
-                        {page}
-                    </Pagination.Item>
-                );
-            }
-
-            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
-
-            items.push(
-                <Pagination.Item
-                    key={totalPages}
-                    active={page === totalPages}
-                    onClick={() => setPage(totalPages)}
-                >
-                    {totalPages}
-                </Pagination.Item>
-            );
-        }
-        return items;
-    };
+  
 
     return (
         <>
@@ -185,22 +143,7 @@ export default function AddPanel() {
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-                <Pagination>
-                    <Pagination.Prev
-                        onClick={() => page > 1 && setPage(page - 1)}
-                        disabled={page === 1}
-                    >
-                        Previous
-                    </Pagination.Prev>
-                    {renderPaginationItems()}
-                    <Pagination.Next
-
-                        onClick={() => page < totalPages && setPage(page + 1)}
-                        disabled={page === totalPages}
-                    >
-                        Next
-                    </Pagination.Next>
-                </Pagination>
+                
 
             </div>
 
