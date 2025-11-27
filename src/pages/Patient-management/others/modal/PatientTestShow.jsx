@@ -21,7 +21,10 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
     const [totalAmount, setTotalAmount] = useState("")
     const [receivedAmount, setReceivedAmount] = useState("");
     const [checkApprove, setCheckApprove] = useState(false);
-    const [newApprove, setNewApprove] = useState("")
+    const [newApprove, setNewApprove] = useState("");
+    const [testId, setTestId] = useState([]);
+    const [ptpdfurl, setPdfurl] = useState("");
+    const [isPdf, setIsPdf] = useState(false);
 
     const getTestData = async () => {
         try {
@@ -50,6 +53,7 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                     return [...prev, obj]
                 }
             });
+            setTestId(...testId, { 'id': obj.id })
             handleAttachements(test.patient_test_id)
         } else {
             setTesList(prev => prev.filter(item => item.id !== obj.id));
@@ -61,7 +65,22 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                 return updated;
             });
         }
+        // generatepdf(test)
     }
+
+    const generatepdf = async () => {
+        const url = `/pdfreport/${patientTest.cid}`;
+        const response = await httpClient.post(url, { testId });
+        if (response) {
+            console.log("response", response)
+            const pdfurl = response.pdf_url;
+            if (pdfurl.length) {
+                setIsPdf(true);
+                setPdfurl(pdfurl);
+            }
+        }
+    }
+
 
     useEffect(() => {
         getTestData();
@@ -201,7 +220,7 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                                     {remainingamount}
                                 </span>
                             </div>{
-                                pendingAmount >0 &&
+                                pendingAmount > 0 &&
                                 <div className="d-flex justify-content-between">
                                     <span>Pending Discount:</span>
                                     <span className="fw-semibold text-danger">
@@ -289,8 +308,15 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                             </ul>
                         </div>
                     </>
-
-
+                    <div style={{ display: 'flex', justifyContent: 'end', gap: '5px' }} >
+                        <Button className="primary" onClick={generatepdf}>generate pdf</Button>
+                        {
+                            isPdf &&
+                            <Link to={`${ptpdfurl}`} target="_blank" rel="noopener noreferrer">
+                                <Button className="primary" >pdf report</Button>
+                            </Link>
+                        }
+                    </div>
 
 
                 </Modal.Body>

@@ -16,12 +16,11 @@ export default function BasicInformation({ invoiceResult, barcode }) {
                         <td>{invoiceResult?.patient?.patient_name || "-"}</td>
                         <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Father/Husband:</td>
                         <td>{invoiceResult?.patient?.age ? `${invoiceResult.patient.father_hasband_MR} years` : "-"}</td>
-
                     </tr>
                     <tr>
                         <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Gender:</td>
                         <td>{invoiceResult?.patient?.gender || "-"}</td>
-                        <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Registration Date::</td>
+                        <td style={{ fontWeight: "bold", padding: "4px 8px" }}>Registration Date:</td>
                         <td>{"-"}</td>
                     </tr>
                     <tr>
