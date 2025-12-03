@@ -52,7 +52,7 @@ import UpdateProfile from '../pages/authentication/UpdateProfile';
 //               <Route path="/access-management/user-manage" element={<RoleUserManagement />} />
 
 //               <Route path='/update-profile' element={<UpdateProfile />} />
-              
+
 //             </Route>
 //             <Route path="/patient-management/invoice" element={<PatientInvoice />} />
 //             <Route path="/patient-management/report" element={<PatientReport />} />
@@ -116,6 +116,15 @@ import Settings from "../pages/Account-create/settings/Settings";
 
 import Login from "../pages/authentication/Login";
 import RoleUserManagement from "../pages/access-management/pages/user-management/UserManagement";
+import LogReport from '../pages/report-management/pages/log-report/LogReport';
+import DuePatient from '../pages/report-management/pages/due-patient/DuePatient';
+import SaleStatment from '../pages/report-management/pages/sale-statement/SaleStatment';
+import DiscountReport from '../pages/report-management/pages/discount-report/DiscountReport';
+import ConsultantReport from '../pages/report-management/pages/consultant-report/ConsultantReport';
+import LabReport from '../pages/report-management/pages/lab-report/LabReport';
+import ReceiptionesReport from '../pages/report-management/pages/receiptiones-report/ReceiptionesReport';
+import BusinessReport from '../pages/report-management/pages/business-report/BusinessReport';
+// import CollectionCenter from '../pages/report-management/pages/collection-center/CollectionCenter';
 
 function AppRoutes() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("LoggedInUser"));
@@ -159,7 +168,15 @@ function AppRoutes() {
               <Route path="/voucher" element={<Voucher />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/ledger" element={<Ledger />} />
-               <Route path='/update-profile' element={<UpdateProfile />} />
+              <Route path='/update-profile' element={<UpdateProfile />} />
+              <Route path="/report-management/log-report" element={<LogReport />} />
+              <Route path="/report-management/due-patient" element={<DuePatient />} />
+              <Route path="/report-management/sale-statement" element={<SaleStatment />} />
+              <Route path="/report-management/discount-report" element={<DiscountReport />} />
+              <Route path="/report-management/consultant-report" element={<ConsultantReport />} />
+              <Route path="/report-management/lab-report" element={<LabReport />} />
+              <Route path="/report-management/receiptiones-report" element={<ReceiptionesReport />} />
+              <Route path="/report-management/Business-report" element={<BusinessReport />} />
             </Route>
             <Route path="/patient-management/invoice" element={<PatientInvoice />} />
             <Route path="/patient-management/report" element={<PatientReport />} />
