@@ -12,6 +12,7 @@ import { useFetchDoctor } from "../../others/custom-hooks/useFetchDoctor";
 import { useFetchPackages } from "../../others/custom-hooks/useFetcPackages";
 
 export default function PatientManagement() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const { testProfiles, getProfileList } = useFetchProfileTest();
     const { companyList, getCompinesList } = useFetchCompanies();
     const { doctorList, getDoctor } = useFetchDoctor();
@@ -98,6 +99,7 @@ export default function PatientManagement() {
             <div className="d-flex justify-content-between mb-2">
                 <h5 className="fw-bold page-header">Patient Management</h5>
                 <div className="d-flex gap-2">
+                    {permissions["Patient Add"] === 1 &&
                     <button
                         className="btn btn-success primary"
                         type="button"
@@ -105,6 +107,7 @@ export default function PatientManagement() {
                     >
                         <i className="fas fa-plus me-2"></i> Add Patient
                     </button>
+}
                     <button
                         className="btn filter-btn"
                         type="button"

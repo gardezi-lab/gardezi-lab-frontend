@@ -7,34 +7,68 @@ import ConsultantReportModal from "../../others/modal/consultant-report-modal/Co
 export default function ConsultantReport() {
     const [consultantList, setConsultantList] = useState([]);
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [consultant, setConsultant] = useState([]);
 
     const [formData, setFormData] = useState({
         from: "",
-        to: ""
+        to: "",
+        doctors_id: ""
     });
 
     const updateFilters = (name, value) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleLog = async () => {
+    const Consultant = async () => {
         try {
-            const url = `/users/doctors_by_date?from_date=${formData.from}&to_date=${formData.to}`;
-            const response = await httpClient.get(url);
-            setConsultantList(response.data)
+            const response = await httpClient.get("/users/doctors");
+            setConsultant(response.data);
         } catch (error) {
-            console.log("Error:", error);
+            console.log("Error loading Consultant:", error);
         }
     };
+
+    const handleLog = async () => {
+        try {
+            console.log("FormData before API call:", formData);
+            if (!formData.doctors_id) {
+                console.log("Doctor ID missing, skipping API call");
+                setConsultantList([]);
+                return;
+            }
+
+            const url = `/users/doctors_by_date/${formData.doctors_id}?from_date=${formData.from}&to_date=${formData.to}`;
+            console.log("API URL:", url);
+
+            const response = await httpClient.get(url);
+            console.log("API Responseeeeeeeee:", response);
+
+            setConsultantList(response.patients);
+        } catch (error) {
+            console.log("Error in API call:", error);
+        }
+    };
+
 
     const applyFilter = () => {
         handleLog();
         setShowFilterModal(false);
     };
 
+
     useEffect(() => {
+        Consultant();
         handleLog();
-    }, []);
+    }, [formData.doctors_id, formData.from, formData.to]);
+
+    const handleModalClose = () => {
+        setFormData({
+            from: "",
+            to: "",
+            doctors_id: ""
+        });
+        setShowFilterModal(false);
+    };
 
     return (
         <>
@@ -55,7 +89,8 @@ export default function ConsultantReport() {
 
             <ConsultantReportModal
                 show={showFilterModal}
-                onClose={() => setShowFilterModal(false)}
+                consultant={consultant}
+                onClose={handleModalClose}
                 formData={formData}
                 onChange={updateFilters}
                 onApply={applyFilter}

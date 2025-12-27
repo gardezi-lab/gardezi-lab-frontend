@@ -4,36 +4,60 @@ import ReceiptionesReportTable from "../../others/table/receiptiones-report-tabl
 import ReceiptionesReportModal from "../../others/modal/receiptiones-report-modal/ReceiptionesReportModal";
 
 export default function ReceiptionesReport() {
-  const [discountList, setDiscountList] = useState([]);
+  const [receptionList, setReceptionList] = useState([]);   // 👈 Dropdown data
+  const [reportList, setReportList] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const [formData, setFormData] = useState({
     from: "",
-    to: ""
+    to: "",
+    receptionist_id: ""
   });
 
-  const updateFilters = (name, value) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const loadReceptionList = async () => {
+    try {
+      const response = await httpClient.get("/users/receptionists");
+      setReceptionList(response.data);
+    } catch (error) {
+      console.log("Error loading re list:", error);
+    }
   };
 
-  const handleLog = async () => {
+  const loadReport = async () => {
     try {
-      const url = `/users/receptionists_by_date?from_date=${formData.from}&to_date=${formData.to}`;
+      const url = `/users/receptionists_by_date/${formData.receptionist_id}?from_date=${formData.from}&to_date=${formData.to}`;
       const response = await httpClient.get(url);
-      setDiscountList(response.data)
+      setReportList(response.data);
+
     } catch (error) {
       console.log("Error:", error);
     }
   };
 
-  const applyFilter = () => {
-    handleLog();
+  const handleModalClose = () => {
+    setFormData({
+      from: "",
+      to: "",
+      receptionist_id: ""
+    });
     setShowFilterModal(false);
   };
 
+  const updateFilters = (name, value) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+
+  const applyFilter = () => {
+    loadReport();
+    setShowFilterModal(false);
+
+  };
+
   useEffect(() => {
-    handleLog();
-  }, []);
+    loadReceptionList();
+    loadReport();
+  }, [formData.receptionist_id, formData.from, formData.to]);
 
   return (
     <>
@@ -51,12 +75,13 @@ export default function ReceiptionesReport() {
         </div>
       </div>
       <ReceiptionesReportTable
-        discountList={discountList} />
+        reportList={reportList} />
 
       <ReceiptionesReportModal
         show={showFilterModal}
-        onClose={() => setShowFilterModal(false)}
+        onClose={handleModalClose}
         formData={formData}
+        receptionList={receptionList}
         onChange={updateFilters}
         onApply={applyFilter}
       />

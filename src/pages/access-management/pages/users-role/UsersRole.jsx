@@ -9,6 +9,7 @@ import Pagination from "react-bootstrap/Pagination";
 import FilterModal from "../../others/modal/users-role/FilterModal";
 
 export default function UsersRole() {
+  const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roleList, setRoleList] = useState([]);
   const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
@@ -108,13 +109,15 @@ export default function UsersRole() {
 
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <button
-            className="btn btn-success primary"
-            type="button"
-            onClick={handleRoleModal}
-          >
-            <i className="fas fa-plus me-2"></i> Add Role
-          </button>
+          {permissions["Role Add"] === 1 &&
+            <button
+              className="btn btn-success primary"
+              type="button"
+              onClick={handleRoleModal}
+            >
+              <i className="fas fa-plus me-2"></i> Add Role
+            </button>
+          }
           <button
             className="btn filter-btn"
             type="button"

@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 
 
 export default function SystemUserTable({ consultantList, onDelete, onEdit, loading }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -60,8 +61,11 @@ export default function SystemUserTable({ consultantList, onDelete, onEdit, load
                                             <td>{consultant.password}</td>
                                             <td>
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    {permissions["User Edit"] === 1 &&
                                                     <FaPenToSquare
                                                         onClick={() => onEdit(consultant)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    }
+                                                    {permissions["User Delete"] === 1 &&
                                                     <FaRegTrashCan onClick={() => {
                                                         if (window.confirm("Are you sure you want to delete this department?")) {
                                                             onDelete(consultant.id);
@@ -69,6 +73,7 @@ export default function SystemUserTable({ consultantList, onDelete, onEdit, load
                                                     }}
                                                         style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                                     />
+                                                }
                                                 </div>
                                             </td>
                                         </tr>

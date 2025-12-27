@@ -1,12 +1,33 @@
 import axios from "axios";
 
 // const baseURL = "https://gardezi-lab-backend-1-zlp6.onrender.com/api";
-const baseURL = "http://127.0.0.1:5000/api"
+const baseURL = "http://127.0.0.1:5000/api";
+
+const axiosInstance = axios.create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 
 const httpClient = {
   get: async (url, params = {}) => {
     try {
-      const response = await axios.get(`${baseURL}${url}`, {
+      const response = await axiosInstance.get(`${baseURL}${url}`, {
         params
       });
       return response.data;
@@ -18,7 +39,7 @@ const httpClient = {
 
   post: async (url, data = {}) => {
     try {
-      const response = await axios.post(`${baseURL}${url}`, data,
+      const response = await axiosInstance.post(`${baseURL}${url}`, data,
         {
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +55,7 @@ const httpClient = {
 
   put: async (url, data = {}) => {
     try {
-      const response = await axios.put(`${baseURL}${url}`, data, {
+      const response = await axiosInstance.put(`${baseURL}${url}`, data, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -47,7 +68,7 @@ const httpClient = {
   },
   patch: async (url, data = {}) => {
     try {
-      const response = await axios.patch(`${baseURL}${url}`, data, {
+      const response = await axiosInstance.patch(`${baseURL}${url}`, data, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -61,7 +82,7 @@ const httpClient = {
 
   delete: async (url) => {
     try {
-      const response = await axios.delete(`${baseURL}${url}`);
+      const response = await axiosInstance.delete(`${baseURL}${url}`);
       return response.data;
     } catch (error) {
       console.error("DELETE Error:", error);

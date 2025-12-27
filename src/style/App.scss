@@ -166,6 +166,18 @@
     opacity: 0.7;
 }
 
+.pagination .page-item.active .page-link {
+  background-color: #1c2765;
+  border-color: #1c2765;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.pagination .page-link {
+  background-color: #1c2765;
+  color: white;
+}
+
 @media print {
     body {
         margin: 0;

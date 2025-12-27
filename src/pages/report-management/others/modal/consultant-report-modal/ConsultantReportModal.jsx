@@ -1,10 +1,15 @@
 import { Modal, Button, Form } from "react-bootstrap";
+import Select from 'react-select';
 
-export default function ConsultantReportModal({ show, onClose, formData, onChange, onApply }) {
+export default function ConsultantReportModal({ show, onClose, formData, onChange, onApply, consultant }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        onChange(name, value); 
+        onChange(name, value);
+    };
+
+    const handleSelectChange = (selectedOption) => {
+        onChange("receptionist_id", selectedOption?.value || "");
     };
 
     return (
@@ -14,6 +19,27 @@ export default function ConsultantReportModal({ show, onClose, formData, onChang
             </Modal.Header>
 
             <Modal.Body>
+                <Form.Group>
+                    <Form.Label className="form-label">Consultant</Form.Label>
+                    <Select
+                        name="doctors_id"
+                        value={
+                            formData.doctors_id
+                                ? {
+                                    value: formData.doctors_id,
+                                    label: consultant.find(r => r.id === formData.doctors_id)?.name
+                                }
+                                : null
+                        }
+                        placeholder="Select Consultant"
+                        onChange={(selectedOption) => onChange("doctors_id", selectedOption?.value || "")}
+                        options={consultant.map((item) => ({
+                            value: item.id,    // backend se jo id aati hai
+                            label: item.name
+                        }))}
+                    />
+
+                </Form.Group>
                 <Form.Group>
                     <Form.Label>From:</Form.Label>
                     <Form.Control

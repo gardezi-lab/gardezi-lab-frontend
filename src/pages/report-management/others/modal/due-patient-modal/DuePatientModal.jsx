@@ -1,10 +1,31 @@
+import { useState, useEffect } from "react";
+import Select from 'react-select';
 import { Modal, Button, Form } from "react-bootstrap";
 
 export default function DuePatientModal({ show, onClose, formData, onChange, onApply }) {
 
+    const [companyList, setCompanyList] = useState([]);
+
+    const getCompanyList = async () => {
+        try {
+            const response = await httpClient.get("/company");
+            setCompanyList(response.data || []);
+        } catch (error) {
+            console.log("Error fetching company list:", error);
+        }
+    };
+
+    useEffect(() => {
+        getCompanyList();
+    }, []);
+
+    const handleSelectChange = (selectedOption, name) => {
+        onChange(name, selectedOption?.value || "");
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        onChange(name, value); 
+        onChange(name, value);
     };
 
     return (
@@ -14,6 +35,25 @@ export default function DuePatientModal({ show, onClose, formData, onChange, onA
             </Modal.Header>
 
             <Modal.Body>
+
+                <Form.Group>
+                    <Form.Label className="form-label">Company</Form.Label>
+                    <Select
+                        className="input-text-color"
+                        name="patientCompany"
+                        // value={patientFormData.patientCompany}
+                        placeholder="Select Company"
+                        onChange={(selectedOption) =>
+                            handleSelectChange(selectedOption, "patientCompany")
+                        }
+                        options={companyList?.map((company) => ({
+                            value: company.id,
+                            label: company.company_name
+                        }))}
+                        // styles={customStyles}
+                    />
+                </Form.Group>
+
                 <Form.Group>
                     <Form.Label>From:</Form.Label>
                     <Form.Control

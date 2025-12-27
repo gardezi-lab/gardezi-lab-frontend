@@ -6,6 +6,7 @@ import httpClient from "../../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
 export default function AddPanel() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showCompanyModal, setShowCompanyModal] = useState(false);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedCompany, setSlectedCompany] = useState(null)
@@ -91,7 +92,7 @@ export default function AddPanel() {
         getCompanyData();
     }, [page, search]);
 
-  
+
 
     return (
         <>
@@ -114,17 +115,18 @@ export default function AddPanel() {
                             setSearch(e.target.value);
                         }}
                     />
-
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={() => {
-                            setIsCurrentEditModalOpen(false);
-                            handleShow();
-                        }}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Company
-                    </button>
+                    {permissions["Company Panel Add"] === 1 &&
+                        <button
+                            className="btn btn-success primary"
+                            type="button"
+                            onClick={() => {
+                                setIsCurrentEditModalOpen(false);
+                                handleShow();
+                            }}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Company
+                        </button>
+                    }
                 </div>
             </div>
 
@@ -143,7 +145,7 @@ export default function AddPanel() {
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-                
+
 
             </div>
 

@@ -1,21 +1,22 @@
-import { href, NavLink } from "react-router-dom";
-
-
+import { NavLink } from "react-router-dom";
 
 const menuItems = [
     {
         title: "Dashboard",
         iconClass: "uil uil-dashboard",
+        roles: ["Reception"],
         dropdown: [
             {
                 label: "Departments",
                 icon: "buildings",
                 href: "/dashboard/department",
+                roles: ["Reception"]
             },
             {
                 label: "Test & Profile",
                 icon: "user-circle",
                 href: "/dashboard/testprofile",
+                roles: ["Reception"],
             },
             {
                 label: "Company Panels",
@@ -38,11 +39,13 @@ const menuItems = [
     {
         title: "Patients",
         iconClass: "uil uil-user-nurse",
+        roles: ["Reception"],
         dropdown: [
             {
                 label: "Patients Management",
                 icon: "users",
                 href: "/patient-management/patient",
+                
             },
             {
                 label: "Cash Management",
@@ -90,39 +93,19 @@ const menuItems = [
         dropdown: [
             {
                 label: "Add Stock",
-                href: "/add-stock",
-            },
-            {
-                label: "Add Vendor",
-                href: "/add-vendor",
+                href: "/stock-management/add-stock",
             },
             {
                 label: "Stock Purchase",
-                href: "/stock-purchase",
+                href: "/stock-management/stock-purchase",
             },
             {
                 label: "Stock Usage",
-                href: "/stock-usage",
+                href: "/stock-management/stock-usage",
             },
             {
                 label: "Stock Inventory",
-                href: "/stock-inventory",
-            },
-            // {
-            //     label: "CC Wise Issue Report",
-            //     href: "/cc-wise-issue-report",
-            // },
-            // {
-            //     label: "Stock Issue",
-            //     href: "/stock-issue",
-            // },
-            // {
-            //     label: "Stock In Report",
-            //     href: "/stock-report",
-            // },
-            {
-                label: "Near Expiry",
-                href: "/near-expiry",
+                href: "/stock-management/stock-inventory",
             },
         ],
     },
@@ -134,47 +117,42 @@ const menuItems = [
             {
                 label: "Create Account",
                 icon: "file-plus",
-                href: "/accounts/create-account",
+                href: "/account-management/create-account",
             },
             {
                 label: "Journal Vouchers",
                 icon: "notes",
-                href: "/accounts/journal-voucher",
+                href: "/account-management/journal-voucher",
             },
             {
                 label: "CRV",
                 icon: "uil-receipt",
-                href: "/accounts/c-r-v",
+                href: "/account-management/c-r-v",
             },
             {
                 label: "CPV",
                 icon: "receipt-alt",
-                href: "/accounts/c-p-v",
+                href: "/account-management/c-p-v",
             },
             {
                 label: "BRV",
                 icon: "bill",
-                href: "/accounts/b-r-v",
+                href: "/account-management/b-r-v",
             },
             {
                 label: "BPV",
                 icon: "transaction",
-                href: "/accounts/b-p-v",
-            },
-            {
-                label: "Vouchers",
-                icon: "receipt",
-                href: "/dashboard/vouchers",
+                href: "/account-management/b-p-v",
             },
             {
                 label: "Ledgers",
                 icon: "book-open",
-                href: "/accounts/ledger",
+                href: "/account-management/ledger",
             },
             {
                 label: "Settings",
                 icon: "settings",
-                href: "/accounts/settings",
+                href: "/account-management/settings",
             },
         ],
     },
@@ -224,9 +202,6 @@ const menuItems = [
             },
         ],
     }
-
-
-
 ];
 
 function DropdownItem({ label, icon, href, isSubDropdown }) {
@@ -273,7 +248,6 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
         );
     }
 
-    // ✅ Normal dropdown item (auto close after click)
     return (
         <li>
             <NavLink
@@ -281,7 +255,7 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
                 className={({ isActive }) =>
                     `dropdown-item ${isActive ? "active" : ""}`
                 }
-                onClick={handleClick} // 👈 add auto-close here
+                onClick={handleClick}
             >
                 <div className="dropdown-item-wrapper">
                     <span
@@ -296,14 +270,40 @@ function DropdownItem({ label, icon, href, isSubDropdown }) {
     );
 }
 
-
-
-
 export default function NavMenu() {
+    const user = localStorage.getItem("LoggedInUser");
+    const permission = JSON.parse(localStorage.getItem("permissions") || "{}");
+    const role = JSON.parse(user)?.role;
+
+    const filteredMenuItems = menuItems
+        .map(item => {
+            // Check role
+            if (item.roles && !item.roles.includes(role)) return null;
+
+            // Filter dropdown items by permission
+            const filteredDropdown = item.dropdown?.filter(ddItem => {
+                const labelKey = ddItem.label; // permission keys should match label
+                // If there's a roles check
+                if (ddItem.roles && !ddItem.roles.includes(role)) return false;
+                // Check permission object, default allow if permission missing
+                if (permission[labelKey] === 0) return false;
+                return true;
+            });
+
+            // Hide parent if no dropdown items left
+            if (filteredDropdown?.length === 0) return null;
+
+            return {
+                ...item,
+                dropdown: filteredDropdown,
+            };
+        })
+        .filter(Boolean);
+
     return (
         <ul className="navbar-nav navbar-nav-top" data-dropdown-on-hover="data-dropdown-on-hover">
-            {menuItems.map(({ title, iconClass, dropdown }) => (
-                <li key={title} className="nav-item dropdown ">
+            {filteredMenuItems.map(({ title, iconClass, dropdown }) => (
+                <li key={title} className="nav-item dropdown">
                     <a
                         className="nav-link dropdown-toggle lh-1 color-white"
                         href="#!"
@@ -313,17 +313,17 @@ export default function NavMenu() {
                         aria-haspopup="true"
                         aria-expanded="false"
                     >
-                        <span className={`uil fs-8 color-white me-2 ${iconClass} `} />
+                        <span className={`uil fs-8 color-white me-2 ${iconClass}`} />
                         {title}
                     </a>
-                    <ul className="dropdown-menu  navbar-dropdown-caret dropdown-scroll">
+                    <ul className="dropdown-menu navbar-dropdown-caret dropdown-scroll">
                         {dropdown.map((item) => (
                             <DropdownItem key={item.label} {...item} />
                         ))}
                     </ul>
-
                 </li>
             ))}
         </ul>
     );
 }
+

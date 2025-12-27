@@ -3,6 +3,7 @@ import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function TestPackageTable({ TestPackageList, onDelete, onEdit, loading }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     return (
         <>
             <div className="card shadow-sm border-0">
@@ -15,7 +16,7 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                     <th scope="col" className="text-start">Name</th>
                                     <th scope="col" className="text-start">Fees</th>
                                     {/* <th scope="col" className="text-start"> Test</th> */}
-                                    <th scope="col" style={{ textAlign:"center"}} >Action</th>
+                                    <th scope="col" style={{ textAlign: "center" }} >Action</th>
                                 </tr>
                             </thead>
 
@@ -35,7 +36,7 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                                     visible={true}
                                                     height="60"
                                                     width="60"
-                                                     color="#fcb040"
+                                                    color="#fcb040"
                                                     ariaLabel="three-circles-loading"
                                                 />
                                             </div>
@@ -52,15 +53,19 @@ export default function TestPackageTable({ TestPackageList, onDelete, onEdit, lo
                                             {/* <td className="text-start">{test.selected_test}</td> */}
                                             <td>
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
-                                                    <FaPenToSquare
-                                                        onClick={() => onEdit(test)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                                                    <FaRegTrashCan onClick={() => {
-                                                        if (window.confirm("Are you sure you want to delete this department?")) {
-                                                            onDelete(test.id);
-                                                        }
-                                                    }}
-                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-                                                    />
+                                                    {permissions["Test Package Edit"] === 1 &&
+                                                        <FaPenToSquare
+                                                            onClick={() => onEdit(test)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    }
+                                                    {permissions["Test Package Delete"] === 1 &&
+                                                        <FaRegTrashCan onClick={() => {
+                                                            if (window.confirm("Are you sure you want to delete this department?")) {
+                                                                onDelete(test.id);
+                                                            }
+                                                        }}
+                                                            style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                        />
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>

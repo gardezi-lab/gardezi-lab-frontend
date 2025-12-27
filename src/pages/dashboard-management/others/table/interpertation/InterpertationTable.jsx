@@ -60,15 +60,19 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
                                             <td className="py-2 px-2">
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
-                                                    <FaPenToSquare
-                                                        onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                                                    <FaRegTrashCan onClick={() => {
-                                                        if (window.confirm("Are you sure you want to delete this department?")) {
-                                                            onDelete(interpertation.id);
-                                                        }
-                                                    }}
-                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-                                                    />
+                                                    {permissions["Interpretation Edit"] === 1 &&
+                                                        <FaPenToSquare
+                                                            onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    }
+                                                    {permissions["Interpretation Delete"] === 1 &&
+                                                        <FaRegTrashCan onClick={() => {
+                                                            if (window.confirm("Are you sure you want to delete this department?")) {
+                                                                onDelete(interpertation.id);
+                                                            }
+                                                        }}
+                                                            style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                        />
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>

@@ -7,6 +7,7 @@ import Pagination from "react-bootstrap/Pagination";
 
 
 export default function Interpertation() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showInterpertationModal, setShowgetInterpertationDataModal] = useState(false);
     const [interpertationList, setInterpertationList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
@@ -30,20 +31,15 @@ export default function Interpertation() {
         setLoading(true);
         try {
             const url = `/interpretations`;
-
-
             const response = await httpClient.get(url);
-            console.log(response);
             if (response) {
-                setInterpertationList(response.data || []);
-                setTotalPages(response.totalPages || 1);
+                setInterpertationList(response?.data || []);
+                setTotalPages(response?.totalPages || 1);
             }
-            console.log("Consultant Data:", data);
-            console.log("Consultant list:", setInterpertationList);
         } catch (err) {
             console.error("Fetch Consultant Error:", err);
         } finally {
-            setLoading(false); // ✅ stop loader
+            setLoading(false);
         }
     };
 
@@ -97,22 +93,24 @@ export default function Interpertation() {
         getInterpertationData();
     }, [page, search]);
 
-  
+
 
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
+                    {permissions["Interpretation Add"] === 1 &&
+                        <button
+                            className="btn btn-success primary"
+                            type="button"
+                            onClick={handleShow}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Interpertation
+                        </button>
+                    }
                     <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={handleShow}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Interpertation
-                    </button>
-                    <button
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-primary filter-btn"
                         type="button"
                         onClick={() => setShowFilterModal(true)}
                     >
@@ -132,7 +130,7 @@ export default function Interpertation() {
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button>
 
-              
+
             </div>
 
 

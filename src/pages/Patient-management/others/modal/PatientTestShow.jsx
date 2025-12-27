@@ -7,6 +7,7 @@ import { FaPrint } from "react-icons/fa6";
 
 
 export default function PatientTestShow({ isPatientTest, setIsPatientTest, patientTest, getUpdatedPatientList }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     console.log("isPatientTest", isPatientTest)
     console.log("patientTest", patientTest)
     const [patientTestShow, setPatientTestShow] = useState([]);
@@ -205,69 +206,73 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                 <Modal.Body>
 
                     <>
-                        <div className="p-3 mb-3">
-                            <div className="d-flex justify-content-between mb-1">
-                                <span>Total Amount:</span>
-                                <span className="fw-semibold">{totalAmount}</span>
-                            </div>
-                            <div className="d-flex justify-content-between mb-1">
-                                <span>Received Amount:</span>
-                                <span className="fw-semibold text-success">{receivedAmount}</span>
-                            </div>
-                            <div className="d-flex justify-content-between">
-                                <span>Due Amount:</span>
-                                <span className="fw-semibold text-danger">
-                                    {remainingamount}
-                                </span>
-                            </div>{
-                                pendingAmount > 0 &&
-                                <div className="d-flex justify-content-between">
-                                    <span>Pending Discount:</span>
-                                    <span className="fw-semibold text-danger">
-                                        {pendingAmount} %
-                                    </span>
+                        {permissions["Patient Payment"] === 1 &&
+                            <>
+
+                                <div className="p-3 mb-3">
+                                    <div className="d-flex justify-content-between mb-1">
+                                        <span>Total Amount:</span>
+                                        <span className="fw-semibold">{totalAmount}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between mb-1">
+                                        <span>Received Amount:</span>
+                                        <span className="fw-semibold text-success">{receivedAmount}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <span>Due Amount:</span>
+                                        <span className="fw-semibold text-danger">
+                                            {remainingamount}
+                                        </span>
+                                    </div>{
+                                        pendingAmount > 0 &&
+                                        <div className="d-flex justify-content-between">
+                                            <span>Pending Discount:</span>
+                                            <span className="fw-semibold text-danger">
+                                                {pendingAmount} %
+                                            </span>
+                                        </div>
+                                    }
+
                                 </div>
-                            }
 
-                        </div>
-
-                        {remainingamount !== 0 && (
-                            <div className="mb-3">
-                                <Form.Label className="fw-semibold">Add New Amount</Form.Label>
-                                <div className="d-flex align-items-center gap-2">
-                                    <Form.Control
-                                        type="number"
-                                        name="newamount"
-                                        value={newamount}
-                                        placeholder="Enter New Amount"
-                                        onChange={(e) => setNewamount(e.target.value)}
-                                    />
-                                    <Button variant="primary" className="primary" size="sm" onClick={saveAmount}>
-                                        Add
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
+                                {remainingamount !== 0 && (
+                                    <div className="mb-3">
+                                        <Form.Label className="fw-semibold">Add New Amount</Form.Label>
+                                        <div className="d-flex align-items-center gap-2">
+                                            <Form.Control
+                                                type="number"
+                                                name="newamount"
+                                                value={newamount}
+                                                placeholder="Enter New Amount"
+                                                onChange={(e) => setNewamount(e.target.value)}
+                                            />
+                                            <Button variant="primary" className="primary" size="sm" onClick={saveAmount}>
+                                                Add
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
 
 
-                        {pendingAmount > 0 && (
-                            <div className="mb-3">
-                                <Form.Label className="fw-semibold">Pending Discount</Form.Label>
-                                <div className="d-flex align-items-center gap-2">
-                                    <Form.Control
-                                        type="number"
-                                        name="newApprove"
-                                        value={newApprove}
-                                        placeholder="Enter New Amount"
-                                        onChange={(e) => setNewApprove(e.target.value)}
-                                    />
-                                    <Button variant="primary" className="primary" size="sm" onClick={approveAmount}>
-                                        Approve
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
-
+                                {pendingAmount > 0 && (
+                                    <div className="mb-3">
+                                        <Form.Label className="fw-semibold">Pending Discount</Form.Label>
+                                        <div className="d-flex align-items-center gap-2">
+                                            <Form.Control
+                                                type="number"
+                                                name="newApprove"
+                                                value={newApprove}
+                                                placeholder="Enter New Amount"
+                                                onChange={(e) => setNewApprove(e.target.value)}
+                                            />
+                                            <Button variant="primary" className="primary" size="sm" onClick={approveAmount}>
+                                                Approve
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        }
                         <div className="pt-3">
                             <h6 className="fw-bold mb-2">Patient Tests</h6>
                             <ul className="list-group list-group-flush">
@@ -333,20 +338,21 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                             <Dropdown.Item onClick={() => getHistoryCount(3)}>3</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Button className="primary"
-                        disabled={
-                            patientTest?.company_id == null ? remainingamount : ""
-                        }
-                    >
-                        <Link to={`/patient-management/report?id=${patientTest?.cid}&testList=${encodeURIComponent(JSON.stringify(testList))}&testHistory=${testHistory}`} target="_blank" rel="noopener noreferrer">
-                            <FaPrint
-                                className="FaPrint"
-                                title="Print"
-                                color="white"
-                            />
-                        </Link>
-                    </Button>
-
+                    {permissions["Patient Report"] === 1 &&
+                        <Button className="primary"
+                            disabled={
+                                patientTest?.company_id == null ? remainingamount : ""
+                            }
+                        >
+                            <Link to={`/patient-management/report?id=${patientTest?.cid}&testList=${encodeURIComponent(JSON.stringify(testList))}&testHistory=${testHistory}`} target="_blank" rel="noopener noreferrer">
+                                <FaPrint
+                                    className="FaPrint"
+                                    title="Print"
+                                    color="white"
+                                />
+                            </Link>
+                        </Button>
+                    }
                     <Button variant="secondary" className="secondary" onClick={closeTestModal}>
                         Close
                     </Button>

@@ -5,6 +5,7 @@ import UserTable from "../../others/table/system-user/SystemUserTable";
 import UserModal from "../../others/modal/system-user/SystemUserModal";
 
 export default function SystemUserModal() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showConsultantModal, setShowConsultantModal] = useState(false);
     const [consultantList, setConsultantList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
@@ -51,7 +52,7 @@ export default function SystemUserModal() {
                 contact_no: formData.consultantContact,
                 role: formData.consultantRole,
                 age: Number(formData.consultantAge),
-                discount:formData.discount
+                discount: formData.discount
             };
 
             if (isCurrentEditModalOpen && selectedConsultant) {
@@ -94,14 +95,14 @@ export default function SystemUserModal() {
         getConsultantData();
     }, [page, search]);
 
- 
+
 
 
     return (
         <>
             <h5 className="fw-bold page-header">Users</h5>
             <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
-                
+
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <input
                         type="text"
@@ -114,17 +115,18 @@ export default function SystemUserModal() {
                             setSearch(e.target.value);
                         }}
                     />
-
-                    < button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={() => {
-                            setIsCurrentEditModalOpen(false);
-                            handleShow();
-                        }}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add User
-                    </button>
+                    {permissions["User Add"] === 1 &&
+                        < button
+                            className="btn btn-success primary"
+                            type="button"
+                            onClick={() => {
+                                setIsCurrentEditModalOpen(false);
+                                handleShow();
+                            }}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add User
+                        </button>
+                    }
                 </div>
             </div >
 

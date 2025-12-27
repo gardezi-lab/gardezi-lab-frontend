@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 
 
 export default function RoleTable({ roleList, onDelete, onEdit, loading }) {
+  const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body p-0">
@@ -51,18 +52,22 @@ export default function RoleTable({ roleList, onDelete, onEdit, loading }) {
                     <td>{role.role_name}</td>
                     <td>
                       <div className="d-flex gap-2 align-items-center justify-content-center">
-                        <FaPenToSquare
-                          onClick={() => onEdit(role)}
-                          style={{ fontSize: "22px", cursor: "pointer" }}
-                        />
-                        <FaRegTrashCan
-                          onClick={() => {
-                            if (window.confirm("Are you sure you want to delete this role?")) {
-                              onDelete(role.id);
-                            }
-                          }}
-                          style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
-                        />
+                        {permissions["Role Edit"] === 1 &&
+                          <FaPenToSquare
+                            onClick={() => onEdit(role)}
+                            style={{ fontSize: "22px", cursor: "pointer" }}
+                          />
+                        }
+                        {permissions["Role Delete"] === 1 &&
+                          <FaRegTrashCan
+                            onClick={() => {
+                              if (window.confirm("Are you sure you want to delete this role?")) {
+                                onDelete(role.id);
+                              }
+                            }}
+                            style={{ fontSize: "22px", cursor: "pointer", color: "red" }}
+                          />
+                        }
                       </div>
                     </td>
                   </tr>

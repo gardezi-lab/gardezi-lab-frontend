@@ -2,6 +2,7 @@ import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 export default function TestProfileTable({ companyList, onDelete, onEdit, loading }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     return (
         <div className="card shadow-sm border-0">
             <div className="card-body p-0">
@@ -56,15 +57,20 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                         <td>{company.rate_list || "—"}</td>
                                         <td>
                                             <div className="d-flex gap-2 align-items-center justify-content-center">
-                                                <FaPenToSquare
-                                                    onClick={() => onEdit(company)} style={{ fontSize: "22px", cursor: "pointer" }} />
-                                                <FaRegTrashCan onClick={() => {
-                                                    if (window.confirm("Are you sure you want to delete this department?")) {
-                                                        onDelete(company.id);
-                                                    }
-                                                }}
-                                                    style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-                                                />
+                                                {permissions["Company Panel Edit"] === 1 &&
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(company)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                }
+                                                {permissions["Company Panel Delete"] === 1 &&
+                                                    <FaRegTrashCan onClick={() => {
+                                                        if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            onDelete(company.id);
+                                                        }
+                                                    }}
+
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
+                                                }
                                             </div>
                                         </td>
                                     </tr>

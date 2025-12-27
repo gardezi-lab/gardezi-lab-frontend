@@ -9,7 +9,7 @@ import httpClient from "../../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
 export default function TestProfile() {
-
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showTestProfilesModal, setShowTestProfilesModal] = useState(false);
     const [selectedTestProfile, setSelectedTestProfile] = useState(null)
     const [loading, setLoading] = useState(false);
@@ -95,7 +95,7 @@ export default function TestProfile() {
     };
 
     const handleEdit = (TestProfile) => {
-        console.log("TestProfile",TestProfile)
+        console.log("TestProfile", TestProfile)
         setSelectedTestProfile(TestProfile);
         setIsCurrentEditModalOpen(true);
         handleShow();
@@ -107,7 +107,7 @@ export default function TestProfile() {
         getTestProfileData();
     }, [page, search]);
 
-   
+
 
     return (
         <div>
@@ -135,16 +135,18 @@ export default function TestProfile() {
                         <option value="1">Active</option>
                         <option value="2">Inactive</option>
                     </select>
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={() => {
-                            setIsCurrentEditModalOpen(false);
-                            handleShow();
-                        }}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Profile
-                    </button>
+                    {permissions["Test & Profile Delete"] === 1 &&
+                        <button
+                            className="btn btn-success primary"
+                            type="button"
+                            onClick={() => {
+                                setIsCurrentEditModalOpen(false);
+                                handleShow();
+                            }}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Profile
+                        </button>
+                    }
                 </div>
             </div>
 
@@ -164,7 +166,7 @@ export default function TestProfile() {
                 </button>
 
                 {/* Right side pagination */}
-               
+
             </div>
 
             <Modal show={showTestProfilesModal} onHide={handleClose}

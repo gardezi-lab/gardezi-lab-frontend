@@ -21,6 +21,7 @@ export default function PatientListingTable({
     patientList, modalMode, confirmDelete, testProfiles, companyList, doctorList, testPackageList, getUpdatedPatientList,
     handleEditRecord, singlePatientList, setSelectedPatient, setLoading, isShowPatientModal
 }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [updatedPatientsArray, setUpdatedPatientsArray] = useState([]);
     const [patientActivityShow, setPatientActivityShow] = useState(false);
     const [patientTest, setPatientTest] = useState();
@@ -157,11 +158,13 @@ export default function PatientListingTable({
                                                 title="View Tests"
                                                 onClick={() => handlePatientTest(patientObj)}
                                             />
+                                            {permissions["Add Results"] === 1 &&
                                             <FaFileMedical
                                                 className="FaFileMedical"
                                                 title="Add Result"
                                                 onClick={() => handleParameterResult(patientObj)}
                                             />
+                        }
                                             {/* <Link to={`/patient-report?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
                                                 <FaPrint
                                                     className="FaPrint"
@@ -174,16 +177,20 @@ export default function PatientListingTable({
                                                     title="View Invoice"
                                                 />
                                             </Link>
-                                            <FaPenToSquare
-                                                className="FaPenToSquare"
-                                                title="Edit"
-                                                onClick={() => handleEditPatient(patientObj)}
-                                            />
-                                            <FaRegTrashCan
-                                                className="FaRegTrashCan"
-                                                title="Delete"
-                                                onClick={() => handleDeletePatient(patientObj)}
-                                            />
+                                            {permissions["Patient Edit"] === 1 &&
+                                                <FaPenToSquare
+                                                    className="FaPenToSquare"
+                                                    title="Edit"
+                                                    onClick={() => handleEditPatient(patientObj)}
+                                                />
+                                            }
+                                            {permissions["Patient Delete"] === 1 &&
+                                                <FaRegTrashCan
+                                                    className="FaRegTrashCan"
+                                                    title="Delete"
+                                                    onClick={() => handleDeletePatient(patientObj)}
+                                                />
+                                            }
                                         </div>
                                     </td>
                                 </tr>

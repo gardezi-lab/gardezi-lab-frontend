@@ -6,6 +6,8 @@ export default function UserDropdown() {
 
     const handleSignOut = () => {
         localStorage.removeItem("LoggedInUser");
+        localStorage.removeItem("token");
+        localStorage.removeItem("permissions");
     }
 
     useEffect(() => {
@@ -25,7 +27,7 @@ export default function UserDropdown() {
                 data-bs-auto-close="outside"
                 aria-expanded="false"
             >
-                {profile && profile.user.name}{" "}
+                {profile && profile?.name}{" "}
                 <span className="d-inline-block" >
                     <span className="fa-solid fa-chevron-down fs-10" />
                 </span>
@@ -41,7 +43,7 @@ export default function UserDropdown() {
                                 <img className="rounded-circle " src="../assets/img/team/57.webp" alt="" />
                             </div>
                             <h6 className="mt-2 text-body-emphasis">
-                                {profile && profile.user.name}{" "}
+                                {profile && profile?.name}{" "}
                             </h6>
                         </div>
                         {/* <div className="mb-3 mx-3">
@@ -86,21 +88,21 @@ export default function UserDropdown() {
                         </ul> */}
                         <div className="px-1 mt-1 mb-1">
                             <a className="btn btn-phoenix-secondary d-flex flex-center w-100" href="/update-profile"
-                                
+
                             >
                                 <span className="me-2" data-feather="log-out"
-                                    style={{ width: 16, height: 16,  }} />
+                                    style={{ width: 16, height: 16, }} />
                                 Update Profile
                             </a>
                         </div>
                         {/* <hr /> */}
                         <div className="px-1">
-                            <a className="btn btn-phoenix-secondary d-flex flex-center w-100" 
-                           
-                            href="/auth/login"
+                            <a className="btn btn-phoenix-secondary d-flex flex-center w-100"
+
+                                href="/auth/login"
                                 onClick={handleSignOut}
                             >
-                                <span className="me-2" data-feather="log-out" 
+                                <span className="me-2" data-feather="log-out"
                                     style={{ width: 16, height: 16, }} />
                                 Sign out
                             </a>
