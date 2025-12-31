@@ -3,7 +3,7 @@ import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 import httpClient from "../../../../../services/httpClient";
 
 export default function DepartmentTable({ departmentList, EditRecord, handleDelete }) {
-    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
+
     const deleteRecord = async (obj) => {
         try {
             const url = `/department/${obj.id}`;
@@ -16,7 +16,7 @@ export default function DepartmentTable({ departmentList, EditRecord, handleDele
             console.log(error);
         }
     }
-
+ 
     const updateRecord = (obj) => {
         if (obj) {
             EditRecord(true, obj);
@@ -40,17 +40,14 @@ export default function DepartmentTable({ departmentList, EditRecord, handleDele
                             <td className="text-start">{dept.department_name}</td>
                             <td>
                                 <div className="d-flex gap-2 align-items-center justify-content-center">
-                                    {permissions["Departments Edit"] === 1 && 
                                     <FaPenToSquare
                                         className="cursor"
                                         onClick={() => updateRecord(dept)}
-                                    />}
-                                    {permissions["Departments delete"] === 1 && 
+                                    />
                                     <FaRegTrashCan
                                         className="cursor"
                                         onClick={() => { deleteRecord(dept) }}
                                     />
-}
                                 </div>
                             </td>
                         </tr>

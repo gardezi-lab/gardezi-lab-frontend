@@ -122,7 +122,7 @@ export default function PatientListingTable({
                                 <tr key={index + 1}>
                                     <td  >{index + 1}</td>
                                     <td >
-                                        {patientObj.date_created}
+                                        {patientObj.created_at}
                                     </td>
                                     <td >{patientObj.mr_number}</td>
 

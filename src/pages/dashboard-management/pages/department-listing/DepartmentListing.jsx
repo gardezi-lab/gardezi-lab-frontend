@@ -6,7 +6,6 @@ import FilterModal from "../../others/modal/department/FilterModal";
 import DepartmentTable from "../../others/table/department/DepartmentTable";
 
 export default function DepartmentListing() {
-  const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
   const [isShowDepartmentModal, setIsShowDepartmentModal] = useState(false);
   const [isShowFilterModal, setIsShowFilterModal] = useState(false);
   const [departmentList, setDepartmentList] = useState([]);
@@ -53,8 +52,6 @@ export default function DepartmentListing() {
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
         <h5 className="fw-bold page-header">Department</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          {permissions["Departments Add"] === 1 && 
-          
           <Button
             size="sm"
             className="btn btn-success primary"
@@ -63,7 +60,6 @@ export default function DepartmentListing() {
           >
             <i className="fas fa-plus me-2"></i> Add Departments
           </Button>
-          }
 
           <Button
             variant="outline-success"
@@ -76,7 +72,7 @@ export default function DepartmentListing() {
           </Button>
         </div>
       </div>
-
+ 
       <DepartmentTable
         departmentList={departmentList}
         EditRecord={EditRecord}

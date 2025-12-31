@@ -137,21 +137,21 @@ function AppRoutes() {
             <Route element={<DashboardLayout />}>
 
               <Route path="/" element={
-                <RoleProtectedRoute allowedRoles={["Reception"]}>
+                // <RoleProtectedRoute allowedRoles={["Reception"]}>
                   <Dashboard />
-                </RoleProtectedRoute>
+                // </RoleProtectedRoute>
               } />
 
               <Route path="/dashboard/department" element={
-                <RoleProtectedRoute allowedRoles={["Reception"]}>
+                // <RoleProtectedRoute allowedRoles={["Reception"]}>
                   <DepartmentListing />
-                </RoleProtectedRoute>
+                // </RoleProtectedRoute>
               } />
               <Route path="/dashboard/testprofile" element={<TestProfile />} />
               <Route path="/dashboard/company-panel" element={
-                <RoleProtectedRoute allowedRoles={["Reception"]}>
+                // <RoleProtectedRoute allowedRoles={["Reception"]}>
                   <AddPanel />
-                </RoleProtectedRoute>
+                // </RoleProtectedRoute>
                 } />
               <Route path="/dashboard/test-package" element={<TestPackage />} />
               <Route path="/dashboard/interpertation" element={<Interpertation />} />

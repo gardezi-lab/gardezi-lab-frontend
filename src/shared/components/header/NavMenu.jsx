@@ -1,22 +1,44 @@
 import { NavLink } from "react-router-dom";
+import {
+    FaTachometerAlt,
+    FaBuilding,
+    FaUserCircle,
+    FaSlidersH,
+    FaBoxOpen,
+    FaFileAlt,
+    FaUserNurse,
+    FaUsers,
+    FaDollarSign,
+    FaClock,
+    FaFlask,
+    FaBookOpen,
+    FaCog,
+    FaChartLine,
+    FaHistory,
+    FaPercentage,
+    FaReceipt,
+    FaFileInvoiceDollar,
+    FaMoneyCheckAlt,
+    FaExchangeAlt,
+    FaClipboardList
+} from "react-icons/fa";
 
 const menuItems = [
     {
         title: "Dashboard",
         iconClass: "uil uil-dashboard",
-        roles: ["Reception"],
         dropdown: [
             {
                 label: "Departments",
-                icon: "buildings",
+                icon: <FaBuilding />,
                 href: "/dashboard/department",
-                roles: ["Reception"]
+
             },
             {
                 label: "Test & Profile",
                 icon: "user-circle",
                 href: "/dashboard/testprofile",
-                roles: ["Reception"],
+
             },
             {
                 label: "Company Panels",
@@ -39,13 +61,13 @@ const menuItems = [
     {
         title: "Patients",
         iconClass: "uil uil-user-nurse",
-        roles: ["Reception"],
+
         dropdown: [
             {
                 label: "Patients Management",
                 icon: "users",
                 href: "/patient-management/patient",
-                
+
             },
             {
                 label: "Cash Management",
@@ -277,22 +299,15 @@ export default function NavMenu() {
 
     const filteredMenuItems = menuItems
         .map(item => {
-            // Check role
             if (item.roles && !item.roles.includes(role)) return null;
-
-            // Filter dropdown items by permission
             const filteredDropdown = item.dropdown?.filter(ddItem => {
-                const labelKey = ddItem.label; // permission keys should match label
-                // If there's a roles check
+                const labelKey = ddItem.label; 
                 if (ddItem.roles && !ddItem.roles.includes(role)) return false;
-                // Check permission object, default allow if permission missing
                 if (permission[labelKey] === 0) return false;
                 return true;
             });
 
-            // Hide parent if no dropdown items left
             if (filteredDropdown?.length === 0) return null;
-
             return {
                 ...item,
                 dropdown: filteredDropdown,

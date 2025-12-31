@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { ThreeCircles } from "react-loader-spinner";
-import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+import { FaRegTrashCan, FaPenToSquare} from "react-icons/fa6";
 import { FaSlidersH } from "react-icons/fa";
 import Modal from 'react-bootstrap/Modal';
 import ParameterModal from "../../modal/test-profile-modal/parameter-modal/ParameterModal";
 
 
 export default function TestProfileTable({ TestProfileList, onDelete, onEdit, loading }) {
-    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [selectedTest, setSelectedTest] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -67,33 +66,27 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                             <td>{test.delivery_time}</td>
                                             <td>
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    <FaSlidersH
+                                                        onClick={() => {
+                                                            setSelectedTest(test);
+                                                            setShowModal(true);
+                                                        }}
+                                                        style={{ fontSize: "20px", cursor: "pointer", color: "#0d6efd" }}
+                                                        title="Manage Parameters"
+                                                    />
 
-                                                    {permissions["Test & Profile parameter"] === 1 &&
-                                                        <FaSlidersH
-                                                            onClick={() => {
-                                                                setSelectedTest(test);
-                                                                setShowModal(true);
-                                                            }}
-                                                            style={{ fontSize: "20px", cursor: "pointer", color: "#0d6efd" }}
-                                                            title="Manage Parameters"
-                                                        />
-                                                    }
-                                                    {permissions["Test & Profile Edit"] === 1 &&
-                                                        <FaPenToSquare
-                                                            onClick={() => onEdit(test)}
-                                                            style={{ fontSize: "22px", cursor: "pointer" }}
-                                                        />
-                                                    }
-                                                    {permissions["Test & Profile Delete"] === 1 &&
-                                                        <FaRegTrashCan
-                                                            onClick={() => {
-                                                                if (window.confirm("Are you sure you want to delete this department?")) {
-                                                                    onDelete(test.id);
-                                                                }
-                                                            }}
-                                                            style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-                                                        />
-                                                    }
+                                                    <FaPenToSquare
+                                                        onClick={() => onEdit(test)}
+                                                        style={{ fontSize: "22px", cursor: "pointer" }}
+                                                    />
+                                                    <FaRegTrashCan
+                                                        onClick={() => {
+                                                            if (window.confirm("Are you sure you want to delete this department?")) {
+                                                                onDelete(test.id);
+                                                            }
+                                                        }}
+                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>

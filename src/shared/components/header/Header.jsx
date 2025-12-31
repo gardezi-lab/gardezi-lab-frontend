@@ -58,9 +58,9 @@ export default function Header() {
                 <li className="nav-item">
                     <SearchIcon />
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <NotificationDropdown />
-                </li>
+                </li> */}
                 <li className="nav-item">
                     <UserDropdown />
                 </li>

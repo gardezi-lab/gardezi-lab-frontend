@@ -37,9 +37,9 @@ export default function NearExpiry() {
       />
 
       <div className="d-flex justify-content-end align-items-center mt-3">
-        <button className="btn btn-secondary primary">
+        {/* <button className="btn btn-secondary primary">
           <i className="fas fa-file-excel me-2"></i> Export to Excel
-        </button>
+        </button> */}
       </div>
 
     </div>

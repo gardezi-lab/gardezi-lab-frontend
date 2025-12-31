@@ -6,7 +6,6 @@ import TestPackageModal from "../../others/modal/test-package/TestPackageModal";
 import { useFetchProfileTest } from "../../../Patient-management/others/custom-hooks/useFetchProfileTest";
 
 export default function TestPackage() {
-    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [show, setShow] = useState(false);
     const [selectedTestPackage, setSelectedTestPackage] = useState(null)
     const [loading, setLoading] = useState(false);
@@ -30,7 +29,7 @@ export default function TestPackage() {
         } catch (err) {
             console.error("Fetch TestPackage Error:", err);
         } finally {
-            setLoading(false);
+            setLoading(false); 
         }
     };
 
@@ -97,18 +96,17 @@ export default function TestPackage() {
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Test Packages</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    {permissions["Test Package Add"] === 1 &&
-                        <button
-                            className="btn btn-success primary"
-                            type="button"
-                            onClick={handleShow}
-                        >
-                            <i className="fas fa-plus me-2"></i> Add Package
-                        </button>
-                    }
+
+                    <button
+                        className="btn btn-success primary"
+                        type="button"
+                        onClick={handleShow}
+                    >
+                        <i className="fas fa-plus me-2"></i> Add Package
+                    </button>
                     {/* Filter Button */}
                     <button
-                        className="btn btn-outline-primary filter-btn"
+                        className="btn btn-outline-primary"
                         type="button"
                         onClick={() => setShowFilterModal(true)}
                     >
@@ -123,7 +121,7 @@ export default function TestPackage() {
                 loading={loading}
             />
 
-
+           
             <Modal show={showFilterModal} >
                 <Modal.Header >
                 </Modal.Header>

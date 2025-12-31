@@ -22,7 +22,7 @@ export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, comp
             "father_hasband_MR": pt?.father_hasband_MR,
             "gender": pt?.gender,
             "id": pt?.id,
-            "mr_number": pt?.mr_number,
+            "mr_number": pt?.MR_number,
             "package_id": findPackageObj,
             "paid": pt?.paid,
             "patient_name": pt?.patient_name,

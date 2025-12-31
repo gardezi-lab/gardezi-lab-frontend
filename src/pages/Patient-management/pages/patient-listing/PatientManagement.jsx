@@ -99,7 +99,7 @@ export default function PatientManagement() {
             <div className="d-flex justify-content-between mb-2">
                 <h5 className="fw-bold page-header">Patient Management</h5>
                 <div className="d-flex gap-2">
-                    {permissions["Patient Add"] === 1 &&
+                    {permissions["patient add"] === 1 &&
                     <button
                         className="btn btn-success primary"
                         type="button"

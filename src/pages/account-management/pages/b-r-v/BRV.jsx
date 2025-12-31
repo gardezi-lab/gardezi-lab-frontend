@@ -132,9 +132,9 @@ export default function BRV() {
 
       <div className="d-flex justify-content-between mt-2">
         <div>
-          <button className="btn btn-sm btn-secondary primary">
+          {/* <button className="btn btn-sm btn-secondary primary">
             <i className="fas fa-file-excel me-2"></i> Export to Excel
-          </button>
+          </button> */}
         </div>
         <Pagination>
           <Pagination.Prev
