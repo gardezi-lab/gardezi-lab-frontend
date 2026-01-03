@@ -46,7 +46,7 @@ export default function Dashboard() {
   // Fetch new reports every 3 seconds
   useEffect(() => {
     fetchReports();
-    const interval = setInterval(fetchReports, 3000);
+    const interval = setInterval(fetchReports, 5000);
     return () => clearInterval(interval);
   }, []);
 

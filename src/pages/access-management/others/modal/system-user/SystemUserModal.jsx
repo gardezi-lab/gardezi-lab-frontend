@@ -278,10 +278,10 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                         </Col>
                         <Col>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Username </Form.Label>
+                                <Form.Label>Email</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    placeholder="Enter Username "
+                                    type="email"
+                                    placeholder="Enter Email "
                                     value={consultantUserName}
                                     onChange={(e) => setConsultantUserName(e.target.value)}
                                     required />
@@ -307,6 +307,7 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                                 <Form.Select
                                     value={consultantRole}
                                     onChange={(e) => setConsultantRole(e.target.value)}
+                                    required
                                 >
                                     <option value="">Select Role</option>
                                     {roles.map((roles) => (
@@ -325,7 +326,7 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                                         value={collectioncenter}
                                         onChange={(e) => setConsultantRole(e.target.value)}
                                     >
-                                        <option value="">Select Role</option>
+                                        <option value="">Select Collection Center</option>
                                         {collectionsList.map((collection) => (
                                             <option key={collection.id} value={collection.cc}>
                                                 {collection.cc}

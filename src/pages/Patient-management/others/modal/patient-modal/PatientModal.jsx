@@ -72,6 +72,7 @@ export default function PatientModal({
     const handleSubmit = async (e) => {
         e.preventDefault();
         const LoggedUser = JSON.parse(localStorage.getItem("LoggedInUser"));
+        // const token = JSON.parse(localStorage.getItem("token"));
         const obj = {
             cell: patientFormData.patientCell,
             patient_name: patientFormData.patientName,
@@ -79,7 +80,7 @@ export default function PatientModal({
             age: patientFormData.patienAge,
             company_id: patientFormData.patientCompany["value"] || " ",
             // users_id: patientFormData.patientRefferedBy["value"],
-            reff_by :patientFormData.patientRefferedBy["value"],
+            reff_by: patientFormData.patientRefferedBy["value"],
             gender: patientFormData.patientGender["value"],
             email: patientFormData.patientEmail,
             address: patientFormData.patientAddress,
@@ -92,8 +93,8 @@ export default function PatientModal({
             discount: patientFormData.testDiscountInPKR || 0,
             paid: patientFormData.testPaidAmount || 0,
             patient_id_posted: patientFormData.patient_id_posted || 0,
-            user_id : LoggedUser.user.id,
-            token : LoggedUser.token
+            user_id: LoggedUser.id,
+            // token: token
         }
         const validationErrors = validate();
         setErrors(validationErrors);
@@ -223,7 +224,6 @@ export default function PatientModal({
 
         setErrors((prevErrors) => {
             const newErrors = { ...prevErrors };
-            debugger
             if (selectedOption && selectedOption.value) {
                 delete newErrors[name];
             }

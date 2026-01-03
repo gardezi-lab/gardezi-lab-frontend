@@ -18,7 +18,7 @@ export default function TestProfile() {
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const recordPerPage = 10;
+    const recordPerPage = 30;
 
     const [search, setSearch] = useState("");
 

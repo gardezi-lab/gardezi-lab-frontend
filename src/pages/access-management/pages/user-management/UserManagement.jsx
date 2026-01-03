@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Table, Form, Spinner, Button } from "react-bootstrap";
+import { Table, Form, Spinner, Button, Pagination } from "react-bootstrap";
 import httpClient from "../../../../services/httpClient";
 
 export default function RoleUserManagement() {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(false);
-
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const recordPerPage = 30;
 
   const permissionTypes = ["reception", "technician", "pathologist", "manager", "doctor", "patient", "accountant"];
 
@@ -73,6 +75,48 @@ export default function RoleUserManagement() {
   useEffect(() => {
     getPermissions();
   }, []);
+  const renderPaginationItems = () => {
+        let items = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                items.push(
+                    <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+                        {i}
+                    </Pagination.Item>
+                );
+            }
+        } else {
+            items.push(
+                <Pagination.Item key={1} active={page === 1} onClick={() => setPage(1)}>
+                    1
+                </Pagination.Item>
+            );
+
+            if (page > 3) items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+
+            if (page > 2 && page < totalPages - 1) {
+                items.push(
+                    <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                        {page}
+                    </Pagination.Item>
+                );
+            }
+
+            if (page < totalPages - 2) items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+
+            items.push(
+                <Pagination.Item
+                    key={totalPages}
+                    active={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                >
+                    {totalPages}
+                </Pagination.Item>
+            );
+        }
+        return items;
+    };
+
 
   return (
     <div className="p-3">
@@ -122,6 +166,30 @@ export default function RoleUserManagement() {
           </tbody>
         </Table>
       )}
+       <div className="d-flex justify-content-end align-items-center mt-3">
+                {/* Left side export */}
+                {/* <button className="btn btn-secondary primary">
+                    <i className="fas fa-file-excel me-2"></i> Export to Excel
+                </button> */}
+
+                {/* Right side pagination */}
+                <Pagination>
+                    <Pagination.Prev
+                        onClick={() => page > 1 && setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </Pagination.Prev>
+                    {renderPaginationItems()}
+                    <Pagination.Next
+
+                        onClick={() => page < totalPages && setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Next
+                    </Pagination.Next>
+                </Pagination>
+            </div>
       <div className="d-flex justify-content-end">
         <Button
           variant="primary"
@@ -133,5 +201,6 @@ export default function RoleUserManagement() {
         </Button>
       </div>
     </div>
+
   );
 }

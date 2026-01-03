@@ -13,34 +13,29 @@ export default function UpdateProfile() {
         username: "",
         password: "",
         email: "",
-        // address: "",
         profile_pic_path: "",
         qualification: ""
     });
 
-    // For previewing uploaded image
     const [preview, setPreview] = useState("");
 
-    // ✅ Handle text field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // ✅ Handle image upload
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setFormData({ ...formData, profile_pic_path: file });
-            setPreview(URL.createObjectURL(file)); // preview the uploaded image
+            setPreview(URL.createObjectURL(file));
         }
     };
 
-    // ✅ Fetch existing profile data
     const getProfileData = async () => {
         try {
             const obj = JSON.parse(localStorage.getItem("LoggedInUser"));
-            const url = `/users/user_profile/${obj?.user.id}`;
+            const url = `/users/user_profile/${obj?.id}`;
             const response = await httpClient.get(url);
 
             if (response?.data) {
@@ -69,7 +64,8 @@ export default function UpdateProfile() {
     const handleUpdate = async () => {
         try {
             const obj = JSON.parse(localStorage.getItem("LoggedInUser"));
-            const url = `/users/user_profile/${obj?.user.id}`;
+            const token = localStorage.getItem("token");
+            // const url = `/users/user_profile/${obj?.id}`;
 
             const updatedData = new FormData();
             updatedData.append("name", formData.name);
@@ -85,9 +81,10 @@ export default function UpdateProfile() {
                 updatedData.append("profile_pic", formData.profile_pic_path);
             }
 
-            const response = await axios.put(`http://127.0.0.1:5000/api/users/user_profile/${obj.user.id}`, updatedData, {
+            const response = await axios.put(`http://127.0.0.1:5000/api/users/user_profile/${obj.id}`, updatedData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
                     // Accept: "application/json",
                 },
             });
@@ -97,7 +94,7 @@ export default function UpdateProfile() {
             }
         } catch (error) {
             console.log(error);
-            alert("Error updating profile!");
+          
         }
     };
 
@@ -107,7 +104,7 @@ export default function UpdateProfile() {
             password: newPassword || formData.password,
         };
         try {
-            const url = `/users/update_password/${userObj?.user.id}`;
+            const url = `/users/update_password/${userObj?.id}`;
             const response = await httpClient.put(url, obj);
             if (response) {
                 console.log("response", response)
@@ -122,7 +119,6 @@ export default function UpdateProfile() {
     return (
         <Container className="mt-4">
             <Form>
-                {/* Profile Image */}
                 <Row className="justify-content-center mb-4">
                     <Col xs="auto" className="text-center">
                         <Image
@@ -141,7 +137,6 @@ export default function UpdateProfile() {
                     </Col>
                 </Row>
 
-                {/* User Info */}
                 <Row className="mb-4">
                     <Col>
                         <Form.Group>
@@ -179,11 +174,9 @@ export default function UpdateProfile() {
                             />
                         </Form.Group>
                     </Col>
-
                 </Row>
 
                 <Row className="mb-4">
-
                     <Col>
                         <Form.Group>
                             <Form.Label>Password</Form.Label>
@@ -236,7 +229,7 @@ export default function UpdateProfile() {
                     </Button>
                 </Col>
             </Row>
-            {/* Password Update Modal */}
+      
             <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)} centered>
                 <Modal.Header className="primary" >
                     <Modal.Title className="fw-bold " style={{ color: "#ffffff" }} >Update Password</Modal.Title>
@@ -260,8 +253,6 @@ export default function UpdateProfile() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
         </Container>
-
     );
 }

@@ -1,27 +1,5 @@
 import { NavLink } from "react-router-dom";
-import {
-    FaTachometerAlt,
-    FaBuilding,
-    FaUserCircle,
-    FaSlidersH,
-    FaBoxOpen,
-    FaFileAlt,
-    FaUserNurse,
-    FaUsers,
-    FaDollarSign,
-    FaClock,
-    FaFlask,
-    FaBookOpen,
-    FaCog,
-    FaChartLine,
-    FaHistory,
-    FaPercentage,
-    FaReceipt,
-    FaFileInvoiceDollar,
-    FaMoneyCheckAlt,
-    FaExchangeAlt,
-    FaClipboardList
-} from "react-icons/fa";
+
 
 const menuItems = [
     {
@@ -30,19 +8,19 @@ const menuItems = [
         dropdown: [
             {
                 label: "Departments",
-                icon: <FaBuilding />,
+                icon: "layers",
                 href: "/dashboard/department",
 
             },
             {
                 label: "Test & Profile",
-                icon: "user-circle",
+                icon: "clipboard",
                 href: "/dashboard/testprofile",
 
             },
             {
                 label: "Company Panels",
-                icon: "sliders",
+                icon: "briefcase",
                 href: "/dashboard/company-panel",
             },
             {
@@ -91,19 +69,19 @@ const menuItems = [
         title: "User",
         iconClass: "uil uil-user",
         dropdown: [
-            {
-                label: "Role",
-                icon: "flask",
-                href: "/access-management/role",
-            },
+            // {
+            //     label: "Role",
+            //     icon: "shield",
+            //     href: "/access-management/role",
+            // },
             {
                 label: "User",
-                icon: "building",
+                icon: "user",
                 href: "/access-management/users",
             },
             {
                 label: "User Management",
-                icon: "flask",
+                icon: "user-check",
                 href: "/access-management/user-manage",
             },
         ],
@@ -115,18 +93,22 @@ const menuItems = [
         dropdown: [
             {
                 label: "Add Stock",
+                icon: "plus-square",
                 href: "/stock-management/add-stock",
             },
             {
                 label: "Stock Purchase",
+                icon: "shopping-cart",
                 href: "/stock-management/stock-purchase",
             },
             {
                 label: "Stock Usage",
+                icon: "trending-down",
                 href: "/stock-management/stock-usage",
             },
             {
                 label: "Stock Inventory",
+                icon: "archive",
                 href: "/stock-management/stock-inventory",
             },
         ],
@@ -143,27 +125,27 @@ const menuItems = [
             },
             {
                 label: "Journal Vouchers",
-                icon: "notes",
+                icon: "clipboard",
                 href: "/account-management/journal-voucher",
             },
             {
                 label: "CRV",
-                icon: "uil-receipt",
+                icon: "dollar-sign",
                 href: "/account-management/c-r-v",
             },
             {
                 label: "CPV",
-                icon: "receipt-alt",
+                icon: "dollar-sign",
                 href: "/account-management/c-p-v",
             },
             {
                 label: "BRV",
-                icon: "bill",
+                icon: "book-open",
                 href: "/account-management/b-r-v",
             },
             {
                 label: "BPV",
-                icon: "transaction",
+                icon: "book-open",
                 href: "/account-management/b-p-v",
             },
             {
@@ -184,42 +166,42 @@ const menuItems = [
         dropdown: [
             {
                 label: "Log Report",
-                icon: "history",
+                icon: "activity",
                 href: "/report-management/log-report",
             },
             {
                 label: "Business Report",
-                icon: "chart-line",
+                icon: "trending-up",
                 href: "/report-management/business-report",
             },
             {
                 label: "Due Patient",
-                icon: "user-clock",
+                icon: "clock",
                 href: "/report-management/due-patient",
             },
             {
                 label: "Sale Statement",
-                icon: "receipt",
+                icon: "bar-chart-2",
                 href: "/report-management/sale-statement",
             },
             {
                 label: "Discount Report",
-                icon: "percentage",
+                icon: "percent",
                 href: "/report-management/discount-report",
             },
             {
                 label: "Consultant Report",
-                icon: "user-md",
+                icon: "user",
                 href: "/report-management/consultant-report",
             },
             {
                 label: "Lab Report",
-                icon: "flask",
+                icon: "layers",
                 href: "/report-management/lab-report",
             },
             {
                 label: "Receptiones Report",
-                icon: "user-nurse",
+                icon: "users",
                 href: "/report-management/receiptiones-report",
             },
         ],

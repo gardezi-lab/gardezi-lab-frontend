@@ -129,6 +129,7 @@ import AccessDenied from './AccessDenied';
 
 function AppRoutes() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
   return (
     <Routes>
       {
@@ -138,21 +139,21 @@ function AppRoutes() {
 
               <Route path="/" element={
                 // <RoleProtectedRoute allowedRoles={["Reception"]}>
-                  <Dashboard />
+                <Dashboard />
                 // </RoleProtectedRoute>
               } />
 
               <Route path="/dashboard/department" element={
                 // <RoleProtectedRoute allowedRoles={["Reception"]}>
-                  <DepartmentListing />
+                <DepartmentListing />
                 // </RoleProtectedRoute>
               } />
               <Route path="/dashboard/testprofile" element={<TestProfile />} />
               <Route path="/dashboard/company-panel" element={
                 // <RoleProtectedRoute allowedRoles={["Reception"]}>
-                  <AddPanel />
+                <AddPanel />
                 // </RoleProtectedRoute>
-                } />
+              } />
               <Route path="/dashboard/test-package" element={<TestPackage />} />
               <Route path="/dashboard/interpertation" element={<Interpertation />} />
 
