@@ -51,7 +51,7 @@ export default function ParameterTable({ ParameterList, onDelete, onEdit, loadin
                                     <div className="d-flex gap-2 justify-content-center">
                                         <FaPenToSquare
                                             onClick={() => onEdit(item)}
-                                            style={{ fontSize: "20px", cursor: "pointer", color: "#007bff" }}
+                                            style={{ fontSize: "20px", cursor: "pointer" }}
                                             title="Edit"
                                         />
                                         <FaRegTrashCan

@@ -161,14 +161,14 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
             test_name: formData.test_name || "",
             test_code: formData.test_code || "",
             sample_required: formData.sample_required || "",
-            select_header: selectedDept ? selectedDept.department_name : "",
+
             department_id: selectedDept ? selectedDept.id : "",
             fee: formData.fee || "",
             delivery_time: formData.delivery_time || "",
             serology_elisa: formData.serology_elisa || "",
             interpretation: formData.interpretation || "",
-            unit_ref_range: formData.unit_ref_range ? 1 : 0,
-            test_formate: formData.test_formate ? 1 : 0
+            // unit_ref_range: formData.unit_ref_range ? 1 : 0,
+            // test_formate: formData.test_formate ? 1 : 0
         };
 
         setError("");
@@ -219,6 +219,8 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             />
                         </Form.Group>
                     </Col>
+                </Row>
+                <Row>
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Department</Form.Label>
@@ -238,8 +240,6 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
 
                         </Form.Group>
                     </Col>
-                </Row>
-                <Row>
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Fee</Form.Label>
@@ -258,6 +258,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             <Form.Control
                                 name="delivery_time"
                                 value={formData.delivery_time}
+                                placeholder="Delivery time"
                                 type="number"
                                 onChange={handleChange}
                             >
@@ -265,6 +266,9 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
 
                         </Form.Group>
                     </Col>
+                </Row>
+                <Row>
+
                     <Col>
                         <Form.Group className="mb-3">
                             <Form.Label>Test Type</Form.Label>
@@ -303,10 +307,10 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                
                 {error && <p className="text-danger">{error}</p>}
                 <div className="d-flex justify-content-end gap-2">
-                    <Button variant="secondary" onClick={onCancel}>
+                    <Button variant="secondary" className="secondary" onClick={onCancel}>
                         Cancel & Close
                     </Button>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" className="primary">
                         {TestProfile ? "Update" : "Save"}
                     </Button>
                 </div>

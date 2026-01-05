@@ -43,10 +43,12 @@ export default function DepartmentTable({ departmentList, EditRecord, handleDele
                                     <FaPenToSquare
                                         className="cursor"
                                         onClick={() => updateRecord(dept)}
+                                         style={{ fontSize: "22px", cursor: "pointer"}}
                                     />
                                     <FaRegTrashCan
                                         className="cursor"
                                         onClick={() => { deleteRecord(dept) }}
+                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                     />
                                 </div>
                             </td>

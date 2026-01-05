@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import feather from "feather-icons";
-import Modal from 'react-bootstrap/Modal';
+import { Modal, Container, Row, Col, Form, Button } from 'react-bootstrap';
 // import TestProfilesModal from "../../others/modal/test-profile/TestProfilesModal";
-import TestProfilesModal from "../../others/modal/company-panel/TestPanelModal";
+import TestProfilesModal from "../../others/modal/test-profile-modal/TestProfilesModal";
+// import TestProfilesModal from "../../others/modal/company-panel/TestPanelModal";
 // import Button from 'react-bootstrap/Button';
 import TestProfileTable from "../../others/table/test-profile/TestProfileTable"
 import httpClient from "../../../../services/httpClient";
@@ -15,6 +16,8 @@ export default function TestProfile() {
     const [loading, setLoading] = useState(false);
     const [testProfileList, setTestProfileList] = useState([])
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
+    const [isShowFilterModal, setIsShowFilterModal] = useState(false);
+    const [departmentName, setDepartmentName] = useState("")
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -27,6 +30,19 @@ export default function TestProfile() {
         setIsCurrentEditModalOpen(false);
         setSelectedTestProfile(null);
     };
+
+    const handleFilterModal = () => {
+        setIsShowFilterModal(true);
+    }
+
+
+    const closeModal = () => {
+        setIsShowFilterModal(false);
+    }
+
+    const saveChanges = () => {
+        setIsShowFilterModal(false);
+    }
     const handleShow = () => setShowTestProfilesModal(true);
 
     const getTestProfileData = async () => {
@@ -40,6 +56,7 @@ export default function TestProfile() {
             if (response) {
                 setTestProfileList(response.data || []);
                 setTotalPages(response.totalPages || 1);
+                getDepartmentName(response.data)
             }
         } catch (err) {
             console.error("Fetch testprofile Error:", err);
@@ -47,6 +64,10 @@ export default function TestProfile() {
             setLoading(false);
         }
     };
+
+    const getDepartmentName = (data) =>{
+        
+    }
 
     const handleSave = async (formData) => {
         setLoading(true);
@@ -97,7 +118,7 @@ export default function TestProfile() {
     };
 
     const handleEdit = (TestProfile) => {
-        console.log("TestProfile",TestProfile)
+        console.log("TestProfile", TestProfile)
         setSelectedTestProfile(TestProfile);
         setIsCurrentEditModalOpen(true);
         handleShow();
@@ -150,17 +171,17 @@ export default function TestProfile() {
         }
         return items;
     };
-  
+
     return (
         <div>
-            <h5 className="fw-bold page-header">Profiles Management</h5>
 
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+            <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
+                <h5 className="fw-bold page-header">Profiles Management</h5>
                 {/* Left side title */}
 
                 {/* Right side actions */}
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
+                    {/* <input
                         type="text"
                         className="form-control"
                         placeholder="Search profiles..."
@@ -170,13 +191,9 @@ export default function TestProfile() {
                             setPage(1);
                             setSearch(e.target.value);
                         }}
-                    />
+                    /> */}
 
-                    <select className="form-select" style={{ width: "180px" }}>
-                        <option value="">Filter by...</option>
-                        <option value="1">Active</option>
-                        <option value="2">Inactive</option>
-                    </select>
+
                     <button
                         className="btn btn-success primary"
                         type="button"
@@ -187,6 +204,15 @@ export default function TestProfile() {
                     >
                         <i className="fas fa-plus me-2"></i> Add Profile
                     </button>
+                    <Button
+                        variant="outline-success"
+                        size="sm"
+                        className="btn filter-btn"
+                        type="button"
+                        onClick={handleFilterModal}
+                    >
+                        <i className="fas fa-filter"></i>
+                    </Button>
                 </div>
             </div>
 
@@ -225,19 +251,53 @@ export default function TestProfile() {
             </div>
 
             <Modal show={showTestProfilesModal} onHide={handleClose}
-                backdrop="static" keyboard={false} className="modal-md">
+                backdrop="static" keyboard={false} size="lg" centered >
                 <Modal.Header className="primary">
                     <Modal.Title className="color-white fw-bold">
-                        {isCurrentEditModalOpen ? "Edit Department" : "Test & Profile"}
+                        {isCurrentEditModalOpen ? "Edit Test & Profile" : "Add Test & Profile"}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                  
                     <TestProfilesModal
                         onSave={handleSave}
                         TestProfile={selectedTestProfile}
                         onCancel={handleClose}
                     />
                 </Modal.Body>
+            </Modal>
+            <Modal show={isShowFilterModal} size="md" centered >
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">Filter Modal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Form>
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Test Name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Search with Test name"
+                                            value={departmentName}
+                                            onChange={(e) => setDepartmentName(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" size="sm" className="primary" onClick={closeModal}>
+                        Clear & Close
+                    </Button>
+                    <Button variant="primary" size="sm" className="primary" onClick={saveChanges} >
+                        Apply Changes
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );

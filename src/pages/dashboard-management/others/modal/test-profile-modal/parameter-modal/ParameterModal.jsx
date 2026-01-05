@@ -289,10 +289,10 @@ export default function ParameterModal({ test, onClose }) {
                 }
 
                 <div className="d-flex justify-content-end gap-2">
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="secondary" onClick={onClose} className="secondary">
                         Close
                     </Button>
-                    <Button variant="primary" type="submit" disabled={saving}>
+                    <Button variant="primary" type="submit" disabled={saving} className="primary">
                         {saving ? (
                             <>
                                 <Spinner animation="border" size="sm" />{" "}

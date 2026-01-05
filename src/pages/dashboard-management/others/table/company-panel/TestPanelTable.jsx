@@ -6,16 +6,16 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
         <div className="card shadow-sm border-0">
             <div className="card-body p-0">
                 <div className="table-responsive" style={{ maxHeight: "62vh", overflowY: 'scroll' }}>
-                    <table className="table table-bordered">
+                    <table className="table table-bordered table-sm "  >
                         <thead>
                             <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                                 <th scope="col">Sr.</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Head Name</th>
                                 <th scope="col">Contact No.</th>
-                                <th scope="col">Username</th>
+                                {/* <th scope="col">Username</th>
                                 <th scope="col">Password</th>
-                                <th scope="col">Rate List</th>
+                                <th scope="col">Rate List</th> */}
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -51,9 +51,9 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                         <td>{company.company_name}</td>
                                         <td>{company.head_name}</td>
                                         <td>{company.contact_no}</td>
-                                        <td>{company.user_name}</td>
-                                        <td>{company.password || "—"}</td>
-                                        <td>{company.rate_list || "—"}</td>
+                                        {/* <td>{company.user_name}</td> */}
+                                        {/* <td>{company.password || "—"}</td>
+                                        <td>{company.rate_list || "—"}</td> */}
                                         <td>
                                             <div className="d-flex gap-2 align-items-center justify-content-center">
                                                 <FaPenToSquare
