@@ -7,6 +7,8 @@ import TechnicianBarChart from "./technician-barchart/TechnicianBarchart";
 import ExpenseReportChart from "./expense-reportchart/ExpenseReportChart";
 
 export default function Dashboard() {
+  const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
+  const user = JSON.parse(localStorage.getItem("LoggedInUser") || "{}");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [apply, setApply] = useState(false);
@@ -75,105 +77,113 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex justify-content-center align-items-center vh-100">
-        <div className="row mb-1">
-          <div className="col-md-2">
-            <input
-              type="date"
-              className="form-control"
-              value={draftFromDate}
-              onChange={(e) => setDraftFromDate(e.target.value)}
-            />
-          </div>
-
-          <div className="col-md-2">
-            <input
-              type="date"
-              className="form-control"
-              value={draftToDate}
-              max={new Date().toISOString().split("T")[0]}
-              onChange={(e) => setDraftToDate(e.target.value)}
-            />
-          </div>
-
-          <div className="col-md-2">
-            <button
-              className="btn primary color-white"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-        <div className="row">
-
-          <div className="col-md-8">
-
-            <div className="row g-3">
-              <div className="col-md-6">
-                <LineChart
-                  fromDate={fromDate}
-                  toDate={toDate}
-                  key={`line-${apply}`}
+        {permissions["View Dashboard"] == 1 ? (
+          <>
+            <div className="row mb-1">
+              <div className="col-md-2">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={draftFromDate}
+                  onChange={(e) => setDraftFromDate(e.target.value)}
                 />
               </div>
 
-              <div className="col-md-6">
-                <CollectionBarChart
-                  fromDate={fromDate}
-                  toDate={toDate}
-                  key={`collection-${apply}`}
+              <div className="col-md-2">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={draftToDate}
+                  max={new Date().toISOString().split("T")[0]}
+                  onChange={(e) => setDraftToDate(e.target.value)}
                 />
               </div>
 
-              <div className="col-md-6">
-                <TechnicianBarChart
-                  fromDate={fromDate}
-                  toDate={toDate}
-                  key={`tech-${apply}`}
-                />
-              </div>
-
-              <div className="col-md-6">
-                <ExpenseReportChart
-                  fromDate={fromDate}
-                  toDate={toDate}
-                  key={`expense-${apply}`}
-                />
+              <div className="col-md-2">
+                <button
+                  className="btn primary color-white"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
               </div>
             </div>
+            <div className="row">
 
-          </div>
+              <div className="col-md-8">
 
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <LineChart
+                      fromDate={fromDate}
+                      toDate={toDate}
+                      key={`line-${apply}`}
+                    />
+                  </div>
 
-          <div className="col-md-4">
+                  <div className="col-md-6">
+                    <CollectionBarChart
+                      fromDate={fromDate}
+                      toDate={toDate}
+                      key={`collection-${apply}`}
+                    />
+                  </div>
 
-            {reports.length === 0 && <p>No reports found</p>}
+                  <div className="col-md-6">
+                    <TechnicianBarChart
+                      fromDate={fromDate}
+                      toDate={toDate}
+                      key={`tech-${apply}`}
+                    />
+                  </div>
 
-            <div
-
-              className="border rounded p-3 fs-8"
-              style={{
-                maxHeight: "400px",
-                overflowY: "auto",
-              }}
-            >
-              {reports.map((r) => (
-                <div key={r.id} className="mb-2">
-                  <p className="small mb-0">
-                    {r.patient_name ?? "Unknown"}
-                    {r.mr_number ?? "-"}
-                    {r.activity}
-                    {" "}
-                    {new Date(r.created_at).toLocaleString()}
-                  </p>
+                  <div className="col-md-6">
+                    <ExpenseReportChart
+                      fromDate={fromDate}
+                      toDate={toDate}
+                      key={`expense-${apply}`}
+                    />
+                  </div>
                 </div>
-              ))}
+
+              </div>
+
+
+              <div className="col-md-4">
+
+                {reports.length === 0 && <p>No reports found</p>}
+
+                <div
+
+                  className="border rounded p-3 fs-8"
+                  style={{
+                    maxHeight: "400px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {reports.map((r) => (
+                    <div key={r.id} className="mb-2">
+                      <p className="small mb-0">
+                        {r.patient_name ?? "Unknown"}
+                        {r.mr_number ?? "-"}
+                        {r.activity}
+                        {" "}
+                        {new Date(r.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+
             </div>
-
-          </div>
-
-        </div>
-
+          </>
+        ) : (
+          <>
+            <h1>Welcome {user?.name}</h1>
+          </>
+        )
+        }
       </div>
 
     </>

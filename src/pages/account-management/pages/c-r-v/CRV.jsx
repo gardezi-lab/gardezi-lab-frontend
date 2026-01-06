@@ -4,6 +4,8 @@ import Pagination from "react-bootstrap/Pagination";
 import CRVTable from "../../others/table/CRVTable";
 import CRVModal from "../../others/modal/CRVModal";
 import httpClient from "../../../../services/httpClient";
+import { Button } from "react-bootstrap";
+
 
 export default function CRV() {
   const [showVoucherModal, setShowVoucherModal] = useState(false);
@@ -134,7 +136,8 @@ export default function CRV() {
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
         <h5 className="fw-bold page-header">CASH RECEIPT VOUCHER</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <button
+          <Button
+          size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -143,14 +146,16 @@ export default function CRV() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Cash Receipt
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -189,7 +194,7 @@ export default function CRV() {
 
         <Modal.Body>
           <div className="mb-3">
-            <label className="form-label">Search by Narration</label>
+            <label className="form-label">Search by Name</label>
             <input
               type="text"
               className="form-control"
@@ -201,13 +206,15 @@ export default function CRV() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -217,9 +224,10 @@ export default function CRV() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -228,7 +236,7 @@ export default function CRV() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 

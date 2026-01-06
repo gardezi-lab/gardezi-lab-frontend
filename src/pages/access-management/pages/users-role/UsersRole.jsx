@@ -7,6 +7,7 @@ import RoleModal from "../../others/modal/users-role/RoleModal";
 import httpClient from "../../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 import FilterModal from "../../others/modal/users-role/FilterModal";
+import { Button } from "react-bootstrap";
 
 export default function UsersRole() {
   const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
@@ -110,21 +111,23 @@ export default function UsersRole() {
       <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
         <div className="d-flex flex-wrap align-items-center gap-2">
           {permissions["Role Add"] === 1 &&
-            <button
+            <Button
+              size="sm"
               className="btn btn-success primary"
               type="button"
               onClick={handleRoleModal}
             >
               <i className="fas fa-plus me-2"></i> Add Role
-            </button>
+            </Button>
           }
-          <button
+          <Button
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={handleFilterModal}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 

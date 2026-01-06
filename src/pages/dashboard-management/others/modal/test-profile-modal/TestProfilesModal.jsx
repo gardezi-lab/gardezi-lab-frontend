@@ -119,7 +119,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
 
         // Jab user test_code likh raha ho → error clear
         if (name === "test_code") {
-            setTestCodeError(""); // clear while typing
+            setTestCodeError("");
             setError("");
         }
 
@@ -148,13 +148,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
             setError("Check the Test Code — it already exists!");
             return;
         }
-
-        // Only 4 are truly required
-        if (!test_name.trim() || !test_code.trim() || !fee.trim() || !delivery_time) {
-            setError("Please fill in Test Name, Test Code, Fee, and Delivery Time.");
-            return;
-        }
-        // Get department if selected
+       
         const selectedDept = departments.find(d => d.id == formData.department_id);
         //  Always send all expected fields — even if empty
         const payload = {
@@ -165,10 +159,9 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
             department_id: selectedDept ? selectedDept.id : "",
             fee: formData.fee || "",
             delivery_time: formData.delivery_time || "",
-            serology_elisa: formData.serology_elisa || "",
-            interpretation: formData.interpretation || "",
-            // unit_ref_range: formData.unit_ref_range ? 1 : 0,
-            // test_formate: formData.test_formate ? 1 : 0
+            serology_elisa: formData.serology_elisa || "four columns", 
+            interpretation: formData.interpretation || (interpretations[0]?.id || ""),
+          
         };
 
         setError("");
@@ -185,6 +178,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             <Form.Control
                                 type="text"
                                 name="test_name"
+                                required
                                 value={formData.test_name}
                                 onChange={handleChange}
                                 placeholder="Will Show on Report"
@@ -212,6 +206,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                             <Form.Label>Sample Required</Form.Label>
                             <Form.Control
                                 type="text"
+                                required
                                 name="sample_required"
                                 value={formData.sample_required}
                                 onChange={handleChange}
@@ -247,6 +242,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                                 type="text"
                                 placeholder="Test Fee"
                                 name="fee"
+                                required
                                 value={formData.fee}
                                 onChange={handleChange}
                             />
@@ -261,6 +257,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                                 placeholder="Delivery time"
                                 type="number"
                                 onChange={handleChange}
+                                required
                             >
                             </Form.Control>
 
@@ -277,7 +274,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                                 value={formData.serology_elisa}
                                 onChange={handleChange}
                             >
-                                <option>Select One</option>
+                                {/* <option>Select One</option> */}
                                 <option value="four columns">Four Columns</option>
                                 <option value="three columns">Three Columns</option>
                                 <option value="two columns">Two Columns</option>
@@ -293,7 +290,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                                 value={formData.interpretation}
                                 onChange={handleChange}
                             >
-                                <option value="">Select Interpretation</option>
+                                {/* <option value="">Select Interpretation</option> */}
                                 {interpretations.map((inter) => (
                                     <option key={inter.id} value={inter.id}>
                                         {inter.heading}
@@ -304,7 +301,7 @@ export default function TestProfilesModal({ onSave, TestProfile, onCancel }) {
                     </Col>
                 </Row>
                 {/* Checkbox Row 1 */}
-               
+
                 {error && <p className="text-danger">{error}</p>}
                 <div className="d-flex justify-content-end gap-2">
                     <Button variant="secondary" className="secondary" onClick={onCancel}>

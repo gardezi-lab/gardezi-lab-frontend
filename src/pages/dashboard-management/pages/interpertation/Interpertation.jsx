@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Modal from 'react-bootstrap/Modal';
+import { Modal, Button } from 'react-bootstrap';
 import httpClient from "../../../../services/httpClient";
 import InterpertationTable from "../../others/table/interpertation/InterpertationTable";
 import InterpertationModal from "../../others/modal/interpertation/InterpertationModal";
@@ -7,16 +7,18 @@ import Pagination from "react-bootstrap/Pagination";
 
 
 export default function Interpertation() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showInterpertationModal, setShowgetInterpertationDataModal] = useState(false);
     const [interpertationList, setInterpertationList] = useState([]);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedInterpertation, setSelectedInterpertation] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [tempSearch, setTempSearch] = useState("");
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const recordPerPage = 5;
+    const recordPerPage = 30;
     const [search, setSearch] = useState("");
 
     const handleClose = () => {
@@ -147,20 +149,26 @@ export default function Interpertation() {
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={handleShow}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Interpertation
-                    </button>
-                    <button
-                        className="btn btn-outline-primary"
+                    {permissions["Add Interpertation"] == 1 &&
+                        <Button
+                            className="btn btn-success primary"
+                            size="sm"
+                            type="button"
+                            onClick={handleShow}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Interpertation
+                        </Button>
+                    }
+
+                    <Button
+                        variant="outline-success"
+                        size="sm"
+                        className="btn filter-btn"
                         type="button"
                         onClick={() => setShowFilterModal(true)}
                     >
                         <i className="fas fa-filter"></i>
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -170,7 +178,7 @@ export default function Interpertation() {
                 onEdit={handleEdit}
                 loading={loading} />
 
-            <div className="d-flex justify-content-between align-items-center mt-3">
+            <div className="d-flex justify-content-end mt-3">
                 {/* <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
                 </button> */}
@@ -194,31 +202,50 @@ export default function Interpertation() {
             </div>
 
 
-            <Modal show={showFilterModal} >
-                <Modal.Header >
+            <Modal show={showFilterModal}>
+                <Modal.Header className="primary">
+                    <Modal.Title className="text-white">Filter</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>
                     <div className="mb-3">
                         <label className="form-label">Search by Name</label>
                         <input
                             type="text"
                             className="form-control"
-                            placeholder="Search name"
-                            value={search}
-                            onChange={(e) => {
-                                setPage(1);
-                                setSearch(e.target.value);
-                            }}
+                            placeholder="Search..."
+                            value={tempSearch}
+                            onChange={(e) => setTempSearch(e.target.value)}
                         />
                     </div>
                 </Modal.Body>
+
                 <Modal.Footer>
-                    <button className="btn btn-secondary" onClick={() => setShowFilterModal(false)}>
+                    <button
+                        className="btn secondary text-white"
+                        onClick={() => setShowFilterModal(false)}
+                    >
                         Close
                     </button>
                     <button
-                        className="btn btn-primary"
-                        onClick={() => setShowFilterModal(false)}
+                        className="btn btn-danger text-white"
+                        onClick={() => {
+                            setTempSearch("");
+                            setSearch("");
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
+                    >
+                        Clear
+                    </button>
+
+                    <button
+                        className="btn primary text-white"
+                        onClick={() => {
+                            setSearch(tempSearch);
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
                     >
                         Apply
                     </button>

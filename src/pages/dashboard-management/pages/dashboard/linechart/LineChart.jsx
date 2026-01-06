@@ -44,6 +44,8 @@ export default function LineChart({ fromDate, toDate }) {
         data: [0],
         borderColor: "rgba(200, 200, 200, 0.8)",
         backgroundColor: "rgba(200, 200, 200, 0.3)",
+        tension: 0.4,
+        fill: true,
       },
     ],
   });
@@ -59,8 +61,8 @@ export default function LineChart({ fromDate, toDate }) {
         const response = await httpClient.get(url);
         const data = response.data || [];
 
+        // 🔹 EMPTY STATE
         if (data.length === 0) {
-          // 👉 Empty state
           setIsEmpty(true);
           setChartData({
             labels: ["No Records"],
@@ -70,13 +72,15 @@ export default function LineChart({ fromDate, toDate }) {
                 data: [0],
                 borderColor: "rgba(200, 200, 200, 0.8)",
                 backgroundColor: "rgba(200, 200, 200, 0.3)",
+                tension: 0.4,
+                fill: true,
               },
             ],
           });
           return;
         }
 
-        // 👉 Normal state
+        // 🔹 NORMAL STATE
         setIsEmpty(false);
         setChartData({
           labels: data.map(i =>

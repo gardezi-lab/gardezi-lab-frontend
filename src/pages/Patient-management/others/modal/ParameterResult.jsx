@@ -57,7 +57,7 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
         fetchFilesForTest(selectedTestPID.patient_test_id);
         // }
         try {
-            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.id}/${patientParameterRes?.cid}/${selectedTest.serology_elisa}`;
+            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.cid}/${patientParameterRes?.cid}/${selectedTest.serology_elisa}`;
             const response = await httpClient.get(url);
             if (response) {
                 setTestType(response.test_type);
@@ -109,7 +109,7 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
         const parameters = [];
 
         const newarray = testParameters.map((parameter) => {
-            console.log("parameter",parameter)
+            console.log("parameter", parameter)
             const obj = {
                 parameter_id: parameter.id,
                 result_value: parameter.default_value,
@@ -146,7 +146,7 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
                 code: verify == "Verified - Unverified Now" ? 0 : 1,
                 verified_by: 3,
                 counter_id: patientParameterRes?.cid,
-                user_id: user.user.id
+                user_id: user.id
             }
             const url = `/patient_entry/verify_test/${testProfileId}`;
             const resposne = await httpClient.put(url, obj);
@@ -188,8 +188,9 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
 
         const url = `http://127.0.0.1:5000/api/patient_entry/file/${selectedTest.patient_test_id}`;
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.post(url, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}`, },
             });
             if (response.data.status == 201) {
                 fetchFilesForTest(patientTestId)
@@ -204,9 +205,10 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
 
     const fetchFilesForTest = async (patientId = null) => {
         try {
+             const token = localStorage.getItem("token");
             setPatientTestId(patientId)
             const url = `http://127.0.0.1:5000/api/patient_entry/get_file/${patientId}`;
-            const response = await axios.get(url);
+            const response = await axios.get(url,{headers:{Authorization: `Bearer ${token}`,}});
             debugger
             if (response?.data?.data?.length) {
                 const filesWithUrl = response.data.data.map((f) => ({

@@ -176,7 +176,8 @@ export default function JournalVoucher() {
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
         <h5 className="fw-bold page-header">Journal Voucher</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <button
+          <Button
+            size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -185,15 +186,17 @@ export default function JournalVoucher() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Voucher
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -233,10 +236,10 @@ export default function JournalVoucher() {
         <Modal.Header className="primary">
           <Modal.Title className="text-white">Filter</Modal.Title>
         </Modal.Header>
-
+ 
         <Modal.Body>
           <div className="mb-3">
-            <label className="form-label">Search by Narration</label>
+            <label className="form-label">Search by Name</label>
             <input
               type="text"
               className="form-control"
@@ -248,13 +251,15 @@ export default function JournalVoucher() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -264,9 +269,10 @@ export default function JournalVoucher() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -275,7 +281,7 @@ export default function JournalVoucher() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -416,7 +422,7 @@ export default function JournalVoucher() {
 
 
       {/* Journal Voucher Modal */}
-      <Modal show={showJVModal}  className="modal-md">
+      <Modal show={showJVModal} className="modal-md">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isEdit ? "Edit Voucher" : "Add Journal Voucher"}

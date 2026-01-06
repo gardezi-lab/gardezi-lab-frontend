@@ -318,7 +318,7 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        {consultantRole == "Receptionist" &&
+                        {consultantRole == "reception" &&
                             <Col>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Collection Center</Form.Label>
@@ -336,7 +336,7 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                                 </Form.Group>
                             </Col>
                         }
-                        {consultantRole == "Receptionist" &&
+                        {consultantRole == "reception" &&
                             <Col>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                     <Form.Label>Discount</Form.Label>

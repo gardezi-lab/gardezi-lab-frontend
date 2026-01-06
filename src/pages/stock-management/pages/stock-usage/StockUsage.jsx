@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import httpClient from "../../../../services/httpClient";
 import StockUsageTable from "../../others/table/stack-usage/StockUsageTable";
 import StockUsageModal from "../../others/modal/stock-usage/StockUsageModal";
-import { Pagination } from "react-bootstrap";
+import { Pagination, Button } from "react-bootstrap";
 
 export default function StockUsage() {
   const [showModal, setShowModal] = useState(false);
@@ -143,7 +143,8 @@ export default function StockUsage() {
         <h5 className="fw-bold page-header">Stock Usage</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
 
-          <button
+          <Button
+            size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -152,15 +153,17 @@ export default function StockUsage() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Stock Usage
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -190,7 +193,7 @@ export default function StockUsage() {
           </Pagination.Next>
         </Pagination>
       </div>
-      
+
       <Modal show={showFilterModal}>
         <Modal.Header className="primary">
           <Modal.Title className="text-white">Filter</Modal.Title>
@@ -198,7 +201,7 @@ export default function StockUsage() {
 
         <Modal.Body>
           <div className="mb-3">
-            <label className="form-label">Search by Narration</label>
+            <label className="form-label">Search item</label>
             <input
               type="text"
               className="form-control"
@@ -210,13 +213,15 @@ export default function StockUsage() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -226,9 +231,10 @@ export default function StockUsage() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -237,7 +243,7 @@ export default function StockUsage() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 

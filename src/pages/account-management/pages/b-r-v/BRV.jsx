@@ -4,6 +4,7 @@ import Pagination from "react-bootstrap/Pagination";
 import BRVTable from "../../others/table/BRVTable";
 import BRVModal from "../../others/modal/BRVModal";
 import httpClient from "../../../../services/httpClient";
+import { Button } from "react-bootstrap";
 
 export default function BRV() {
   const [showVoucherModal, setShowVoucherModal] = useState(false);
@@ -103,7 +104,8 @@ export default function BRV() {
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
         <h5 className="fw-bold page-header">BANK RECEIPT VOUCHER</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <button
+          <Button
+            size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -112,14 +114,16 @@ export default function BRV() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Bank Receipt
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -173,13 +177,15 @@ export default function BRV() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -189,9 +195,10 @@ export default function BRV() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -200,7 +207,7 @@ export default function BRV() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 

@@ -22,7 +22,7 @@ export default function LedgerTable({ accoutheadlist, loading }) {
             <Table striped bordered hover responsive size="sm">
                 <thead>
                     <tr>
-                        <th style={{textAlign: 'center'}}>Sr.</th>
+                        <th style={{ textAlign: 'center' }}>Sr.</th>
                         <th>Voucher No</th>
                         <th>Date</th>
                         <th>Narration</th>
@@ -32,48 +32,61 @@ export default function LedgerTable({ accoutheadlist, loading }) {
                     </tr>
                 </thead>
 
-                <tbody>
-                    {loading ? (
-                        <tr>
-                            <td colSpan="7" className="text-center py-5">
-                                <ThreeCircles
-                                    height="60"
-                                    width="60"
-                                    color="#0d6efd"
-                                    visible={true}
-                                />
-                            </td>
-                        </tr>
-                    ) : rowsWithBalance.length > 0 ? (
-                        <>
-                            {rowsWithBalance.map((item, index) => (
-                                <tr key={index}>
-                                    <td style={{textAlign: 'center'}}>{index + 1}</td>
-                                    <td>{item?.listing_voucher}</td>
-                                    <td>{item?.date}</td>
-                                    <td>{item?.narration}</td>
-                                    <td>{item?.dr}</td>
-                                    <td>{item?.cr}</td>
-                                    <td>{item.runningBalance.toFixed(2)}</td>
-                                </tr>
-                            ))}
 
-                            <tr className="fw-bold bg-light">
-                                <td colSpan="4" className="text-center">Total:</td>
-                                <td>{totalDebit.toFixed(2)}</td>
-                                <td>{totalCredit.toFixed(2)}</td>
-                                <td>{totalBalance.toFixed(2)}</td>
-                            </tr>
-                        </>
-                    ) : (
+                {loading ? (
+                    <tbody>
                         <tr>
-                            <td colSpan="7" className="text-center text-muted">
-                                No records found
+                            <td colSpan="7">
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        height: "250px", // ✅ adjust karo apne table ke hisaab se
+                                    }}
+                                >
+                                    <ThreeCircles
+                                        visible={true}
+                                        height="60"
+                                        width="60"
+                                        color="#fcb040"
+                                        ariaLabel="three-circles-loading"
+                                    />
+                                </div>
                             </td>
                         </tr>
-                    )}
-                </tbody>
-            </Table>
+                    </tbody>
+
+                ) : rowsWithBalance.length > 0 ? (
+                    <tbody>
+                        {rowsWithBalance.map((item, index) => (
+                            <tr key={index}>
+                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                <td>{item?.listing_voucher}</td>
+                                <td>{item?.date}</td>
+                                <td>{item?.narration}</td>
+                                <td>{item?.dr}</td>
+                                <td>{item?.cr}</td>
+                                <td>{item.runningBalance.toFixed(2)}</td>
+                            </tr>
+                        ))}
+
+                        <tr className="fw-bold bg-light">
+                            <td colSpan="4" className="text-center">Total:</td>
+                            <td>{totalDebit.toFixed(2)}</td>
+                            <td>{totalCredit.toFixed(2)}</td>
+                            <td>{totalBalance.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                ) : (
+                    <tr>
+                        <td colSpan="7" className="text-center text-muted">
+                            No records found
+                        </td>
+                    </tr>
+                )}
+
+            </Table >
         </>
     );
 }

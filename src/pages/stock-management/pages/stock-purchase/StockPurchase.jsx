@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import httpClient from "../../../../services/httpClient";
 import StockPurchaseTable from "../../others/table/stack-purchase/StockPurchaseTable";
 import StockPurchaseModal from "../../others/modal/stock-purchase/StockPurchaseModal";
-import { Pagination } from "react-bootstrap";
+import { Pagination, Button } from "react-bootstrap";
 
 export default function StockPurchase() {
   const [showModal, setShowModal] = useState(false);
@@ -142,8 +142,9 @@ export default function StockPurchase() {
       <div className="d-flex justify-content-between mb-2">
         <h5 className="fw-bold page-header">Stock Purchase</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-
-          <button
+ 
+          <Button
+            size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -152,14 +153,16 @@ export default function StockPurchase() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Stock
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -190,7 +193,6 @@ export default function StockPurchase() {
         </Pagination>
       </div>
 
-
       <Modal show={showFilterModal}>
         <Modal.Header className="primary">
           <Modal.Title className="text-white">Filter</Modal.Title>
@@ -198,7 +200,7 @@ export default function StockPurchase() {
 
         <Modal.Body>
           <div className="mb-3">
-            <label className="form-label">Search by Narration</label>
+            <label className="form-label">Search by Name</label>
             <input
               type="text"
               className="form-control"
@@ -210,13 +212,15 @@ export default function StockPurchase() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -226,9 +230,10 @@ export default function StockPurchase() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -237,7 +242,7 @@ export default function StockPurchase() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 

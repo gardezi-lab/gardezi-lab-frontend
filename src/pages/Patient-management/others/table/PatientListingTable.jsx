@@ -94,6 +94,22 @@ export default function PatientListingTable({
         getPatientById();
     }, [modalMode == "edit", isShowPatientModal == true])
 
+    const formatPKDateTime = (dateString) => {
+        if (!dateString) return "";
+
+        const date = new Date(dateString);
+
+        return date.toLocaleString("en-PK", {
+            timeZone: "Asia/Karachi",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+    };
 
     return (
         <>
@@ -121,8 +137,8 @@ export default function PatientListingTable({
                             return (
                                 <tr key={index + 1}>
                                     <td  >{index + 1}</td>
-                                    <td >
-                                        {patientObj.created_at}
+                                    <td>
+                                        {formatPKDateTime(patientObj.created_at)}
                                     </td>
                                     <td >{patientObj.mr_number}</td>
 
@@ -139,7 +155,13 @@ export default function PatientListingTable({
                                     </td>
                                     <td >{patientObj.cell}</td>
                                     <td >{patientObj.age}</td>
-                                    <td >{patientObj.reff_by?.name}</td>
+                                    <td style={{textWrap:'nowrap'}}>
+                                        {patientObj.reff_by?.name?.length > 20
+                                            ? `${patientObj.reff_by.name.slice(0, 20)}...`
+                                            : patientObj.reff_by?.name
+                                        }
+                                    </td>
+
                                     <td >{patientObj.paid + " " + "/" + " " + patientObj.total_fee}</td>
                                     <td>
                                         <div className="d-flex justify-content-center align-item-center gap-2"  >
@@ -148,43 +170,42 @@ export default function PatientListingTable({
                                                 title="View Patient Logs"
                                                 onClick={() => handlePatientActivtyLog(patientObj)}
                                             />
-                                            {/* <FaDollarSign
-                                                className="FaHistory"
-                                                title="View payment Logs"
-                                                onClick={() => handlePatientPaymentLog(patientObj)}
-                                            /> */}
+
                                             <FaEye
                                                 className="FaEye"
                                                 title="View Tests"
                                                 onClick={() => handlePatientTest(patientObj)}
                                             />
-                                            {permissions["Add Results"] === 1 &&
-                                            <FaFileMedical
-                                                className="FaFileMedical"
-                                                title="Add Result"
-                                                onClick={() => handleParameterResult(patientObj)}
-                                            />
-                        }
+                                            {permissions["Add Patient Result"] == 1 &&
+                                                <FaFileMedical
+                                                    className="FaFileMedical"
+                                                    title="Add Result"
+                                                    onClick={() => handleParameterResult(patientObj)}
+                                                />
+                                            }
                                             {/* <Link to={`/patient-report?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
                                                 <FaPrint
                                                     className="FaPrint"
                                                     title="Print"
                                                 />
                                             </Link> */}
-                                            <Link to={`/patient-management/invoice?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
-                                                <FaFileInvoiceDollar
-                                                    className="FaFileInvoiceDollar"
-                                                    title="View Invoice"
-                                                />
-                                            </Link>
-                                            {permissions["Patient Edit"] === 1 &&
+                                            {
+                                                permissions["Patient Invoice"] == 1 &&
+                                                <Link to={`/patient-management/invoice?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
+                                                    <FaFileInvoiceDollar
+                                                        className="FaFileInvoiceDollar"
+                                                        title="View Invoice"
+                                                    />
+                                                </Link>
+                                            }
+                                            {permissions["Edit Patient"] == 1 &&
                                                 <FaPenToSquare
                                                     className="FaPenToSquare"
                                                     title="Edit"
                                                     onClick={() => handleEditPatient(patientObj)}
                                                 />
                                             }
-                                            {permissions["Patient Delete"] === 1 &&
+                                            {permissions["Delete Patient"] == 1 &&
                                                 <FaRegTrashCan
                                                     className="FaRegTrashCan"
                                                     title="Delete"

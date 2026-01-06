@@ -20,9 +20,22 @@ export default function JournalVoucherTable({ voucherList, onDelete, loading }) 
             {loading ? (
               <tbody>
                 <tr>
-                  <td colSpan="5" className="text-center">
-                    <div className="py-5">
-                      <ThreeCircles visible height="60" width="60" color="#fcb040" />
+                  <td colSpan="7">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "250px", 
+                      }}
+                    >
+                      <ThreeCircles
+                        visible={true}
+                        height="60"
+                        width="60"
+                        color="#fcb040"
+                        ariaLabel="three-circles-loading"
+                      />
                     </div>
                   </td>
                 </tr>

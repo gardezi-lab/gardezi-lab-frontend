@@ -160,8 +160,9 @@ export default function SystemUserModal() {
                 <h5 className="fw-bold page-header">Users</h5>
 
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    {permissions["User Add"] === 0 &&
-                        < button
+                    {permissions["Add User"] == 1 &&
+                        <Button
+                        size="sm"
                             className="btn btn-success primary"
                             type="button"
                             onClick={() => {
@@ -170,7 +171,7 @@ export default function SystemUserModal() {
                             }}
                         >
                             <i className="fas fa-plus me-2"></i> Add User
-                        </button>
+                        </Button>
                     }
                     <Button
                         variant="outline-success"
@@ -241,7 +242,7 @@ export default function SystemUserModal() {
                                         <Form.Label>Name</Form.Label>
                                         <Form.Control
                                             type="text"
-                                            placeholder="Search with department name"
+                                            placeholder="Search with user name"
                                             value={departmentName}
                                             onChange={(e) => setDepartmentName(e.target.value)}
                                             required

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
+import { Button, Pagination } from "react-bootstrap";
+// import Pagination from "react-bootstrap/Pagination";
 import httpClient from "../../../../services/httpClient";
 import AddStockTable from "../../others/table/add-stock/AddStockTable";
 import AddStockModal from "../../others/modal/add-stock/AddStockModal";
@@ -137,7 +138,8 @@ export default function AddStock() {
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Stock Items</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <button
+                    <Button
+                        size="sm"
                         className="btn btn-success primary"
                         type="button"
                         onClick={() => {
@@ -146,17 +148,19 @@ export default function AddStock() {
                         }}
                     >
                         <i className="fas fa-plus me-2"></i> Add Stock
-                    </button>
+                    </Button>
                     {/* Filter Button */}
-                    <button
+                    <Button
+                        variant="outline-success"
+                        size="sm"
                         className="btn filter-btn"
                         type="button"
                         onClick={() => setShowFilterModal(true)}
                     >
                         <i className="fas fa-filter"></i>
-                    </button>
+                    </Button>
                 </div>
-
+ 
             </div>
             <AddStockTable
                 stockList={stockList}
@@ -189,10 +193,10 @@ export default function AddStock() {
                 <Modal.Header className="primary">
                     <Modal.Title className="text-white">Filter</Modal.Title>
                 </Modal.Header>
-
+ 
                 <Modal.Body>
                     <div className="mb-3">
-                        <label className="form-label">Search by Narration</label>
+                        <label className="form-label">Search by Name</label>
                         <input
                             type="text"
                             className="form-control"
@@ -204,13 +208,15 @@ export default function AddStock() {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <button
-                        className="btn secondary text-white"
+                    <Button
+                        size="sm"
+                        className="btn secondary text-white "
                         onClick={() => setShowFilterModal(false)}
                     >
                         Close
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        size="sm"
                         className="btn btn-danger text-white"
                         onClick={() => {
                             setTempSearch("");
@@ -220,9 +226,10 @@ export default function AddStock() {
                         }}
                     >
                         Clear
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
+                        size="sm"
                         className="btn primary text-white"
                         onClick={() => {
                             setSearch(tempSearch);
@@ -231,7 +238,7 @@ export default function AddStock() {
                         }}
                     >
                         Apply
-                    </button>
+                    </Button>
                 </Modal.Footer>
             </Modal>
 

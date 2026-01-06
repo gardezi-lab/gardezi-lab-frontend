@@ -3,7 +3,8 @@ import Modal from "react-bootstrap/Modal";
 import CreateAccountTable from "../../others/table/CreateAccountTable";
 import CreateAccountModal from "../../others/modal/CreateAccountModal";
 import httpClient from "../../../../services/httpClient";
-import Pagination from "react-bootstrap/Pagination";
+import { Pagination, Button } from "react-bootstrap";
+
 
 export default function CreateAccount() {
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -144,7 +145,8 @@ export default function CreateAccount() {
         <h5 className="fw-bold page-header">Accounts</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
 
-          <button
+          <Button
+            size="sm"
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -153,14 +155,16 @@ export default function CreateAccount() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Account
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -171,7 +175,7 @@ export default function CreateAccount() {
 
         <Modal.Body>
           <div className="mb-3">
-            <label className="form-label">Search by Narration</label>
+            <label className="form-label">Search by Name</label>
             <input
               type="text"
               className="form-control"
@@ -183,13 +187,15 @@ export default function CreateAccount() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -199,9 +205,10 @@ export default function CreateAccount() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -210,10 +217,9 @@ export default function CreateAccount() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
-
 
       <CreateAccountTable
         departmentList={departmentList}

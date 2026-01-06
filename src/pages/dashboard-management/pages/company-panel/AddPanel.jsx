@@ -4,16 +4,20 @@ import TestPanelModal from "../../others/modal/company-panel/TestPanelModal";
 import TestPanelTable from "../../others/table/company-panel/TestPanelTable";
 import httpClient from "../../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
+import { Button } from "react-bootstrap";
 
 export default function AddPanel() {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showCompanyModal, setShowCompanyModal] = useState(false);
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [selectedCompany, setSlectedCompany] = useState(null)
-    const [companyList, setCompanyList] = useState([])
+    const [companyList, setCompanyList] = useState([]);
+    const [showFilterModal, setShowFilterModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const recordPerPage = 5;
+    const [tempSearch, setTempSearch] = useState("");
+    const recordPerPage = 30;
 
     const [search, setSearch] = useState("");
 
@@ -138,14 +142,14 @@ export default function AddPanel() {
     return (
         <>
 
-            <h5 className="fw-bold page-header">Companies</h5>
 
-            <div className="d-flex justify-content-end align-items-center mb-3 mt-2">
+            <div className="d-flex justify-content-between align-items-center mb-3 mt-1">
+                <h5 className="fw-bold page-header">Companies</h5>
                 {/* Left side title */}
 
                 {/* Right side actions */}
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
+                    {/* <input
                         type="text"
                         className="form-control"
                         placeholder="Search company by name"
@@ -155,18 +159,28 @@ export default function AddPanel() {
                             setPage(1);
                             setSearch(e.target.value);
                         }}
-                    />
-
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={() => {
-                            setIsCurrentEditModalOpen(false);
-                            handleShow();
-                        }}
+                    /> */}
+                    {permissions["Add Company"] == 1 &&
+                        <Button
+                            className="btn btn-success primary"
+                            size="sm"
+                            type="button"
+                            onClick={() => {
+                                setIsCurrentEditModalOpen(false);
+                                handleShow();
+                            }}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Company
+                        </Button>
+                    }
+                    <Button
+                        variant="outline-success"
+                        size="sm"
+                        className="btn filter-btn"
+                        onClick={() => setShowFilterModal(true)}
                     >
-                        <i className="fas fa-plus me-2"></i> Add Company
-                    </button>
+                        <i className="fas fa-filter"></i>
+                    </Button>
                 </div>
             </div>
 
@@ -179,7 +193,7 @@ export default function AddPanel() {
             />
 
             {/* Footer below table */}
-            <div className="d-flex justify-content-between align-items-center mt-3">
+            <div className="d-flex justify-content-end  mt-3">
                 {/* Left side export */}
                 {/* <button className="btn btn-secondary primary">
                     <i className="fas fa-file-excel me-2"></i> Export to Excel
@@ -217,6 +231,55 @@ export default function AddPanel() {
                         onCancel={handleClose}
                     />
                 </Modal.Body>
+            </Modal>
+            <Modal show={showFilterModal}>
+                <Modal.Header className="primary">
+                    <Modal.Title className="text-white">Filter</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="mb-3">
+                        <label className="form-label">Search by Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search..."
+                            value={tempSearch}
+                            onChange={(e) => setTempSearch(e.target.value)}
+                        />
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <button
+                        className="btn secondary text-white"
+                        onClick={() => setShowFilterModal(false)}
+                    >
+                        Close
+                    </button>
+                    <button
+                        className="btn btn-danger text-white"
+                        onClick={() => {
+                            setTempSearch("");
+                            setSearch("");
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
+                    >
+                        Clear
+                    </button>
+
+                    <button
+                        className="btn primary text-white"
+                        onClick={() => {
+                            setSearch(tempSearch);
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
+                    >
+                        Apply
+                    </button>
+                </Modal.Footer>
             </Modal>
         </>
     )

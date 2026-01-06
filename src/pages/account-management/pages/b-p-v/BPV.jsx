@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
 import BPVTable from "../../others/table/BPVTable";
 import BPVModal from "../../others/modal/BPVModal";
 import httpClient from "../../../../services/httpClient";
+import { Pagination, Button } from "react-bootstrap";
+
 export default function BPV() {
   const [showVoucherModal, setShowVoucherModal] = useState(false);
   const [voucherList, setVoucherList] = useState([]);
@@ -100,9 +101,9 @@ export default function BPV() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
-        <h5 className="fw-bold page-header">BANK PAYMENT VOUCHER</h5>
+        {/* <h5 className="fw-bold page-header">BANK PAYMENT VOUCHER</h5> */}
         <div className="d-flex flex-wrap align-items-center gap-2">
-          <button
+          <Button
             className="btn btn-success primary"
             type="button"
             onClick={() => {
@@ -111,14 +112,14 @@ export default function BPV() {
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Bank Payment
-          </button>
-          <button
+          </Button>
+          <Button
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -172,13 +173,15 @@ export default function BPV() {
         </Modal.Body>
 
         <Modal.Footer>
-          <button
+          <Button
+            size="sm"
             className="btn secondary text-white"
             onClick={() => setShowFilterModal(false)}
           >
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
             className="btn btn-danger text-white"
             onClick={() => {
               setTempSearch("");
@@ -188,9 +191,10 @@ export default function BPV() {
             }}
           >
             Clear
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             className="btn primary text-white"
             onClick={() => {
               setSearch(tempSearch);
@@ -199,7 +203,7 @@ export default function BPV() {
             }}
           >
             Apply
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
 

@@ -40,7 +40,7 @@ export default function UserDropdown() {
                     <div className="card-body p-0">
                         <div className="text-center pt-4 pb-3">
                             <div className="avatar avatar-xl ">
-                                <img className="rounded-circle " src="../assets/img/team/57.webp" alt="" />
+                                <img className="rounded-circle " src={`http://localhost:5000/${profile?.image_path}`} alt="" />
                             </div>
                             <h6 className="mt-2 text-body-emphasis">
                                 {profile && profile?.name}{" "}
@@ -55,18 +55,13 @@ export default function UserDropdown() {
                             />
                         </div> */}
                     </div>
-                    {/* <div className="overflow-auto scrollbar" style={{ height: "10rem" }}>
+                    <div className="overflow-auto scrollbar">
                         <ul className="nav d-flex flex-column mb-2 pb-1">
                             {[
                                 { label: "Profile", icon: "user" },
-                                { label: "Dashboard", icon: "pie-chart" },
-                                { label: "Posts & Activity", icon: "lock" },
-                                { label: "Settings & Privacy", icon: "settings" },
-                                { label: "Help Center", icon: "help-circle" },
-                                { label: "Language", icon: "globe" },
                             ].map(({ label, icon }) => (
                                 <li key={label} className="nav-item">
-                                    <a className="nav-link px-3 d-block" href="#!">
+                                    <a className="nav-link px-3 d-block" href="/update-profile">
                                         <span className="me-2 text-body align-bottom" data-feather={icon}
                                             style={{ width: 16, height: 16 }} />
                                         {label}
@@ -74,7 +69,7 @@ export default function UserDropdown() {
                                 </li>
                             ))}
                         </ul>
-                    </div> */}
+                    </div>
                     <div className="card-footer  p-0">
                         {/* <ul className="nav d-flex flex-column my-3">
                             <li className="nav-item">
@@ -86,7 +81,7 @@ export default function UserDropdown() {
                             </li>
 
                         </ul> */}
-                        <div className="px-1 mt-1 mb-1">
+                        {/* <div className="px-1 mt-1 mb-1">
                             <a className="btn btn-phoenix-secondary d-flex flex-center w-100" href="/update-profile"
 
                             >
@@ -94,7 +89,7 @@ export default function UserDropdown() {
                                     style={{ width: 16, height: 16, }} />
                                 Update Profile
                             </a>
-                        </div>
+                        </div> */}
                         {/* <hr /> */}
                         <div className="px-1">
                             <a className="btn btn-phoenix-secondary d-flex flex-center w-100"

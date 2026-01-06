@@ -81,6 +81,7 @@ export default function InterpertationModal({ onSave, interpertation, onCancel }
                 </Row>
 
                 <Row>
+                    {/* maybe its free usage had expired */}
                     <Col md={12}>
                         <Form.Group className="mb-3">
                             <Form.Label>Interpretation</Form.Label>
@@ -104,10 +105,10 @@ export default function InterpertationModal({ onSave, interpertation, onCancel }
                 </Row>
 
                 <div className="d-flex justify-content-end gap-2">
-                    <Button variant="secondary" onClick={onCancel}>
+                    <Button variant="secondary" className='secondary' onClick={onCancel}>
                         Cancel & Close
                     </Button>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" className='primary' type="submit">
                         {interpertation ? "Update" : "Submit"}
                     </Button>
                 </div>

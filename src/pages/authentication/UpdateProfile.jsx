@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form, Image, Modal } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Image, Modal, InputGroup } from "react-bootstrap";
 import httpClient from "../../services/httpClient";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 export default function UpdateProfile() {
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [newPassword, setNewPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         cell: "",
@@ -94,7 +97,7 @@ export default function UpdateProfile() {
             }
         } catch (error) {
             console.log(error);
-          
+
         }
     };
 
@@ -176,19 +179,35 @@ export default function UpdateProfile() {
                     </Col>
                 </Row>
 
-                <Row className="mb-4">
+                <Row className="position-relative mb-4">
                     <Col>
                         <Form.Group>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                name="password"
-                                placeholder="Profile password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                readOnly={true}
-                            />
+
+                            <InputGroup style={{}}>
+                                <Form.Control
+                                    style={{ borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px' }}
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    placeholder="Profile password"
+                                    value={formData.password}
+                                    readOnly
+                                />
+
+                                <InputGroup.Text
+                                    onClick={() => setShowPassword(prev => !prev)}
+                                    style={{
+                                        cursor: "pointer",
+                                        background: "transparent",
+                                        borderTopRightRadius: '5px',
+                                        borderBottomRightRadius: '5px'
+                                    }}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </InputGroup.Text>
+                            </InputGroup>
                         </Form.Group>
+
                     </Col>
                     <Col>
                         <Form.Group>
@@ -229,7 +248,7 @@ export default function UpdateProfile() {
                     </Button>
                 </Col>
             </Row>
-      
+
             <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)} centered>
                 <Modal.Header className="primary" >
                     <Modal.Title className="fw-bold " style={{ color: "#ffffff" }} >Update Password</Modal.Title>

@@ -10,7 +10,7 @@ import httpClient from "../../../../services/httpClient";
 import Pagination from "react-bootstrap/Pagination";
 
 export default function TestProfile() {
-
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [showTestProfilesModal, setShowTestProfilesModal] = useState(false);
     const [selectedTestProfile, setSelectedTestProfile] = useState(null)
     const [loading, setLoading] = useState(false);
@@ -18,6 +18,8 @@ export default function TestProfile() {
     const [isCurrentEditModalOpen, setIsCurrentEditModalOpen] = useState(false);
     const [isShowFilterModal, setIsShowFilterModal] = useState(false);
     const [departmentName, setDepartmentName] = useState("")
+    const [showFilterModal, setShowFilterModal] = useState(false);
+    const [tempSearch, setTempSearch] = useState("");
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -65,8 +67,8 @@ export default function TestProfile() {
         }
     };
 
-    const getDepartmentName = (data) =>{
-        
+    const getDepartmentName = (data) => {
+
     }
 
     const handleSave = async (formData) => {
@@ -193,23 +195,26 @@ export default function TestProfile() {
                         }}
                     /> */}
 
-
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={() => {
-                            setIsCurrentEditModalOpen(false);
-                            handleShow();
-                        }}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Profile
-                    </button>
+                    {permissions["Add Test & Profile"] == 1 &&
+                        <Button
+                            className="btn btn-success primary"
+                            type="button"
+                            size="sm"
+                            onClick={() => {
+                                setIsCurrentEditModalOpen(false);
+                                handleShow();
+                            }}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Profile
+                        </Button>
+                    }
                     <Button
                         variant="outline-success"
                         size="sm"
                         className="btn filter-btn"
                         type="button"
-                        onClick={handleFilterModal}
+                        onClick={() => setShowFilterModal(true)}
+                    // onClick={handleFilterModal}
                     >
                         <i className="fas fa-filter"></i>
                     </Button>
@@ -258,7 +263,7 @@ export default function TestProfile() {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  
+
                     <TestProfilesModal
                         onSave={handleSave}
                         TestProfile={selectedTestProfile}
@@ -266,36 +271,55 @@ export default function TestProfile() {
                     />
                 </Modal.Body>
             </Modal>
-            <Modal show={isShowFilterModal} size="md" centered >
+            <Modal show={showFilterModal}>
                 <Modal.Header className="primary">
-                    <Modal.Title className="color-white fw-bold">Filter Modal</Modal.Title>
+                    <Modal.Title className="text-white">Filter Modal</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>
-                    <Container>
-                        <Form>
-                            <Row>
-                                <Col>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Test Name</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Search with Test name"
-                                            value={departmentName}
-                                            onChange={(e) => setDepartmentName(e.target.value)}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Container>
+                    <div className="mb-3">
+                        <label className="form-label">Search by Test Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search..."
+                            value={tempSearch}
+                            onChange={(e) => setTempSearch(e.target.value)}
+                        />
+                    </div>
                 </Modal.Body>
+
                 <Modal.Footer>
-                    <Button variant="secondary" size="sm" className="primary" onClick={closeModal}>
-                        Clear & Close
+                    <Button
+                        size="sm"
+                        className="btn secondary text-white"
+                        onClick={() => setShowFilterModal(false)}
+                    >
+                        Close
                     </Button>
-                    <Button variant="primary" size="sm" className="primary" onClick={saveChanges} >
-                        Apply Changes
+                    <Button
+                        size="sm"
+                        className="btn btn-danger text-white"
+                        onClick={() => {
+                            setTempSearch("");
+                            setSearch("");
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
+                    >
+                        Clear
+                    </Button>
+
+                    <Button
+                        size="sm"
+                        className="btn primary text-white"
+                        onClick={() => {
+                            setSearch(tempSearch);
+                            setPage(1);
+                            setShowFilterModal(false);
+                        }}
+                    >
+                        Apply
                     </Button>
                 </Modal.Footer>
             </Modal>

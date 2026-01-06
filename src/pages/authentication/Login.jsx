@@ -9,6 +9,8 @@ import { useAuth } from "../../context/AuthContext";
 export default function Login({ setIsLoggedIn }) {
     const navigate = useNavigate();
     const { login } = useAuth();
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const [userForm, setUserForm] = useState({
         user_name: "",
@@ -33,8 +35,8 @@ export default function Login({ setIsLoggedIn }) {
             });
 
             if (response.status == 200) {
-                login(response);  
-               
+                login(response);
+
                 setIsLoggedIn(true);
                 navigate("/");
             }
@@ -47,7 +49,7 @@ export default function Login({ setIsLoggedIn }) {
         <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
             <Card style={{ padding: "30px 10px", width: "35%" }}>
 
-                <div className="pt-4 pb-4 d-flex justify-content-center">
+                <div className="pt-3 pb-4 d-flex justify-content-center">
                     <img
                         src={gardezi_logo}
                         alt="logo"
@@ -72,7 +74,7 @@ export default function Login({ setIsLoggedIn }) {
                     <Form.Group className="p-2">
                         <Form.Label>Password</Form.Label>
                         <Form.Control
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             placeholder="Enter password"
                             value={userForm.password}
@@ -80,6 +82,23 @@ export default function Login({ setIsLoggedIn }) {
                             required
                             minLength={3}
                         />
+                        {
+                            userForm.password &&
+                            <Form.Text
+                                as="div"
+                                onClick={() => setShowPassword(prev => !prev)}
+                                style={{
+                                    textAlign: "right",
+                                    color: "goldenrod",
+                                    textDecoration: "underline",
+                                    cursor: "pointer",
+                                    marginTop: "4px",
+                                    userSelect: "none"
+                                }}
+                            >
+                                {showPassword ? "Hide Password" : "Show Password"}
+                            </Form.Text>
+                        }
                     </Form.Group>
 
                     <div className="pt-4 px-2">

@@ -128,6 +128,7 @@ export default function TestPackageModal({ onSave, TestPackage, onCancel, testPr
                                     isMulti
                                     placeholder="Select Test"
                                     name="selected_test"
+                                    required
                                     value={formData.selected_test}
                                     onChange={(selectedOption) => handleSelectChange(selectedOption, "patientTest")}
                                     options={testProfiles.map((test) => ({

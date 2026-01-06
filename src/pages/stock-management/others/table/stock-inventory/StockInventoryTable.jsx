@@ -1,15 +1,15 @@
+import { Table } from "react-bootstrap";
 import { ThreeCircles } from "react-loader-spinner";
 // import { FaRegTrashCan } from "react-icons/fa6";
 
 export default function StockInventoryTable({ stockList, onDelete, onEdit, loading }) {
   return (
-    <div className="card shadow-sm border-0">
-      <div className="card-body p-0">
+  
         <div
           className="table-responsive"
           style={{ maxHeight: "62vh", overflowY: "scroll" }}
         >
-          <table className="table table-bordered table-sm">
+          <Table bordered striped hover size="sm">
             <thead>
               <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                 <th scope="col" style={{textAlign: 'center'}}>Sr.</th>
@@ -77,9 +77,8 @@ export default function StockInventoryTable({ stockList, onDelete, onEdit, loadi
                 </tr>
               </tbody>
             )}
-          </table>
+          </Table>
         </div>
-      </div>
-    </div>
+  
   );
 }

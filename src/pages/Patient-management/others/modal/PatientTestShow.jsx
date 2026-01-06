@@ -206,7 +206,7 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                 <Modal.Body>
 
                     <>
-                        {permissions["Patient Payment"] === 1 &&
+                        {permissions["Patient Payment"] == 1 &&
                             <>
 
                                 <div className="p-3 mb-3">
@@ -338,7 +338,7 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                             <Dropdown.Item onClick={() => getHistoryCount(3)}>3</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    {permissions["Patient Report"] === 1 &&
+                    {permissions["Patient Report"] == 1 &&
                         <Button className="primary"
                             disabled={
                                 patientTest?.company_id == null ? remainingamount : ""

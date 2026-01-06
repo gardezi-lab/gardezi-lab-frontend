@@ -3,6 +3,7 @@ import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 
 
 export default function InterpertationTable({ interpertationList, onDelete, onEdit, loading }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;
@@ -60,8 +61,11 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
                                             <td className="py-2 px-2">
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                    {permissions["Edit Interpertation"] == 1 &&
                                                     <FaPenToSquare
                                                         onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    }
+                                                    {permissions["Delete Interpertation"] == 1 &&
                                                     <FaRegTrashCan onClick={() => {
                                                         if (window.confirm("Are you sure you want to delete this department?")) {
                                                             onDelete(interpertation.id);
@@ -69,6 +73,7 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                                     }}
                                                         style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                                     />
+                                                }
                                                 </div>
                                             </td>
                                         </tr>

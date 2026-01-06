@@ -49,6 +49,7 @@ export default function TestProfilesModal({ onSave, company, onCancel }) {
                             <Form.Label>Name :</Form.Label>
                             <Form.Control
                                 type="text"
+                                required
                                 placeholder="Enter Company Name"
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
@@ -60,6 +61,7 @@ export default function TestProfilesModal({ onSave, company, onCancel }) {
                             <Form.Label>Head Name</Form.Label>
                             <Form.Control
                                 type="text"
+                                required
                                 placeholder="Head Name"
                                 value={headName}
                                 onChange={(e) => setHeadName(e.target.value)}
@@ -73,6 +75,7 @@ export default function TestProfilesModal({ onSave, company, onCancel }) {
                             <Form.Label>Contact No</Form.Label>
                             <Form.Control
                                 type="text"
+                                required
                                 placeholder="Contact No"
                                 value={contactNo}
                                 onChange={(e) => setContactNo(e.target.value)}
@@ -84,6 +87,7 @@ export default function TestProfilesModal({ onSave, company, onCancel }) {
                             <Form.Label>Username</Form.Label>
                             <Form.Control
                                 type="text"
+                                required
                                 placeholder="Enter Username"
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
@@ -105,10 +109,10 @@ export default function TestProfilesModal({ onSave, company, onCancel }) {
                     </Col>
                 </Row>
                 <div className="d-flex justify-content-end gap-2">
-                    <Button variant="secondary" onClick={onCancel}>
+                    <Button variant="secondary" className="secondary" onClick={onCancel}>
                         Cancel & Close
                     </Button>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" className="primary">
                         {company ? "Update" : "Save"}
                     </Button>
                 </div>

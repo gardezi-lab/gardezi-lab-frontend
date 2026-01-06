@@ -99,15 +99,15 @@ export default function PatientManagement() {
             <div className="d-flex justify-content-between mb-2">
                 <h5 className="fw-bold page-header">Patient Management</h5>
                 <div className="d-flex gap-2">
-                    {permissions["patient add"] === 1 &&
-                    <button
-                        className="btn btn-success primary"
-                        type="button"
-                        onClick={openPatientModal}
-                    >
-                        <i className="fas fa-plus me-2"></i> Add Patient
-                    </button>
-}
+                    {permissions["Add Patient"] == 1 &&
+                        <button
+                            className="btn btn-success primary"
+                            type="button"
+                            onClick={openPatientModal}
+                        >
+                            <i className="fas fa-plus me-2"></i> Add Patient
+                        </button>
+                    }
                     <button
                         className="btn filter-btn"
                         type="button"
@@ -154,7 +154,7 @@ export default function PatientManagement() {
             />
 
             <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-                <Modal.Header className="primary">
+                <Modal.Header className="primary"  >
                     <Modal.Title className="color-white fw-bold">Confirm Deletion</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="text-center">
@@ -163,13 +163,23 @@ export default function PatientManagement() {
                     </h5>
                 </Modal.Body>
                 <Modal.Footer className="justify-content-end">
-                    <Button variant="secondary" className="secondary" onClick={handleCloseDeleteModal}>
+                    <Button variant="secondary" size="sm" className="secondary" onClick={handleCloseDeleteModal}>
                         Cancel
                     </Button>
-                    <Button variant="danger" className="primary" onClick={deletePatient} >
+                    <Button variant="danger"  size="sm" onClick={deletePatient}
+                        style={{
+                            backgroundColor: "#e74c3c",
+                            borderColor: "#c0392b",
+                        }}
+                    >
                         Delete Visit
                     </Button>
-                    <Button variant="danger" className="primary" onClick={Permanentdelete} >
+                    <Button variant="danger" size="sm" onClick={Permanentdelete} 
+                     style={{
+                            backgroundColor: "#c0392b",
+                            borderColor: "#922b21",
+                        }}
+                    >
                         Delete Record
                     </Button>
                 </Modal.Footer>

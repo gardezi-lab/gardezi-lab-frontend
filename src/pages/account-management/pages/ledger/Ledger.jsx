@@ -4,6 +4,8 @@ import httpClient from "../../../../services/httpClient";
 // import httpClient from "../../../services/httpClient";
 import LedgerModal from "../../others/modal/LedgerModal";
 import LedgerTable from "../../others/table/LedgerTable";
+import { Button } from "react-bootstrap";
+
 
 export default function Ledger() {
     const [accoutheadlist, setAccoutHeadList] = useState({});
@@ -56,13 +58,15 @@ export default function Ledger() {
                     )}
                 </div>
 
-                <button
+                <Button
+                    variant="outline-success"
+                    size="sm"
                     className="btn filter-btn"
                     type="button"
                     onClick={handleShow}
                 >
                     <i className="fas fa-filter"></i>
-                </button>
+                </Button>
             </div>
 
 

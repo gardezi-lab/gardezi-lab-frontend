@@ -80,7 +80,7 @@ const menuItems = [
                 href: "/access-management/users",
             },
             {
-                label: "User Management",
+                label: "Acess Management",
                 icon: "user-check",
                 href: "/access-management/user-manage",
             },
@@ -279,24 +279,39 @@ export default function NavMenu() {
     const permission = JSON.parse(localStorage.getItem("permissions") || "{}");
     const role = JSON.parse(user)?.role;
 
+
     const filteredMenuItems = menuItems
-        .map(item => {
-            if (item.roles && !item.roles.includes(role)) return null;
-            const filteredDropdown = item.dropdown?.filter(ddItem => {
-                const labelKey = ddItem.label; 
-                if (ddItem.roles && !ddItem.roles.includes(role)) return false;
-                if (permission[labelKey] === 0) return false;
-                return true;
+        .map(menu => {
+            // 🔴 STEP 1: Parent permission strictly check
+            // agar parent ka permission explicitly 0 hai → poora menu hide
+            if (permission.hasOwnProperty(menu.title) && permission[menu.title] == 0) {
+                return null;
+            }
+debugger
+            // 🟢 STEP 2: Filter dropdown items
+            const filteredDropdown = menu.dropdown.filter(ddItem => {
+                // 1️⃣ exact label permission (rare case)
+                if (permission[ddItem.label] == 1) return true;
+
+                // 2️⃣ match sub-permissions like:
+                // "Departments Add", "Departments Edit", etc.
+                return Object.entries(permission).some(([key, value]) => {
+                    if (value !== 1) return false;
+                    return key.toLowerCase().startsWith(ddItem.label.toLowerCase());
+                });
             });
 
-            if (filteredDropdown?.length === 0) return null;
+            // 🔴 STEP 3: agar koi child bacha hi nahi → parent bhi hide
+            if (filteredDropdown.length === 0) return null;
+
             return {
-                ...item,
-                dropdown: filteredDropdown,
+                ...menu,
+                dropdown: filteredDropdown
             };
         })
         .filter(Boolean);
 
+    console.log('filteredMenuItems', filteredMenuItems)
     return (
         <ul className="navbar-nav navbar-nav-top" data-dropdown-on-hover="data-dropdown-on-hover">
             {filteredMenuItems.map(({ title, iconClass, dropdown }) => (

@@ -138,8 +138,8 @@ function AppRoutes() {
             <Route element={<DashboardLayout />}>
 
               <Route path="/" element={
-                // <RoleProtectedRoute allowedRoles={["Reception"]}>
-                <Dashboard />
+                // <RoleProtectedRoute allowedRoles={["technician"]}>
+                  <Dashboard />
                 // </RoleProtectedRoute>
               } />
 

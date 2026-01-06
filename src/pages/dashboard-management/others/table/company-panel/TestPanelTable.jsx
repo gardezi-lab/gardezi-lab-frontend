@@ -1,22 +1,23 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+import { Table } from "react-bootstrap";
 
 export default function TestProfileTable({ companyList, onDelete, onEdit, loading }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     return (
-        <div className="card shadow-sm border-0">
-            <div className="card-body p-0">
+            <div >
                 <div className="table-responsive" style={{ maxHeight: "62vh", overflowY: 'scroll' }}>
-                    <table className="table table-bordered table-sm "  >
+                    <Table bordered striped hover size="sm">
                         <thead>
                             <tr style={{ backgroundColor: "#1c2765", color: "white" }}>
                                 <th scope="col">Sr.</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Head Name</th>
-                                <th scope="col">Contact No.</th>
+                                <th scope="col">CEO</th>
+                                <th scope="col">Phone</th>
                                 {/* <th scope="col">Username</th>
                                 <th scope="col">Password</th>
                                 <th scope="col">Rate List</th> */}
-                                <th scope="col">Action</th>
+                                <th scope="col" style={{textAlign:'center'}} >Action</th>
                             </tr>
                         </thead>
 
@@ -56,8 +57,11 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                         <td>{company.rate_list || "—"}</td> */}
                                         <td>
                                             <div className="d-flex gap-2 align-items-center justify-content-center">
+                                                {permissions["Edit Company"] == 1 &&
                                                 <FaPenToSquare
                                                     onClick={() => onEdit(company)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                }
+                                                {permissions["Delete Company"] == 1 &&
                                                 <FaRegTrashCan onClick={() => {
                                                     if (window.confirm("Are you sure you want to delete this department?")) {
                                                         onDelete(company.id);
@@ -65,6 +69,7 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                                 }}
                                                     style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                                 />
+                                            }
                                             </div>
                                         </td>
                                     </tr>
@@ -79,9 +84,8 @@ export default function TestProfileTable({ companyList, onDelete, onEdit, loadin
                                 </tr>
                             </tbody>
                         )}
-                    </table>
+                    </Table>
                 </div>
             </div>
-        </div>
     );
 }

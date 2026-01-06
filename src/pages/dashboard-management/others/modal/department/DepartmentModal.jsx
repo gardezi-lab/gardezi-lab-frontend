@@ -4,6 +4,7 @@ import httpClient from "../../../../../services/httpClient";
 
 export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepartmentModal, modalHeader, updateObj }) {
     const [departmentName, setDepartmentName] = useState("");
+    const [errors, setErrors] = useState({});
 
     const closeModal = () => {
         setIsShowDepartmentModal(false);
@@ -15,6 +16,12 @@ export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepart
     }
 
     const saveChanges = async () => {
+        const validationErrors = validate();
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
         try {
             const obj = {
                 department_name: departmentName
@@ -38,6 +45,16 @@ export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepart
         }
     };
 
+    const validate = () => {
+        const newErrors = {};
+        if (!departmentName || !departmentName.trim()) {
+            newErrors.departmentName = "Department Name is required";
+        }
+        return newErrors;
+    };
+
+
+
     useEffect(() => {
         setDepartmentName(updateObj?.department_name);
     }, [updateObj !== null, isShowDepartmentModal])
@@ -55,7 +72,7 @@ export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepart
                             <Row>
                                 <Col>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Department Name</Form.Label>
+                                        <Form.Label>Department Name<span style={{ color: '#ff6666' }}> *</span></Form.Label>
                                         <Form.Control
                                             type="text"
                                             placeholder="Department name"
@@ -64,6 +81,7 @@ export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepart
                                             onChange={(e) => setDepartmentName(e.target.value)}
                                             required
                                         />
+                                        {errors?.departmentName && <p className="patient-error">{errors.departmentName}</p>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -72,7 +90,7 @@ export default function DepartmentModal({ isShowDepartmentModal, setIsShowDepart
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" size="sm" className="secondary" onClick={closeModal}>
-                        Close
+                        Clear & Close
                     </Button>
                     <Button variant="primary" size="sm" className="primary" onClick={saveChanges} >
                         {modalHeader == "Update" ? "Update" : "Save"}
