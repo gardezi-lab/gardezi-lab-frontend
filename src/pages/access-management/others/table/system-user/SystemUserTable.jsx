@@ -64,9 +64,9 @@ export default function SystemUserTable({ consultantList, onDelete, onEdit, load
                                             }
                                             {permissions["Delete User"] == 1 &&
                                                 <FaRegTrashCan onClick={() => {
-                                                    if (window.confirm("Are you sure you want to delete this department?")) {
+                                                    // if (window.confirm("Are you sure you want to delete this department?")) {
                                                         onDelete(consultant.id);
-                                                    }
+                                                    // }
                                                 }}
                                                     style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                                 />

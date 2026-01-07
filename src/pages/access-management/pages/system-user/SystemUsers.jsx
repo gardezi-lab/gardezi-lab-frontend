@@ -13,6 +13,9 @@ export default function SystemUserModal() {
     const [loading, setLoading] = useState(false);
     const [departmentName, setDepartmentName] = useState("")
     const [isShowFilterModal, setIsShowFilterModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteUserId, setDeleteUserId] = useState(null);
+
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -89,15 +92,38 @@ export default function SystemUserModal() {
     };
 
     const handleDelete = async (id) => {
+        setDeleteUserId(id);
+        setShowDeleteModal(true);
+        // setLoading(true);
+        // try {
+        //     await httpClient.delete(`/users/${id}`);
+        //     getConsultantData();
+        // } catch (err) {
+        //     console.error("Delete Consultant Error:", err);
+        // } finally {
+        //     setLoading(false);
+        // }
+    };
+
+    const Permanentdelete = async () => {
+        if (!deleteUserId) return;
+
         setLoading(true);
         try {
-            await httpClient.delete(`/users/${id}`);
+            await httpClient.delete(`/users/${deleteUserId}`);
             getConsultantData();
         } catch (err) {
             console.error("Delete Consultant Error:", err);
         } finally {
             setLoading(false);
+            setShowDeleteModal(false);
+            setDeleteUserId(null);
         }
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setDeleteUserId(null);
     };
 
     const handleEdit = (dep) => {
@@ -162,7 +188,7 @@ export default function SystemUserModal() {
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     {permissions["Add User"] == 1 &&
                         <Button
-                        size="sm"
+                            size="sm"
                             className="btn btn-success primary"
                             type="button"
                             onClick={() => {
@@ -262,6 +288,45 @@ export default function SystemUserModal() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
+                <Modal.Header className="primary">
+                    <Modal.Title className="color-white fw-bold">
+                        Confirm Deletion
+                    </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body className="text-center">
+                    <h5 className="fw-semibold text-muted">
+                        Are you sure you want to delete this user?
+                    </h5>
+                </Modal.Body>
+
+                <Modal.Footer className="justify-content-end gap-2">
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        className="secondary"
+                        onClick={handleCloseDeleteModal}
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={Permanentdelete}
+                        style={{
+                            backgroundColor: "#c0392b",
+                            borderColor: "#922b21",
+                            fontWeight: "600",
+                        }}
+                    >
+                        Delete Record
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </>
     )
 }

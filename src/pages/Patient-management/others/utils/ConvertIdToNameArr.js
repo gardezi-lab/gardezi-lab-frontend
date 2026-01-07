@@ -2,6 +2,7 @@
 export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, companyList, testPackageList) {
     
     const updatedPatientArr = patientsArray?.map((pt) => {
+        console.log("ptptpt",pt)
         const patientId = pt.reff_by;
         const findDoctorObj = doctorList?.find(doctor => doctor.id == patientId);
         const testPackageId = pt.package_id;
@@ -21,7 +22,7 @@ export function ConvertIdToNameArr(patientsArray, testProfiles, doctorList, comp
             "email": pt?.email,
             "father_hasband_MR": pt?.father_hasband_MR,
             "gender": pt?.gender,
-            "id": pt?.id,
+            "id": pt?.patient_id,
             "mr_number": pt?.MR_number,
             "package_id": findPackageObj,
             "paid": pt?.paid,

@@ -7,6 +7,7 @@ import { FaTimes } from "react-icons/fa";
 import Select from 'react-select';
 
 export default function ParameterResult({ showParameterResult, setShowParameterResult, patientParameterRes }) {
+    
     const [selectedPatientObj, setSelectedPatientObj] = useState();
     const [allTestOfPatient, setAllTestOfPatient] = useState([]);
     const [selectedTest, setSelectedTest] = useState(null);
@@ -57,7 +58,7 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
         fetchFilesForTest(selectedTestPID.patient_test_id);
         // }
         try {
-            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.cid}/${patientParameterRes?.cid}/${selectedTest.serology_elisa}`;
+            const url = `/patient_entry/test_parameters/${selectedTestId}/${selectedPatientObj.id}/${patientParameterRes?.cid}/${selectedTest.serology_elisa}`;
             const response = await httpClient.get(url);
             if (response) {
                 setTestType(response.test_type);
@@ -162,6 +163,7 @@ export default function ParameterResult({ showParameterResult, setShowParameterR
 
     useEffect(() => {
         const patientObject = patientParameterRes;
+       
         setSelectedPatientObj(patientObject);
         getAllTestsOfPatient(patientObject);
 
