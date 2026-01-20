@@ -1,61 +1,55 @@
-import React, { useState } from 'react'
-import { Container, Button, Modal, Form } from 'react-bootstrap';
+import { useState } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export default function BusinessReportFilterModal({ show, onClose }) {
+export default function BusinessReportFilterModal({ onApply, onCancel, loading }) {
 
-    const [formData, setFormData] = useState({
-        from: "",
-        to: ""
-    });
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    }
+    const handleSubmit = () => {
+        if (!fromDate || !toDate) return alert("Please select both dates");
+        onApply(fromDate, toDate);
+    };
 
-    const applyFilter = () => {
-        onClose(); // close modal
-    }
 
     return (
-        <Modal show={show} >
-            <Modal.Header className="primary">
-                <Modal.Title className="fw-bold color-white">Filter Report</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-                <Container>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>From:</Form.Label>
-                        <Form.Control
-                            type="date"
-                            name="from"
-                            value={formData.from}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>To:</Form.Label>
-                        <Form.Control
-                            type="date"
-                            name="to"
-                            min={formData.from}
-                            value={formData.to}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
-
-                </Container>
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary" className="secondary" onClick={onClose}>Clear & Close</Button>
-                <Button variant="primary" className="primary" onClick={applyFilter}>Apply</Button>
-            </Modal.Footer>
-        </Modal>
+        <div>
+            <Container>
+                <Form>
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>From Date</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    value={fromDate}
+                                    onChange={(e) => setFromDate(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>To Date</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    value={toDate}
+                                    onChange={(e) => setToDate(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Form>
+                <div className="d-flex justify-content-end gap-2 mt-3">
+                    <Button variant="secondary" className="secondary" onClick={onCancel}>
+                        Cancel & Close
+                    </Button>
+                    <Button variant="primary" className="primary" onClick={handleSubmit}>
+                        Apply
+                    </Button>
+                </div>
+            </Container>
+        </div>
     )
 }
-
-

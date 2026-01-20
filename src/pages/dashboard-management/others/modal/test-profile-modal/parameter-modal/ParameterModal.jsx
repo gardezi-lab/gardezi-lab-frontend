@@ -5,6 +5,7 @@ import httpClient from "../../../../../../services/httpClient";
 import { Editor } from "@tinymce/tinymce-react";
 
 export default function ParameterModal({ test, onClose }) {
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     const [parameterList, setParameterList] = useState([]);
     const [editItem, setEditItem] = useState(null);
     const [paramError, setParamError] = useState("");
@@ -292,6 +293,7 @@ export default function ParameterModal({ test, onClose }) {
                     <Button variant="secondary" onClick={onClose} className="secondary">
                         Close
                     </Button>
+                    {(permissions["Parameters Add"] == 1 || permissions["Parameters Edit"] == 1) &&
                     <Button variant="primary" type="submit" disabled={saving} className="primary">
                         {saving ? (
                             <>
@@ -304,6 +306,7 @@ export default function ParameterModal({ test, onClose }) {
                             "Submit"
                         )}
                     </Button>
+                    }
                 </div>
             </Form>
 

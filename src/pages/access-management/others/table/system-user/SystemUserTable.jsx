@@ -58,11 +58,11 @@ export default function SystemUserTable({ consultantList, onDelete, onEdit, load
                                     <td>{consultant.password}</td>
                                     <td>
                                         <div className="d-flex gap-2 align-items-center justify-content-center">
-                                            {permissions["Edit User"] == 1 &&
+                                            {permissions["User Edit"] == 1 &&
                                                 <FaPenToSquare
                                                     onClick={() => onEdit(consultant)} style={{ fontSize: "22px", cursor: "pointer" }} />
                                             }
-                                            {permissions["Delete User"] == 1 &&
+                                            {permissions["User Delete"] == 1 &&
                                                 <FaRegTrashCan onClick={() => {
                                                     // if (window.confirm("Are you sure you want to delete this department?")) {
                                                         onDelete(consultant.id);

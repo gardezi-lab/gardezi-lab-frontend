@@ -1,8 +1,15 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPrint } from "react-icons/fa6";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button } from "react-bootstrap";
+import { useState } from "react";
 
 export default function JournalVoucherTable({ voucherList, onDelete, loading }) {
+  const [selectedId, setSelectedId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
   return (
 
     <div className="table-responsive table-sm" style={{ maxHeight: "62vh", overflowY: "scroll" }}>
@@ -56,7 +63,11 @@ export default function JournalVoucherTable({ voucherList, onDelete, loading }) 
                     onClick={() => window.open(`/print-voucher?id=${v.id}`, "_blank")}
                   />
                   <FaRegTrashCan
-                    onClick={() => onDelete(v.id)}
+                    // onClick={() => onDelete(v.id)}
+                    onClick={() => {
+                      setSelectedId(v.id);
+                      setShowDeleteModal(true);
+                    }}
                     style={{ fontSize: 20, cursor: "pointer", color: "red" }}
                   />
                 </td>
@@ -71,6 +82,42 @@ export default function JournalVoucherTable({ voucherList, onDelete, loading }) 
           </tbody>
         )}
       </Table>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header className="primary"  >
+          <Modal.Title className="color-white fw-bold">Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <h5 className="fw-semibold text-muted">
+            Are you sure you want to delete this voucher?
+          </h5>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-end">
+          <Button variant="secondary" size="sm" className="secondary" onClick={handleCloseDeleteModal}>
+            Cancel
+          </Button>
+          {/* <Button variant="danger" size="sm" onClick={deletePatient}
+                        style={{
+                            backgroundColor: "#e74c3c",
+                            borderColor: "#c0392b",
+                        }}
+                    >
+                        Delete Visit
+                    </Button> */}
+          <Button variant="danger" size="sm"
+            onClick={() => {
+              onDelete(selectedId);
+              setShowDeleteModal(false);
+            }}
+            style={{
+              backgroundColor: "#c0392b",
+              borderColor: "#922b21",
+            }}
+          >
+            Delete Record
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
 
   );

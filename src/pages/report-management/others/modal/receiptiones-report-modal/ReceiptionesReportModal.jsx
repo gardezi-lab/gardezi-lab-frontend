@@ -21,7 +21,7 @@ export default function ReceiptionesReportModal({ show, onClose, formData, onCha
                         name="receptionist_id"
                         value={
                             formData.receptionist_id
-                            ? {
+                                ? {
                                     value: formData.receptionist_id,
                                     label: receptionList.find(r => r.id === formData.receptionist_id)?.name
                                 }

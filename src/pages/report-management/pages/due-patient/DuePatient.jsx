@@ -19,7 +19,7 @@ export default function DuePatient() {
 
   const handleLog = async () => {
     try {
-      const url = `/patient_entry/due_patients?from_date=${formData.from}&to_date=${formData.to}`;
+      const url = `/reporting/due_report?from_date=${formData.from}&to_date=${formData.to}`;
       const response = await httpClient.get(url);
       setDiscountList(response.data)
     } catch (error) {
@@ -39,27 +39,17 @@ export default function DuePatient() {
     <>
       <div className="d-flex justify-content-between mb-4">
         <h5 className="fw-bold page-header">Due Pateint Report</h5>
-        <div className="d-flex gap-2">
-
-          <button
-            className="btn filter-btn"
-            type="button"
-            onClick={() => setShowFilterModal(true)}
-          >
-            <i className="fas fa-filter"></i>
-          </button>
-        </div>
       </div>
       <DuePatientTable
         discountList={discountList} />
 
-      <DuePatientModal
+      {/* <DuePatientModal
         show={showFilterModal}
         onClose={() => setShowFilterModal(false)}
         formData={formData}
         onChange={updateFilters}
         onApply={applyFilter}
-      />
+      /> */}
     </>
   )
 }

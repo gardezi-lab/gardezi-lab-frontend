@@ -208,7 +208,6 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                     <>
                         {permissions["Patient Payment"] == 1 &&
                             <>
-
                                 <div className="p-3 mb-3">
                                     <div className="d-flex justify-content-between mb-1">
                                         <span>Total Amount:</span>
@@ -234,7 +233,6 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                                     }
 
                                 </div>
-
                                 {remainingamount !== 0 && (
                                     <div className="mb-3">
                                         <Form.Label className="fw-semibold">Add New Amount</Form.Label>
@@ -252,8 +250,6 @@ export default function PatientTestShow({ isPatientTest, setIsPatientTest, patie
                                         </div>
                                     </div>
                                 )}
-
-
                                 {pendingAmount > 0 && (
                                     <div className="mb-3">
                                         <Form.Label className="fw-semibold">Pending Discount</Form.Label>

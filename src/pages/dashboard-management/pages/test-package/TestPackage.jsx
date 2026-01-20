@@ -144,7 +144,7 @@ export default function TestPackage() {
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Test Packages</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    {permissions["Add Test Package"] == 1 &&
+                    {permissions["Test Package Add"] == 1 &&
                         <Button
                             className="btn btn-success primary"
                             type="button"

@@ -98,13 +98,13 @@ export default function DepartmentListing() {
     }
     return items;
   };
-
+ 
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
         <h5 className="fw-bold page-header">Department</h5>
         <div className="d-flex flex-wrap align-items-center gap-2">
-          {permissions["Add Departments"] == 1 &&
+          {permissions["Departments Add"] == 1 &&
           <Button
             size="sm"
             className="btn btn-success primary"

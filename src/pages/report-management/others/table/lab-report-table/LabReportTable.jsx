@@ -1,41 +1,69 @@
 import { Table } from "react-bootstrap";
-import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
-import httpClient from "../../../../../services/httpClient";
+import { ThreeCircles } from "react-loader-spinner";
 
-export default function LabReportTable({ departmentList }) {
-
-
-
-
+export default function LabReportTable({ cashList, loading }) {
     return (
         <>
             <Table striped bordered hover responsive size="sm">
                 <thead>
                     <tr>
-                        <th scope="col">Sr.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">MR#</th>
-                        <th scope="col">CR</th>
-                        <th scope="col">DR</th>
+                        <th>Sr.</th>
+                        <th>Name</th>
+                        <th>MR #</th>
+                        <th>Ref Consultant</th>
+                        <th>Test</th>
+                        <th>Fees</th>
+                        {/* <th>Status</th> */}
                     </tr>
                 </thead>
-                <tbody>
-                    {/* {
-                        cashList?.map((cash, index) => {
-                            return (
-                                <tr key={index} >
-                                    <td>{index + 1}</td>
-                                    <td>{cash?.date}</td>
-                                    <td>{cash?.description}</td>
-                                    <td>{cash?.dr}</td>
-                                    <td>{cash?.cr}</td>
-                                </tr>
-                            )
-                        })
-                    } */}
+                {loading ? (
+                    <tbody>
+                        <tr>
+                            <td colSpan="7">
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        height: "250px", // ✅ adjust karo apne table ke hisaab se
+                                    }}
+                                >
+                                    <ThreeCircles
+                                        visible={true}
+                                        height="60"
+                                        width="60"
+                                        color="#fcb040"
+                                        ariaLabel="three-circles-loading"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
 
-                </tbody>
-            </Table>
+                ) : cashList?.length > 0 ? (
+                    <tbody>
+                        {cashList?.map((cash, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{cash?.patient_name}</td>
+                                <td>{cash?.mr_number}</td>
+                                <td>{cash?.ref_name}</td>
+                                <td>{cash?.tests}</td>
+                                <td>{cash?.total_fee}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                ) : (
+                    <tbody>
+                        <tr>
+                            <td colSpan="6" className="text-center">
+                                No Data Found
+                            </td>
+                        </tr>
+                    </tbody>
+                )}
+
+            </Table >
         </>
-    )
+    );
 }

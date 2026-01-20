@@ -32,7 +32,6 @@ export default function CollectionCenter() {
             const url = `/collectioncenter`;
             const response = await httpClient.get(url);
 
-            console.log("API RESPONSE ", response);
             if (response) {
                 setCollectionList(response)
             }

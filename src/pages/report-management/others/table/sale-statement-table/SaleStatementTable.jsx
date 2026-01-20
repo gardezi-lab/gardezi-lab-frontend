@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 import httpClient from "../../../../../services/httpClient";
 
-export default function SaleStatementTable({ departmentList }) {
+export default function SaleStatementTable({ departmentList, loading }) {
 
 
 
@@ -19,6 +19,7 @@ export default function SaleStatementTable({ departmentList }) {
                         <th scope="col">DR</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {/* {
                         cashList?.map((cash, index) => {
@@ -33,7 +34,11 @@ export default function SaleStatementTable({ departmentList }) {
                             )
                         })
                     } */}
-
+                    <tr>
+                        <td colSpan="6" className="text-center">
+                            No Data Found
+                        </td>
+                    </tr>
                 </tbody>
             </Table>
         </>

@@ -160,7 +160,7 @@ export default function AddPanel() {
                             setSearch(e.target.value);
                         }}
                     /> */}
-                    {permissions["Add Company"] == 1 &&
+                    {permissions["Company Panels Add"] == 1 &&
                         <Button
                             className="btn btn-success primary"
                             size="sm"

@@ -65,7 +65,7 @@ export default function BRV() {
 
   // Delete Voucher
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this voucher?")) return;
+    // if (!window.confirm("Are you sure you want to delete this BRV?")) return;
     setLoading(true);
     try {
       await httpClient.delete(`/journal_vouchers/${id}`);

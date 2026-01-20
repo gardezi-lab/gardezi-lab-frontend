@@ -85,7 +85,7 @@ export default function JournalVoucher() {
 
   // Delete Voucher
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this voucher?")) return;
+    // if (!window.confirm("Are you sure you want to delete this voucher?")) return;
     setLoading(true);
     try {
       await httpClient.delete(`/journal_vouchers/${id}`);
@@ -182,7 +182,8 @@ export default function JournalVoucher() {
             type="button"
             onClick={() => {
               setIsEdit(false);
-              setShowVoucherTypeModal(true);
+              // setShowVoucherTypeModal(true);
+              setShowJVModal(true)
             }}
           >
             <i className="fas fa-plus me-2"></i> Add Voucher
@@ -285,7 +286,7 @@ export default function JournalVoucher() {
         </Modal.Footer>
       </Modal>
 
-
+ 
       <Modal show={showVoucherTypeModal} >
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">Select Voucher Type</Modal.Title>
@@ -355,10 +356,10 @@ export default function JournalVoucher() {
             Cancel
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> 
 
       {/* BPV Modal */}
-      <Modal show={showBPVModal} onHide={() => setShowBPVModal(false)} className="modal-md">
+      {/* <Modal show={showBPVModal} onHide={() => setShowBPVModal(false)} className="modal-md">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isEdit ? "Edit Voucher" : "Add Bank Payment Voucher"}
@@ -371,9 +372,10 @@ export default function JournalVoucher() {
             onCancel={() => setShowBPVModal(false)}
           />
         </Modal.Body>
-      </Modal>
+      </Modal> */}
+
       {/* BRV Modal */}
-      <Modal show={showBRVModal} onHide={() => setShowBRVModal(false)} className="modal-md">
+      {/* <Modal show={showBRVModal} onHide={() => setShowBRVModal(false)} className="modal-md">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isEdit ? "Edit Voucher" : "Add Bank Receipt Voucher"}
@@ -386,11 +388,11 @@ export default function JournalVoucher() {
             onCancel={() => setShowBRVModal(false)}
           />
         </Modal.Body>
-      </Modal>
+      </Modal> */}
 
 
       {/* CRV Modal */}
-      <Modal show={showCRVModal} onHide={() => setShowCRVModal(false)} className="modal-md">
+      {/* <Modal show={showCRVModal} onHide={() => setShowCRVModal(false)} className="modal-md">
         <Modal.Header className="primary">
           <Modal.Title className="color-white fw-bold">
             {isEdit ? "Edit Voucher" : "Add Cash Receipt Voucher"}
@@ -403,7 +405,7 @@ export default function JournalVoucher() {
             onCancel={() => setShowCRVModal(false)}
           />
         </Modal.Body>
-      </Modal>
+      </Modal> */}
 
       <Modal show={showCPVModal} onHide={() => setShowCPVModal(false)} className="modal-md">
         <Modal.Header className="primary">

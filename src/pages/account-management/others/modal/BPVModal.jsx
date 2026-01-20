@@ -68,55 +68,84 @@ export default function BPVModal({ onSave, onCancel }) {
   // ===========================
   // Submit
   // ===========================
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!date || !narration || entries.length === 0)
+  //     return alert("Please fill all fields");
+
+  //   // find default bank account
+  //   const bankAccount = accountList.find(acc =>
+  //     acc.name_head.toLowerCase().includes("bank")
+  //   );
+
+  //   if (!bankAccount) {
+  //     return alert("Bank account not found!");
+  //   }
+
+  //   // sum of all debits
+  //   const totalDebit = entries.reduce((sum, e) => sum + parseFloat(e.dr || 0), 0);
+
+  //   const bankAlreadyExists = entries.some(
+  //     e => parseInt(e.account_head_id) === bankAccount.id
+  //   );
+
+  //   const finalEntries = bankAlreadyExists
+  //     ? entries
+  //     : [
+  //       ...entries,
+  //       {
+  //         account_head_id: bankAccount.id,
+  //         name_head: bankAccount.name_head,
+  //         dr: 0,
+  //         cr: totalDebit,
+  //       },
+  //     ];
+
+  //   const formData = {
+  //     date,
+  //     narration,
+  //     voucher_type: "BPV",
+  //     entries: finalEntries,
+  //   };
+
+  //   try {
+  //     await onSave(formData);
+  //     setDate("");
+  //     setNarration("");
+  //     setEntries([]);
+  //   } catch (err) {
+  //     console.error("Error saving voucher:", err);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!date || !narration || entries.length === 0)
+
+    if (!date || !narration || entries.length === 0) {
       return alert("Please fill all fields");
-
-    // find default bank account
-    const bankAccount = accountList.find(acc =>
-      acc.name_head.toLowerCase().includes("bank")
-    );
-
-    if (!bankAccount) {
-      return alert("Bank account not found!");
     }
-
-    // sum of all debits
-    const totalDebit = entries.reduce((sum, e) => sum + parseFloat(e.dr || 0), 0);
-
-    const bankAlreadyExists = entries.some(
-      e => parseInt(e.account_head_id) === bankAccount.id
-    );
-
-    const finalEntries = bankAlreadyExists
-      ? entries
-      : [
-        ...entries,
-        {
-          account_head_id: bankAccount.id,
-          name_head: bankAccount.name_head,
-          dr: 0,
-          cr: totalDebit,
-        },
-      ];
 
     const formData = {
       date,
       narration,
-      voucher_type: "BPV",
-      entries: finalEntries,
+      voucher_type: "BRV",
+      entries: entries, // 🔥 sirf user wali entries
     };
 
     try {
       await onSave(formData);
+
+      // reset form
       setDate("");
       setNarration("");
       setEntries([]);
+      setAccountHead("");
+      setCr("");
     } catch (err) {
       console.error("Error saving voucher:", err);
     }
   };
+
 
   return (
     <Container>
@@ -227,7 +256,7 @@ export default function BPVModal({ onSave, onCancel }) {
         <hr />
         <div className="d-flex justify-content-end gap-2 align-items-center">
           <Button variant="secondary" className="secondary" onClick={onCancel} disabled={saving}>
-             Cancel & Close
+            Cancel & Close
           </Button>
           <Button variant="primary" className="primary" type="submit">
             {saving ? (

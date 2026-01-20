@@ -53,7 +53,7 @@ export default function CRV() {
       if (isEdit && selectedVoucher) {
         await httpClient.put(`/cash_receipt_voucher/${selectedVoucher.id}`, formData);
       } else {
-        await httpClient.post("/cash_receipt_voucher", formData);
+        await httpClient.post("/cash_receipt_voucher/", formData);
       }
       getVoucherData();
     } catch (err) {
@@ -66,7 +66,7 @@ export default function CRV() {
 
   // Delete Voucher
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this voucher?")) return;
+    // if (!window.confirm("Are you sure you want to delete this voucher?")) return;
     setLoading(true);
     try {
       await httpClient.delete(`/journal_vouchers/${id}`);

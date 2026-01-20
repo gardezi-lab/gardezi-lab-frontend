@@ -6,7 +6,7 @@ export default function BusinessReportTable({ departmentList }) {
 
     return (
         <>
-            <Table striped bordered hover responsive size="sm">
+            <Table bordered striped hover size="sm">
                 <thead>
                     <tr>
                         <th scope="col">Sr.</th>

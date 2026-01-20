@@ -3,7 +3,8 @@ import { ThreeCircles } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import httpClient from "../../../../services/httpClient";
 import { Row, Col, Form, Table, Modal, Button } from "react-bootstrap";
-import { FaHistory, FaEye, FaFileMedical } from "react-icons/fa";
+import { FaHistory, FaEye, FaFileMedical, FaPaperclip, FaTimes } from "react-icons/fa";
+
 import {
     FaRegTrashCan, FaPenToSquare, FaPrint, FaFileInvoiceDollar, FaDollarSign,
 
@@ -14,6 +15,7 @@ import PatientLogModal from "../modal/PatientLogModal";
 import PatientTestShow from "../modal/PatientTestShow";
 import PatientDueAmountModal from "../modal/PatientDueAmountModal";
 import ParameterResult from "../modal/ParameterResult";
+import PatientFileModal from "../modal/PatientFileModal";
 
 
 
@@ -30,6 +32,11 @@ export default function PatientListingTable({
     const [patientPaymentLog, setPatientPaymenLog] = useState();
     const [showParameterResult, setShowParameterResult] = useState(false);
     const [patientParameterRes, setPatientParameterRes] = useState();
+    const [showFileModal, setShowFileModal] = useState(false);
+    
+    const [selectedPatientForFiles, setSelectedPatientForFiles] = useState(null);
+
+
 
     const [dedicatedPatientObj, setDedicatedPatientObj] = useState(null)
 
@@ -70,7 +77,23 @@ export default function PatientListingTable({
         const convertedArray = ConvertIdToNameArr(patientList, testProfiles, doctorList, companyList, testPackageList);
         console.log("pt convertedArray", convertedArray);
         setUpdatedPatientsArray(convertedArray);
-    }, [patientList])
+    }, [patientList]);
+
+    const handlePatientFiles = async (patientObj) => {
+        setSelectedPatientForFiles(patientObj);
+        setShowFileModal(true);
+
+        // try {
+        //     const res = await httpClient.get(`/patient-files/${patientObj.cid}`);
+        //     setPatientFiles(res.files || []);
+        // } catch (err) {
+        //     console.log(err);
+        // }
+    };
+
+
+
+
 
 
     useEffect(() => {
@@ -155,7 +178,7 @@ export default function PatientListingTable({
                                     </td>
                                     <td >{patientObj.cell}</td>
                                     <td >{patientObj.age}</td>
-                                    <td style={{textWrap:'nowrap'}}>
+                                    <td style={{ textWrap: 'nowrap' }}>
                                         {patientObj.reff_by?.name?.length > 20
                                             ? `${patientObj.reff_by.name.slice(0, 20)}...`
                                             : patientObj.reff_by?.name
@@ -176,21 +199,22 @@ export default function PatientListingTable({
                                                 title="View Tests"
                                                 onClick={() => handlePatientTest(patientObj)}
                                             />
-                                            {permissions["Add Patient Result"] == 1 &&
+                                            <FaPaperclip
+                                                className="FaPaperclip"
+                                                style={{ cursor: 'pointer',color:'#1c2765' }}
+                                                title="Patient Files"
+                                                onClick={() => handlePatientFiles(patientObj)}
+                                            />
+                                            {permissions["Patients Add Result"] == 1 &&
                                                 <FaFileMedical
                                                     className="FaFileMedical"
                                                     title="Add Result"
                                                     onClick={() => handleParameterResult(patientObj)}
                                                 />
                                             }
-                                            {/* <Link to={`/patient-report?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
-                                                <FaPrint
-                                                    className="FaPrint"
-                                                    title="Print"
-                                                />
-                                            </Link> */}
+                                            
                                             {
-                                                permissions["Patient Invoice"] == 1 &&
+                                                permissions["Patients Invoice"] == 1 &&
                                                 <Link to={`/patient-management/invoice?id=${patientObj.cid}`} target="_blank" rel="noopener noreferrer">
                                                     <FaFileInvoiceDollar
                                                         className="FaFileInvoiceDollar"
@@ -198,14 +222,14 @@ export default function PatientListingTable({
                                                     />
                                                 </Link>
                                             }
-                                            {permissions["Edit Patient"] == 1 &&
+                                            {permissions["Patients Edit"] == 1 &&
                                                 <FaPenToSquare
                                                     className="FaPenToSquare"
                                                     title="Edit"
                                                     onClick={() => handleEditPatient(patientObj)}
                                                 />
                                             }
-                                            {permissions["Delete Patient"] == 1 &&
+                                            {permissions["Patients Delete"] == 1 &&
                                                 <FaRegTrashCan
                                                     className="FaRegTrashCan"
                                                     title="Delete"
@@ -246,6 +270,14 @@ export default function PatientListingTable({
                 showParameterResult={showParameterResult}
                 patientParameterRes={patientParameterRes}
             />
+
+            <PatientFileModal
+                showFileModal={showFileModal}
+                selectedPatientForFiles={selectedPatientForFiles}
+                
+                setShowFileModal={setShowFileModal}
+            />
+
         </>
     );
 }

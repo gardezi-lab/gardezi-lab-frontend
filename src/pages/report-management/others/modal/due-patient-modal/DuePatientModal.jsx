@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Select from 'react-select';
+import httpClient from "../../../../../services/httpClient";
 import { Modal, Button, Form } from "react-bootstrap";
 
 export default function DuePatientModal({ show, onClose, formData, onChange, onApply }) {

@@ -4,7 +4,7 @@ import { ThreeCircles } from "react-loader-spinner";
 import { Button, Table } from "react-bootstrap";
 
 export default function ParameterTable({ ParameterList, onDelete, onEdit, loading }) {
-
+    const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
     return (
         <>
             <Table bordered hover size="sm">
@@ -49,16 +49,20 @@ export default function ParameterTable({ ParameterList, onDelete, onEdit, loadin
                                 <td>{item.default_value}</td>
                                 <td>
                                     <div className="d-flex gap-2 justify-content-center">
-                                        <FaPenToSquare
-                                            onClick={() => onEdit(item)}
-                                            style={{ fontSize: "20px", cursor: "pointer" }}
-                                            title="Edit"
-                                        />
+                                        {permissions["Parameters Edit"] == 1 &&
+                                            <FaPenToSquare
+                                                onClick={() => onEdit(item)}
+                                                style={{ fontSize: "20px", cursor: "pointer" }}
+                                                title="Edit"
+                                            />
+                                        }
+                                        {permissions["Parameters Delete"] == 1 &&
                                         <FaRegTrashCan
                                             onClick={() => onDelete(item.parameter_id)}
                                             style={{ fontSize: "20px", cursor: "pointer", color: "red" }}
                                             title="Delete"
                                         />
+}
                                     </div>
                                 </td>
                             </tr>
@@ -72,7 +76,7 @@ export default function ParameterTable({ ParameterList, onDelete, onEdit, loadin
                     )}
                 </tbody>
             </Table>
-           
+
         </>
     );
 }

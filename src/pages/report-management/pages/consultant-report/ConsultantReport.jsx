@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import httpClient from "../../../../services/httpClient";
 import ConsultantReportTable from "../../others/table/consultant-report-table/ConsultantReportTable";
 import ConsultantReportModal from "../../others/modal/consultant-report-modal/ConsultantReportModal";
+import { Button } from "react-bootstrap";
 
 
 export default function ConsultantReport() {
     const [consultantList, setConsultantList] = useState([]);
     const [showFilterModal, setShowFilterModal] = useState(false);
     const [consultant, setConsultant] = useState([]);
-
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         from: "",
         to: "",
@@ -29,23 +30,19 @@ export default function ConsultantReport() {
     };
 
     const handleLog = async () => {
+        setLoading(true)
         try {
-            console.log("FormData before API call:", formData);
             if (!formData.doctors_id) {
-                console.log("Doctor ID missing, skipping API call");
                 setConsultantList([]);
                 return;
             }
-
-            const url = `/users/doctors_by_date/${formData.doctors_id}?from_date=${formData.from}&to_date=${formData.to}`;
-            console.log("API URL:", url);
-
+            const url = `/reporting/doctors_report/${formData.doctors_id}?from_date=${formData.from}&to_date=${formData.to}`;
             const response = await httpClient.get(url);
-            console.log("API Responseeeeeeeee:", response);
-
             setConsultantList(response.patients);
         } catch (error) {
             console.log("Error in API call:", error);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -76,16 +73,21 @@ export default function ConsultantReport() {
                 <h5 className="fw-bold page-header">Consultant Report</h5>
                 <div className="d-flex gap-2">
 
-                    <button
+                    <Button
+                        variant="outline-success"
+                        size="sm"
                         className="btn filter-btn"
                         type="button"
                         onClick={() => setShowFilterModal(true)}
                     >
                         <i className="fas fa-filter"></i>
-                    </button>
+                    </Button>
                 </div>
             </div>
-            <ConsultantReportTable consultantList={consultantList} />
+            <ConsultantReportTable
+                consultantList={consultantList}
+                loading={loading}
+            />
 
             <ConsultantReportModal
                 show={showFilterModal}

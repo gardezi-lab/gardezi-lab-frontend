@@ -186,7 +186,7 @@ export default function SystemUserModal() {
                 <h5 className="fw-bold page-header">Users</h5>
 
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    {permissions["Add User"] == 1 &&
+                    {permissions["User Add"] == 1 &&
                         <Button
                             size="sm"
                             className="btn btn-success primary"

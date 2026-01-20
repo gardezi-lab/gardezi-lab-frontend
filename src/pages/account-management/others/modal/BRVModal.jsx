@@ -65,58 +65,87 @@ export default function BRVModal({ onSave, onCancel }) {
   };
 
   // Submit
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!date || !narration || entries.length === 0)
+  //     return alert("Please fill all fields");
+
+  //   // find default bank account
+  //   const bankAccount = accountList.find(acc =>
+  //     acc.name_head.toLowerCase().includes("bank")
+  //   );
+
+  //   // if (!bankAccount) {
+  //   //   return alert("Bank account not found!");
+  //   // }
+
+  //   // sum of all credits
+  //   const totalCredit = entries.reduce((sum, e) => sum + parseFloat(e.cr || 0), 0);
+
+  //   // check if bank/cash already exists in entries
+  //   const bankAlreadyExists = entries.some(
+  //     e => parseInt(e.account_head_id) === bankAccount.id
+  //   );
+
+  //   // add auto debit entry only if bank not already added
+  //   const finalEntries = bankAlreadyExists
+  //     ? entries
+  //     : [
+  //       ...entries,
+  //       {
+  //         account_head_id: bankAccount.id,
+  //         name_head: bankAccount.name_head,
+  //         dr: totalCredit,
+  //         cr: 0,
+  //       },
+  //     ];
+
+  //   const formData = {
+  //     date,
+  //     narration,
+  //     voucher_type: "BRV",
+  //     entries: finalEntries,
+  //   };
+
+  //   try {
+  //     await onSave(formData);
+  //     setDate("");
+  //     setNarration("");
+  //     setEntries([]);
+  //   } catch (err) {
+  //     console.error("Error saving voucher:", err);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!date || !narration || entries.length === 0)
+    if (!date || !narration || entries.length === 0) {
       return alert("Please fill all fields");
-
-    // find default bank account
-    const bankAccount = accountList.find(acc =>
-      acc.name_head.toLowerCase().includes("bank")
-    );
-
-    if (!bankAccount) {
-      return alert("Bank account not found!");
     }
-
-    // sum of all credits
-    const totalCredit = entries.reduce((sum, e) => sum + parseFloat(e.cr || 0), 0);
-
-    // check if bank/cash already exists in entries
-    const bankAlreadyExists = entries.some(
-      e => parseInt(e.account_head_id) === bankAccount.id
-    );
-
-    // add auto debit entry only if bank not already added
-    const finalEntries = bankAlreadyExists
-      ? entries
-      : [
-        ...entries,
-        {
-          account_head_id: bankAccount.id,
-          name_head: bankAccount.name_head,
-          dr: totalCredit,
-          cr: 0,
-        },
-      ];
 
     const formData = {
       date,
       narration,
       voucher_type: "BRV",
-      entries: finalEntries,
+      entries: entries, // 🔥 sirf user wali entries
     };
 
     try {
       await onSave(formData);
+
+      // reset form
       setDate("");
       setNarration("");
       setEntries([]);
+      setAccountHead("");
+      setCr("");
     } catch (err) {
       console.error("Error saving voucher:", err);
     }
   };
+
 
   // JSX
   return (
@@ -252,7 +281,7 @@ export default function BRVModal({ onSave, onCancel }) {
         <hr />
         <div className="d-flex justify-content-end gap-2 align-items-center">
           <Button className="secondary" variant="secondary" onClick={onCancel} disabled={saving}>
-              Cancel & Close
+            Cancel & Close
           </Button>
 
           <Button

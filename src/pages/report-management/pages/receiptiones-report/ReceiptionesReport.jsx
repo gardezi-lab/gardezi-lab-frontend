@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import httpClient from "../../../../services/httpClient";
 import ReceiptionesReportTable from "../../others/table/receiptiones-report-table/ReceiptionesReportTable";
 import ReceiptionesReportModal from "../../others/modal/receiptiones-report-modal/ReceiptionesReportModal";
+import { Button } from "react-bootstrap";
 
 export default function ReceiptionesReport() {
   const [receptionList, setReceptionList] = useState([]);   // 👈 Dropdown data
@@ -25,7 +26,7 @@ export default function ReceiptionesReport() {
 
   const loadReport = async () => {
     try {
-      const url = `/users/receptionists_by_date/${formData.receptionist_id}?from_date=${formData.from}&to_date=${formData.to}`;
+      const url = `/reporting/receptionists_report/${formData.receptionist_id}?from_date=${formData.from}&to_date=${formData.to}`;
       const response = await httpClient.get(url);
       setReportList(response.data);
 
@@ -65,13 +66,15 @@ export default function ReceiptionesReport() {
         <h5 className="fw-bold page-header">Receiptiones Report</h5>
         <div className="d-flex gap-2">
 
-          <button
+          <Button
+            variant="outline-success"
+            size="sm"
             className="btn filter-btn"
             type="button"
             onClick={() => setShowFilterModal(true)}
           >
             <i className="fas fa-filter"></i>
-          </button>
+          </Button>
         </div>
       </div>
       <ReceiptionesReportTable

@@ -1,21 +1,12 @@
 import React, { useState } from 'react'
 import { Container, Button, Modal, Form } from 'react-bootstrap';
+import Select from 'react-select';
 
-export default function LabReportModal({ show, onClose }) {
+export default function LabReportModal({ show, onClose, formData, ccList, applyFilter, onChange }) {
 
-    const [formData, setFormData] = useState({
-        from: "",
-        to: ""
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    }
-
-    const applyFilter = () => {
-        onClose(); // close modal
-    }
+    const handleSelectChange = (selectedOption) => {
+        onChange("center_id", selectedOption?.value || "");
+    };
 
     return (
         <Modal show={show} >
@@ -25,6 +16,33 @@ export default function LabReportModal({ show, onClose }) {
 
             <Modal.Body>
                 <Container>
+                    <Form.Group>
+                        <Form.Label className="form-label">Lab</Form.Label>
+                        <Select
+                            name="center_id"
+                            value={
+                                formData.center_id && Array.isArray(ccList)
+                                    ? {
+                                        value: formData.center_id,
+                                        label: ccList.find(r => r.id === formData.center_id)?.name
+                                    }
+                                    : null
+                            }
+                            placeholder="Select Lab"
+                            onChange={handleSelectChange}
+                            options={
+                                Array.isArray(ccList)
+                                    ? ccList.map(item => ({
+                                        value: item.id,
+                                        label: item.name
+                                    }))
+                                    : []
+                            }
+                        />
+
+
+                    </Form.Group>
+
 
                     <Form.Group className="mb-3">
                         <Form.Label>From:</Form.Label>
@@ -32,7 +50,7 @@ export default function LabReportModal({ show, onClose }) {
                             type="date"
                             name="from"
                             value={formData.from}
-                            onChange={handleChange}
+                            onChange={(e) => onChange(e.target.name, e.target.value)}
                         />
                     </Form.Group>
 
@@ -43,7 +61,7 @@ export default function LabReportModal({ show, onClose }) {
                             name="to"
                             min={formData.from}
                             value={formData.to}
-                            onChange={handleChange}
+                            onChange={(e) => onChange(e.target.name, e.target.value)}
                         />
                     </Form.Group>
 

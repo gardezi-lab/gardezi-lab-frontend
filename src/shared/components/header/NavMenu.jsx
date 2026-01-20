@@ -39,30 +39,30 @@ const menuItems = [
     {
         title: "Patients",
         iconClass: "uil uil-user-nurse",
+        href: "/patient-management/patient"
+        // dropdown: [
+        //     {
+        //         label: "Patients Management",
+        //         icon: "users",
+        //         href: "/patient-management/patient",
 
-        dropdown: [
-            {
-                label: "Patients Management",
-                icon: "users",
-                href: "/patient-management/patient",
-
-            },
-            {
-                label: "Cash Management",
-                icon: "dollar-sign",
-                href: "/patient-management/cash"
-            },
-            {
-                label: "Delayed Tests",
-                icon: "clock",
-                href: "/patient-management/delayed-test"
-            },
-            {
-                label: "Panel Report",
-                icon: "file-text",
-                href: "/patient-management/panel-report",
-            },
-        ],
+        //     },
+        //     {
+        //         label: "Cash Management",
+        //         icon: "dollar-sign",
+        //         href: "/patient-management/cash"
+        //     },
+        //     {
+        //         label: "Delayed Tests",
+        //         icon: "clock",
+        //         href: "/patient-management/delayed-test"
+        //     },
+        //     {
+        //         label: "Panel Report",
+        //         icon: "file-text",
+        //         href: "/patient-management/panel-report",
+        //     },
+        // ],
     },
 
     {
@@ -204,6 +204,21 @@ const menuItems = [
                 icon: "users",
                 href: "/report-management/receiptiones-report",
             },
+            {
+                label: "Cash Management",
+                icon: "dollar-sign",
+                href: "/patient-management/cash"
+            },
+            {
+                label: "Delayed Tests",
+                icon: "clock",
+                href: "/patient-management/delayed-test"
+            },
+            {
+                label: "Panel Report",
+                icon: "file-text",
+                href: "/patient-management/panel-report",
+            },
         ],
     }
 ];
@@ -287,9 +302,9 @@ export default function NavMenu() {
             if (permission.hasOwnProperty(menu.title) && permission[menu.title] == 0) {
                 return null;
             }
-debugger
+     
             // 🟢 STEP 2: Filter dropdown items
-            const filteredDropdown = menu.dropdown.filter(ddItem => {
+            const filteredDropdown = menu?.dropdown?.filter(ddItem => {
                 // 1️⃣ exact label permission (rare case)
                 if (permission[ddItem.label] == 1) return true;
 
@@ -302,7 +317,7 @@ debugger
             });
 
             // 🔴 STEP 3: agar koi child bacha hi nahi → parent bhi hide
-            if (filteredDropdown.length === 0) return null;
+            // if (filteredDropdown.length === 0) return null;
 
             return {
                 ...menu,
@@ -314,7 +329,7 @@ debugger
     console.log('filteredMenuItems', filteredMenuItems)
     return (
         <ul className="navbar-nav navbar-nav-top" data-dropdown-on-hover="data-dropdown-on-hover">
-            {filteredMenuItems.map(({ title, iconClass, dropdown }) => (
+            {/* {filteredMenuItems.map(({ title, iconClass, dropdown }) => (
                 <li key={title} className="nav-item dropdown">
                     <a
                         className="nav-link dropdown-toggle lh-1 color-white"
@@ -329,12 +344,50 @@ debugger
                         {title}
                     </a>
                     <ul className="dropdown-menu navbar-dropdown-caret dropdown-scroll">
-                        {dropdown.map((item) => (
+                        {dropdown?.map((item) => (
                             <DropdownItem key={item.label} {...item} />
                         ))}
                     </ul>
                 </li>
-            ))}
+            ))} */}
+            {filteredMenuItems.map(({ title, iconClass, dropdown, href }) => {
+    const hasDropdown = Array.isArray(dropdown) && dropdown.length > 0;
+
+    return (
+        <li key={title} className={`nav-item ${hasDropdown ? "dropdown" : ""}`}>
+            {hasDropdown ? (
+                <>
+                    <a
+                        className="nav-link dropdown-toggle lh-1 color-white"
+                        href="#!"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside"
+                        aria-expanded="false"
+                    >
+                        <span className={`uil fs-8 color-white me-2 ${iconClass}`} />
+                        {title}
+                    </a>
+
+                    <ul className="dropdown-menu navbar-dropdown-caret dropdown-scroll">
+                        {dropdown.map((item) => (
+                            <DropdownItem key={item.label} {...item} />
+                        ))}
+                    </ul>
+                </>
+            ) : (
+                <NavLink
+                    to={href}
+                    className="nav-link lh-1 color-white"
+                >
+                    <span className={`uil fs-8 color-white me-2 ${iconClass}`} />
+                    {title}
+                </NavLink>
+            )}
+        </li>
+    );
+})}
+
         </ul>
     );
 }

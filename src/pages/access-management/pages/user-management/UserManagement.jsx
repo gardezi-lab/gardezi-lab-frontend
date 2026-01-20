@@ -12,7 +12,7 @@ export default function RoleUserManagement() {
   const [tempSearch, setTempSearch] = useState("");
   const recordPerPage = 30;
 
-  const permissionTypes = ["admin", "reception", "technician", "pathologist", "manager", "doctor", "patient", "accountant"];
+  const permissionTypes = ["admin", "reception", "technician", "pathologist", "manager", "doctor", "accountant","collection center"];
   const perModuleFunction = ["read", "add", "edit", "delete"];
 
   const getPermissions = async () => {
@@ -23,7 +23,9 @@ export default function RoleUserManagement() {
       )}&currentpage=${page}&recordperpage=${recordPerPage}`);
 
       if (response) {
-        setModules(response.module);
+        console.log("permission response",response)
+        setModules(response.modules);
+        setTotalPages(response.total_pages)
       } else {
         console.warn("Unexpected response format:", response);
       }
@@ -55,13 +57,14 @@ export default function RoleUserManagement() {
           moduleid: mod.moduleid,
           modulename: mod.modulename,
           crud: {
+            admin:Number(mod.crud.admin),
             reception: Number(mod.crud.reception),
             technician: Number(mod.crud.technician),
             pathologist: Number(mod.crud.pathologist),
             doctor: Number(mod.crud.doctor),
-            patient: Number(mod.crud.patient),
             accountant: Number(mod.crud.accountant),
-            manager: Number(mod.crud.manager)
+            manager: Number(mod.crud.manager),
+            collection_center :Number(mod.crud.collection_center)
           },
         })),
       };
@@ -83,6 +86,7 @@ export default function RoleUserManagement() {
   useEffect(() => {
     getPermissions();
   }, [page, search]);
+
   const renderPaginationItems = () => {
     let items = [];
     if (totalPages <= 5) {
@@ -166,7 +170,7 @@ export default function RoleUserManagement() {
               </tr>
             </thead>
             <tbody>
-              {modules.map((mod, i) => (
+              {modules?.map((mod, i) => (
                 <tr key={mod.module_id}>
                   <td style={{ textAlign: 'center' }}>
                     {i + 1}
@@ -270,8 +274,6 @@ export default function RoleUserManagement() {
           </button>
         </Modal.Footer>
       </Modal>
-
     </div>
-
   );
 }

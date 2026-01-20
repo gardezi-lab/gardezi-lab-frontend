@@ -1,6 +1,7 @@
 import { Table } from "react-bootstrap";
+import { ThreeCircles } from "react-loader-spinner";
 
-export default function DiscountReportTable({ discountList }) {
+export default function DiscountReportTable({ discountList, loading }) {
 
     return (
         <Table striped bordered hover responsive size="sm">
@@ -17,10 +18,33 @@ export default function DiscountReportTable({ discountList }) {
                     <th>Status</th>
                 </tr>
             </thead>
+            {loading ? (
+                <tbody>
+                    <tr>
+                        <td colSpan="7">
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "250px", // ✅ adjust karo apne table ke hisaab se
+                                }}
+                            >
+                                <ThreeCircles
+                                    visible={true}
+                                    height="60"
+                                    width="60"
+                                    color="#fcb040"
+                                    ariaLabel="three-circles-loading"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
 
-            <tbody>
-                {discountList?.length > 0 ? (
-                    discountList.map((item, index) => (
+            ) : discountList?.length > 0 ? (
+                <tbody>
+                    {discountList.map((item, index) => (
                         <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>{item.pt_id}</td>
@@ -32,15 +56,17 @@ export default function DiscountReportTable({ discountList }) {
                             <td>{item.sample}</td>
                             <td>{item.status}</td>
                         </tr>
-                    ))
-                ) : (
+                    ))}
+                </tbody>
+            ) : (
+                <tbody>
                     <tr>
                         <td colSpan="9" className="text-center">
                             No Data Found
                         </td>
                     </tr>
-                )}
-            </tbody>
+                </tbody>
+            )}
         </Table>
     );
 }

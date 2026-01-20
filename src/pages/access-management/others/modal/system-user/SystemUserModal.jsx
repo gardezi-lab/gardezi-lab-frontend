@@ -310,11 +310,17 @@ export default function UserModal({ onSave, consultant, onCancel }) {
                                     required
                                 >
                                     <option value="">Select Role</option>
-                                    {roles.map((roles) => (
-                                        <option key={roles.id} value={roles.role_name}>
-                                            {roles.role_name}
-                                        </option>
-                                    ))}
+                                    {/* {roles.map((roles) => ( */}
+                                        <option id={"admin"} value={"admin"}>Admin</option>
+                                        <option id={"reception"} value={"reception"}>Reception</option>
+                                        <option id={"technician"} value={"technician"}>Technician</option>
+                                        <option id={"pathologist"} value={"pathologist"}>Pathologist</option>
+                                        <option id={"manager"} value={"manager"}>Manager</option>
+                                        <option id={"doctor"} value={"doctor"}>Doctor</option>
+                                        <option id={"accountant"} value={"accountant"}>Accountant</option>
+                                        <option id={"collection_center"} value={"collection_center"}>Collection Center</option>
+                                        
+                                    {/* ))} */}
                                 </Form.Select>
                             </Form.Group>
                         </Col>

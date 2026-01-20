@@ -195,7 +195,7 @@ export default function TestProfile() {
                         }}
                     /> */}
 
-                    {permissions["Add Test & Profile"] == 1 &&
+                    {permissions["Test & Profile Add"] == 1 &&
                         <Button
                             className="btn btn-success primary"
                             type="button"

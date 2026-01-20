@@ -4,7 +4,7 @@ import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
 import { FaSlidersH } from "react-icons/fa";
 import Modal from 'react-bootstrap/Modal';
 import ParameterModal from "../../modal/test-profile-modal/parameter-modal/ParameterModal";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import httpClient from "../../../../../services/httpClient";
 
 
@@ -13,11 +13,17 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
     const [selectedTest, setSelectedTest] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [departments, setDepartments] = useState([]);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const handleClose = () => {
         setShowModal(false);
         setSelectedTest(null);
     };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false)
+    };
+
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -57,7 +63,7 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                 <td>{test.delivery_time}</td>
                                 <td>
                                     <div className="d-flex gap-2 align-items-center justify-content-center">
-                                        {permissions["Read Parameters"] == 1 &&
+                                        {permissions["Parameters"] == 1 &&
                                             <FaSlidersH
                                                 onClick={() => {
                                                     setSelectedTest(test);
@@ -67,19 +73,24 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                                                 title="Manage Parameters"
                                             />
                                         }
-                                        {permissions["Edit Test & Profile"] == 1 &&
+                                        {permissions["Test & Profile Edit"] == 1 &&
                                             <FaPenToSquare
                                                 onClick={() => onEdit(test)}
                                                 style={{ fontSize: "22px", cursor: "pointer" }}
                                             />
                                         }
-                                        {permissions["Delete Test & Profile"] == 1 &&
+                                        {permissions["Test & Profile Delete"] == 1 &&
                                             <FaRegTrashCan
+                                                // onClick={() => {
+                                                //     if (window.confirm("Are you sure you want to delete this department?")) {
+                                                //         onDelete(test.id);
+                                                //     }
+                                                // }}
                                                 onClick={() => {
-                                                    if (window.confirm("Are you sure you want to delete this department?")) {
-                                                        onDelete(test.id);
-                                                    }
+                                                    setSelectedTest(test.id);
+                                                    setShowDeleteModal(true);
                                                 }}
+
                                                 style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
                                             />
                                         }
@@ -110,6 +121,46 @@ export default function TestProfileTable({ TestProfileList, onDelete, onEdit, lo
                     )}
                 </Modal.Body>
             </Modal>
+
+            <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+                <Modal.Header className="primary"  >
+                    <Modal.Title className="color-white fw-bold">Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="text-center">
+                    <h5 className="fw-semibold text-muted">
+                        Are you sure you want to delete this test?
+                    </h5>
+                </Modal.Body>
+                <Modal.Footer className="justify-content-end">
+                    <Button variant="secondary" size="sm" className="secondary" onClick={handleCloseDeleteModal}>
+                        Cancel
+                    </Button>
+                    {/* <Button variant="danger" size="sm" onClick={deletePatient}
+                        style={{
+                            backgroundColor: "#e74c3c",
+                            borderColor: "#c0392b",
+                        }}
+                    >
+                        Delete Visit
+                    </Button> */}
+                    <Button variant="danger" size="sm"
+                        onClick={() => {
+                            onDelete(selectedTest);
+                            setShowDeleteModal(false);
+                        }}
+                        style={{
+                            backgroundColor: "#c0392b",
+                            borderColor: "#922b21",
+                        }}
+                    >
+                        Delete Record
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+
+
 
         </>
     );

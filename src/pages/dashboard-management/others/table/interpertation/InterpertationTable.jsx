@@ -1,9 +1,19 @@
 import { ThreeCircles } from "react-loader-spinner";
 import { FaRegTrashCan, FaPenToSquare } from "react-icons/fa6";
+import { Button, Modal, } from "react-bootstrap";
+import { useState } from "react";
 
 
 export default function InterpertationTable({ interpertationList, onDelete, onEdit, loading }) {
     const permissions = JSON.parse(localStorage.getItem("permissions") || "{}");
+
+    const [selectedId, setSelectedId] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+    };
+
     function stripHtml(html) {
         const div = document.createElement("div");
         div.innerHTML = html;
@@ -47,7 +57,7 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                                 />
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr> 
                                 </tbody>
                             ) : interpertationList?.length > 0 ? (
                                 <tbody >
@@ -61,19 +71,24 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                                 dangerouslySetInnerHTML={{ __html: interpertation.detail }}></td>
                                             <td className="py-2 px-2">
                                                 <div className="d-flex gap-2 align-items-center justify-content-center">
-                                                    {permissions["Edit Interpertation"] == 1 &&
-                                                    <FaPenToSquare
-                                                        onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
+                                                    {permissions["Interpertation Edit"] == 1 &&
+                                                        <FaPenToSquare
+                                                            onClick={() => onEdit(interpertation)} style={{ fontSize: "22px", cursor: "pointer" }} />
                                                     }
-                                                    {permissions["Delete Interpertation"] == 1 &&
-                                                    <FaRegTrashCan onClick={() => {
-                                                        if (window.confirm("Are you sure you want to delete this department?")) {
-                                                            onDelete(interpertation.id);
-                                                        }
-                                                    }}
-                                                        style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
-                                                    />
-                                                }
+                                                    {permissions["Interpertation Delete"] == 1 &&
+                                                        <FaRegTrashCan
+                                                            //  onClick={() => {
+                                                            //     if (window.confirm("Are you sure you want to delete this department?")) {
+                                                            //         onDelete(interpertation.id);
+                                                            //     }
+                                                            // }}
+                                                            onClick={() => {
+                                                                setSelectedId(interpertation.id);
+                                                                setShowDeleteModal(true);
+                                                            }}
+                                                            style={{ fontSize: "22px", cursor: "pointer", color: 'red' }}
+                                                        />
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
@@ -89,6 +104,43 @@ export default function InterpertationTable({ interpertationList, onDelete, onEd
                                 </tbody>
                             )}
                         </table>
+
+
+                        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+                            <Modal.Header className="primary"  >
+                                <Modal.Title className="color-white fw-bold">Confirm Deletion</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body className="text-center">
+                                <h5 className="fw-semibold text-muted">
+                                    Are you sure you want to delete this interpertation?
+                                </h5>
+                            </Modal.Body>
+                            <Modal.Footer className="justify-content-end">
+                                <Button variant="secondary" size="sm" className="secondary" onClick={handleCloseDeleteModal}>
+                                    Cancel
+                                </Button>
+                                {/* <Button variant="danger" size="sm" onClick={deletePatient}
+                        style={{
+                            backgroundColor: "#e74c3c",
+                            borderColor: "#c0392b",
+                        }}
+                    >
+                        Delete Visit
+                    </Button> */}
+                                <Button variant="danger" size="sm"
+                                    onClick={() => {
+                                        onDelete(selectedId);
+                                        setShowDeleteModal(false);
+                                    }}
+                                    style={{
+                                        backgroundColor: "#c0392b",
+                                        borderColor: "#922b21",
+                                    }}
+                                >
+                                    Delete Record
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div>
             </div>

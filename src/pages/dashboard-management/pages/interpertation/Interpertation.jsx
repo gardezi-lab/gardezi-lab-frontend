@@ -149,7 +149,7 @@ export default function Interpertation() {
             <div className="d-flex justify-content-between align-items-center mb-3 mt-2">
                 <h5 className="fw-bold page-header">Add Interpertation For Tests</h5>
                 <div className="d-flex flex-wrap align-items-center gap-2">
-                    {permissions["Add Interpertation"] == 1 &&
+                    {permissions["Interpertation Add"] == 1 &&
                         <Button
                             className="btn btn-success primary"
                             size="sm"
